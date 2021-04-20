@@ -12,7 +12,7 @@ import com.example.cookingapp.R
 
 class CookbookFragment : Fragment() {
 
-    private lateinit var cookbookViewModel: ConverterViewModel
+    private lateinit var cookbookViewModel: CookbookViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -20,7 +20,7 @@ class CookbookFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         cookbookViewModel =
-                ViewModelProvider(this).get(ConverterViewModel::class.java)
+                ViewModelProvider(this).get(CookbookViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_cookbook, container, false)
         val textView: TextView = root.findViewById(R.id.text_cookbook)
         cookbookViewModel.text.observe(viewLifecycleOwner, Observer {

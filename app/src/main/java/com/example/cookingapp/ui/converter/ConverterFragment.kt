@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.R
-import com.example.cookingapp.ui.cookbook.ConverterViewModel
+import com.example.cookingapp.ui.converter.ConverterViewModel
 
 class ConverterFragment : Fragment() {
 

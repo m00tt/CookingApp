@@ -1,4 +1,4 @@
-package com.example.cookingapp.ui.cookbook
+package com.example.cookingapp.ui.converter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
