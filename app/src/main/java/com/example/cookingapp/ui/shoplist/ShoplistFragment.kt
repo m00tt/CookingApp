@@ -1,4 +1,4 @@
-package com.example.cookingapp.ui.dashboard
+package com.example.cookingapp.ui.shoplist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.R
 
-class DashboardFragment : Fragment() {
+class ShoplistFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var shoplistViewModel: ShoplistViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        shoplistViewModel =
+                ViewModelProvider(this).get(ShoplistViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_shoplist, container, false)
+        val textView: TextView = root.findViewById(R.id.text_shoplist)
+        shoplistViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
