@@ -10,5 +10,6 @@
 
     <color name="giallo">#FFBD00</color>
     <color name="giallo_barra">#F0B200</color>
+    <color name="scritte">#FF8300</color>
 
 </resources>
