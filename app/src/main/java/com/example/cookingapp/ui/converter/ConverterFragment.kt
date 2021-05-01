@@ -22,8 +22,8 @@ class ConverterFragment : Fragment() {
     ): View? {
         converterViewModel =
                 ViewModelProvider(this).get(ConverterViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_cookbook, container, false)
-        val textView: TextView = root.findViewById(R.id.text_cookbook)
+        val root = inflater.inflate(R.layout.fragment_converter, container, false)
+        val textView: TextView = root.findViewById(R.id.text_converter)
         converterViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
