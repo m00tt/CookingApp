@@ -6,6 +6,8 @@
     <string name="title_converter">Convertitore</string>
     <string name="converter_spoon_text_title">Cucchiai</string>
     <string name="converter_gr_text_title">Grammi</string>
+    <string name="converter_grassiveg_text_title">Grassi animali</string>
+    <string name="converter_grassianm_text_title">Grassi vegetali</string>
     <string name="converter_button_reset_name">Reset</string>
     <string name="converter_icon_alt">Converter icon</string>
 </resources>

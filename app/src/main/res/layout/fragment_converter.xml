@@ -67,14 +67,31 @@
         android:layout_height="wrap_content"
         android:layout_weight="7" />
 
-    <ImageView
-        android:id="@+id/converter_img_icon"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:contentDescription="@string/converter_icon_alt"
-        android:foregroundGravity="center"
-        android:src="@mipmap/ic_converter_arrows_round" />
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="45" />
+
+        <ImageButton
+            android:id="@+id/converter_change_values"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:background="@color/white"
+            android:contentDescription="@string/converter_icon_alt"
+            android:src="@mipmap/ic_converter_arrows_round" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="45" />
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
