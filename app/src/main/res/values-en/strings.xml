@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CookingApp</string>
+    <string name="title_cookbook">Cookbook</string>
+    <string name="title_shoplist">Shop list</string>
+    <string name="title_converter">Converter</string>
+    <string name="converter_spoon_text_title">Spoons</string>
+    <string name="converter_gr_text_title">Grams</string>
+    <string name="converter_butter_text_title">Butter (gr)</string>
+    <string name="converter_oil_text_title">Oil (gr)</string>
+    <string name="converter_glass_text_title">Glasses</string>
+    <string name="converter_ml_text_title">Milliliters</string>
+    <string name="converter_milk_text_title">Milk (ml)</string>
+</resources>

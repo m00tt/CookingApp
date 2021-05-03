@@ -1,13 +1,19 @@
 <resources>
     <string name="app_name">CookingApp</string>
-    <string name="title_home">Home</string>
+    <string name="title_home" translatable="false">Home</string>
     <string name="title_cookbook">Ricettario</string>
     <string name="title_shoplist">Lista Spesa</string>
     <string name="title_converter">Convertitore</string>
     <string name="converter_spoon_text_title">Cucchiai</string>
     <string name="converter_gr_text_title">Grammi</string>
-    <string name="converter_grassiveg_text_title">Grassi animali</string>
-    <string name="converter_grassianm_text_title">Grassi vegetali</string>
-    <string name="converter_button_reset_name">Reset</string>
-    <string name="converter_icon_alt">Converter icon</string>
+    <string name="converter_butter_text_title">Burro (gr)</string>
+    <string name="converter_oil_text_title">Olio (gr)</string>
+    <string name="converter_glass_text_title">Bicchieri</string>
+    <string name="converter_ml_text_title">Millilitri</string>
+    <string name="converter_yogurt_text_title" translatable="false">Yogurt (gr)</string>
+    <string name="converter_milk_text_title">Latte (ml)</string>
+    <string name="converter_button_reset_name" translatable="false">Reset</string>
+    <string name="converter_icon_change_alt" translatable="false">Converter icon</string>
+    <string name="converter_icon_units_alt" translatable="false">Units icon</string>
+    <string name="converter_hint" translatable="false">0.0</string>
 </resources>

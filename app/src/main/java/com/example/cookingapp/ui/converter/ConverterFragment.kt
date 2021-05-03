@@ -1,21 +1,43 @@
 package com.example.cookingapp.ui.converter
 
-import android.content.res.loader.ResourcesLoader
-import android.graphics.PointF.length
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.cookingapp.R
-import android.widget.Toast
 import com.example.cookingapp.MainActivity
-import com.example.cookingapp.ui.converter.ConverterViewModel
+import com.example.cookingapp.R
 import kotlinx.android.synthetic.main.fragment_converter.*
+import java.text.DecimalFormat
+
+/*
+
+TO-DO LIST - MOTT
+
+* 1. CAMBIARE ICONE
+* 2. VERIFICARE SE NECESSARIO RENDERE LE FUNZIONI PUBLIC IN MODO CHE SIANO RAGGIUNGIBILI DA ALTRI PACKAGE PER LE CONVERSIONI
+
+
+* */
+
+
+//Dichiarazione costanti utilizzate per funzioni di conversione
+val FROM_GR_TO_SPOON = 0
+val FROM_SPOON_TO_GR = 1
+val FROM_BUTTER_TO_OIL = 0
+val FROM_OIL_TO_BUTTER = 1
+val FROM_GLASS_TO_ML = 0
+val FROM_ML_TO_GLASS = 1
+val FROM_YOGURT_TO_MILK = 0
+val FROM_MILK_TO_YOGURT = 1
+
+
+
 
 class ConverterFragment : Fragment() {
 
@@ -38,21 +60,211 @@ class ConverterFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        converter_change_values.setOnClickListener(object : View.OnClickListener {
+
+        //Listener per il cambiamento delle unità da convertire
+        converter_change_units.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val myResources = getResources()  //Verifica della resource table
-                if (converter_tv_gr.text.equals(myResources.getText(R.string.converter_gr_text_title))){
-                    converter_tv_gr.text = myResources.getText(R.string.converter_grassiveg_text_title)
-                    converter_tv_spoon.text = myResources.getText(R.string.converter_grassianm_text_title)
+                if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_spoon_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_butter_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_oil_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_oil_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_glass_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_ml_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_ml_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_yogurt_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_milk_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_milk_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_gr_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_spoon_text_title)
                 }
-                else{
-                    converter_tv_gr.text = myResources.getText(R.string.converter_gr_text_title)
-                    converter_tv_spoon.text = myResources.getText(R.string.converter_spoon_text_title)
+
+                converter_et_fromconvert.setText("")
+                converter_et_toconvert.setText("")
+            }
+        })
+
+        //Listener per lo switch delle unità selezionate
+        converter_change_values.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+
+                var from_convert: String? = null
+
+                if (converter_et_fromconvert.text.length > 0) {
+                    from_convert = converter_et_toconvert.text.toString()
                 }
+
+                val myResources = getResources()  //Verifica della resource table
+                if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_spoon_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_gr_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_spoon_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_gr_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_spoon_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_oil_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_butter_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_oil_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_butter_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_oil_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_ml_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_glass_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_ml_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_glass_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_ml_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_milk_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_yogurt_text_title)
+                } else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_milk_text_title))) {
+                    converter_tv_fromconvert.text = myResources.getText(R.string.converter_yogurt_text_title)
+                    converter_tv_toconvert.text = myResources.getText(R.string.converter_milk_text_title)
+                }
+
+
+                if (!from_convert.equals(null)) {
+                    converter_et_fromconvert.setText(from_convert)
+                } else {
+                    converter_et_fromconvert.setText("")
+                    converter_et_toconvert.setText("")
+                }
+            }
+        })
+
+        //Listener per reset button
+        converter_reset_button.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                converter_et_fromconvert.setText("")
+            }
+        })
+
+        //Listener per catturare la variazione del testo all'interno della EditText da convertire
+        converter_et_fromconvert.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            //Ogni volta che avviene un cambiamento del testo della EditText
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val myResources = getResources()  //Verifica della resource table
+                val precision = DecimalFormat("#.##") //Dichiarazione della precisione double
+                if (converter_et_fromconvert.text.length > 0) {
+                    //Conversione tra GRAMMI e CUCCHIAI
+                    if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_spoon_text_title))) {
+                        var x = converter_et_fromconvert.text.toString()
+                        try {
+                            var n_x = x.toDouble()
+                            if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title))) {
+                                n_x = gr_spoonConvertor(n_x, FROM_GR_TO_SPOON)
+                            } else {
+                                n_x = gr_spoonConvertor(n_x, FROM_SPOON_TO_GR)
+                            }
+                            converter_et_toconvert.setText(precision.format(n_x))
+                        } catch (e: Exception) {
+                            Toast.makeText(context as MainActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    //Conversione tra BURRO e OLIO
+                    else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_oil_text_title))) {
+                        var x = converter_et_fromconvert.text.toString()
+                        try {
+                            var n_x = x.toDouble()
+                            if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title))) {
+                                n_x = butter_oilConvertor(n_x, FROM_BUTTER_TO_OIL)
+                            } else {
+                                n_x = butter_oilConvertor(n_x, FROM_OIL_TO_BUTTER)
+                            }
+                            converter_et_toconvert.setText(precision.format(n_x))
+                        } catch (e: Exception) {
+                            Toast.makeText(context as MainActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    //Conversione tra BICCHIERI e MILLILITRI
+                    else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_ml_text_title))) {
+                        var x = converter_et_fromconvert.text.toString()
+                        try {
+                            var n_x = x.toDouble()
+                            if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title))) {
+                                n_x = glass_mlConvertor(n_x, FROM_GLASS_TO_ML)
+                            } else {
+                                n_x = glass_mlConvertor(n_x, FROM_ML_TO_GLASS)
+                            }
+                            converter_et_toconvert.setText(precision.format(n_x))
+                        } catch (e: Exception) {
+                            Toast.makeText(context as MainActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    //Conversione tra YOGURT e LATTE
+                    else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_milk_text_title))) {
+                        var x = converter_et_fromconvert.text.toString()
+                        try {
+                            var n_x = x.toDouble()
+                            if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title))) {
+                                n_x = yogurt_milkConvertor(n_x, FROM_YOGURT_TO_MILK)
+                            } else {
+                                n_x = yogurt_milkConvertor(n_x, FROM_MILK_TO_YOGURT)
+                            }
+                            converter_et_toconvert.setText(precision.format(n_x))
+                        } catch (e: Exception) {
+                            Toast.makeText(context as MainActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    converter_et_toconvert.setText("")
+                }
+
             }
         })
     }
 
+    private fun gr_spoonConvertor(value: Double, dir: Int): Double {
+        //conversione da Grammi a Cucchiai
+        if(dir == FROM_GR_TO_SPOON){
+            return value / 15
+        }
+        //conversione da Cucchiai a Grammi
+        else{
+            return value * 15
+        }
+
+    }
+
+    private fun butter_oilConvertor(value: Double, dir: Int): Double {
+        //conversione da Burro a Olio
+        if(dir == FROM_BUTTER_TO_OIL){
+            return (value * 80) / 100
+        }
+        //conversione da Olio a Burro
+        else{
+            return (value * 100) / 80
+        }
+
+    }
+
+    private fun glass_mlConvertor(value: Double, dir: Int): Double {
+        //conversione da Bicchiere a ML
+        if(dir == FROM_GLASS_TO_ML){
+            return value * 200
+        }
+        //conversione da ML a Bicchiere
+        else{
+            return value / 200
+        }
+    }
+
+    private fun yogurt_milkConvertor(value: Double, dir: Int): Double {
+        //conversione da Yogurt a Latte
+        if(dir == FROM_YOGURT_TO_MILK){
+            return (value * 80) / 100
+        }
+        //conversione da Latte a Yogurt
+        else{
+            return (value * 100) / 80
+        }
+
+    }
 
 
 }
