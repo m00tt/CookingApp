@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.R
-import com.example.cookingapp.ui.cookbook.CookbookViewModel
 
 class RecipeFragment : Fragment() {
 
@@ -23,7 +22,7 @@ class RecipeFragment : Fragment() {
         recipeViewModel =
                 ViewModelProvider(this).get(RecipeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_recipe, container, false)
-        val textView: TextView = root.findViewById(R.id.text_recipe)
+        val textView: TextView = root.findViewById(R.id.recipe_name)
         recipeViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
