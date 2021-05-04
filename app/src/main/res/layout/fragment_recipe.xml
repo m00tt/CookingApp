@@ -37,7 +37,8 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@mipmap/ic_heart_foreground" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -64,7 +65,21 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:singleLine="false"
-                android:text="Name" />
+                android:text="Name"
+                />
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_edit"
+            android:layout_width="62dp"
+            android:layout_height="59dp"
+            android:layout_weight="35"
+            android:clickable="true"
+            android:scaleType="center"
+            android:translationX="330dp"
+            android:translationY="110dp"
+            app:fabSize="auto"
+            app:maxImageSize="80dp"
+            app:srcCompat="@mipmap/ic_pencil_foreground" />
     </LinearLayout>
 </ScrollView>
