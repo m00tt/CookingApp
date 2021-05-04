@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="20" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="15"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:background="@drawable/drawable_roundborder_convertor"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/converter_tv_fromconvert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/converter_gr_text_title"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/converter_et_fromconvert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="90"
+                android:background="@android:color/transparent"
+                android:ems="6"
+                android:gravity="center"
+                android:hint="@string/converter_hint"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:textSize="36sp" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="10" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="10"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="29.5" />
+
+        <ImageButton
+            android:id="@+id/converter_change_values"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/converter_icon_change_alt"
+            app:srcCompat="@mipmap/ic_converter_change_arrows_round" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5"
+            android:text="@string/converter_switch_button"
+            android:textColor="@color/black" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10" />
+
+        <ImageButton
+            android:id="@+id/converter_change_units"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/converter_icon_units_alt"
+            app:srcCompat="@mipmap/ic_converter_arrows_round" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2.5"
+            android:text="@string/converter_changeunits_button"
+            android:textColor="@color/black" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20" />
+
+        <Button
+            android:id="@+id/converter_reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/converter_button_reset_name" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="29.5" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="10" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="15"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:background="@drawable/drawable_roundborder_convertor"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/converter_tv_toconvert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/converter_spoon_text_title"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/converter_et_toconvert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="90"
+                android:background="@android:color/transparent"
+                android:ems="5"
+                android:gravity="center"
+                android:hint="@string/converter_hint"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:textColor="@color/black"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="20" />
+</LinearLayout>
