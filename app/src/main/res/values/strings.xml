@@ -16,4 +16,6 @@
     <string name="converter_icon_change_alt" translatable="false">Converter icon</string>
     <string name="converter_icon_units_alt" translatable="false">Units icon</string>
     <string name="converter_hint" translatable="false">0.0</string>
+    <string name="converter_switch_button">Inverti</string>
+    <string name="converter_changeunits_button">Cambia unità</string>
 </resources>

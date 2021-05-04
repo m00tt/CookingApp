@@ -79,28 +79,66 @@
             android:layout_height="match_parent"
             android:layout_weight="35" />
 
-        <ImageButton
-            android:id="@+id/converter_change_values"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="10"
-            android:background="@color/white"
-            android:contentDescription="@string/converter_icon_change_alt"
-            android:src="@mipmap/ic_converter_arrows_round" />
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/converter_change_values"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="90"
+                android:background="@color/white"
+                android:contentDescription="@string/converter_icon_change_alt"
+                android:src="@mipmap/ic_converter_change_arrows_round" />
+
+            <TextView
+                android:id="@+id/converter_tv_switch_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="10"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="@string/converter_switch_button"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="10" />
 
-        <ImageButton
-            android:id="@+id/converter_change_units"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="10"
-            android:background="@color/white"
-            android:contentDescription="@string/converter_icon_units_alt"
-            android:src="@mipmap/ic_launcher" />
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/converter_change_units"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="90"
+                android:background="@color/white"
+                android:contentDescription="@string/converter_icon_units_alt"
+                android:src="@mipmap/ic_converter_arrows_round" />
+
+            <TextView
+                android:id="@+id/converter_tv_changeunits_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="10"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="@string/converter_changeunits_button"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <Space
             android:layout_width="wrap_content"

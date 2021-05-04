@@ -11,4 +11,6 @@
     <string name="converter_glass_text_title">Glasses</string>
     <string name="converter_ml_text_title">Milliliters</string>
     <string name="converter_milk_text_title">Milk (ml)</string>
+    <string name="converter_switch_button">Switch</string>
+    <string name="converter_changeunits_button">Change units</string>
 </resources>
