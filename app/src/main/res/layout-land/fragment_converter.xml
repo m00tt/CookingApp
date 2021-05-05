@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="15"
+        android:layout_weight="10"
         android:orientation="vertical">
 
         <Space
@@ -38,7 +38,8 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/converter_gr_text_title"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/converter_et_fromconvert"
@@ -68,7 +69,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="10"
+        android:layout_weight="20"
         android:orientation="vertical">
 
         <Space
@@ -84,7 +85,7 @@
             android:layout_weight="2.5"
             android:background="@android:color/transparent"
             android:contentDescription="@string/converter_icon_change_alt"
-            app:srcCompat="@mipmap/ic_converter_change_arrows_round" />
+            app:srcCompat="@mipmap/ic_converter_change_arrows_land_round" />
 
         <TextView
             android:id="@+id/textView2"
@@ -146,7 +147,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="15"
+        android:layout_weight="10"
         android:orientation="vertical">
 
         <Space
@@ -170,7 +171,8 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/converter_spoon_text_title"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/converter_et_toconvert"
@@ -182,7 +184,6 @@
                 android:gravity="center"
                 android:hint="@string/converter_hint"
                 android:importantForAutofill="no"
-                android:inputType="numberDecimal"
                 android:textColor="@color/black"
                 android:textSize="36sp" />
 

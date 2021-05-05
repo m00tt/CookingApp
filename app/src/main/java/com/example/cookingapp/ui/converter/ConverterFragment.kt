@@ -19,7 +19,7 @@ import java.text.DecimalFormat
 
 TO-DO LIST - MOTT
 
-* 1. CAMBIARE ICONE
+* 1. PASSARE VALORI TRA LANDSCAPE E PORTRAIT
 * 2. VERIFICARE SE NECESSARIO RENDERE LE FUNZIONI PUBLIC IN MODO CHE SIANO RAGGIUNGIBILI DA ALTRI PACKAGE PER LE CONVERSIONI
 
 
@@ -52,7 +52,7 @@ class ConverterFragment : Fragment() {
                 ViewModelProvider(this).get(ConverterViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_converter, container, false)
         //al textView: TextView = root.findViewById(R.id.text_converter)
-        converterViewModel.text.observe(viewLifecycleOwner, Observer {
+        this.converterViewModel.text.observe(viewLifecycleOwner, Observer {
             //textView.text = it
         })
         return root
@@ -153,7 +153,7 @@ class ConverterFragment : Fragment() {
                 if (converter_et_fromconvert.text.length > 0) {
                     //Conversione tra GRAMMI e CUCCHIAI
                     if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_spoon_text_title))) {
-                        var x = converter_et_fromconvert.text.toString()
+                        val x = converter_et_fromconvert.text.toString()
                         try {
                             var n_x = x.toDouble()
                             if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title))) {
@@ -168,7 +168,7 @@ class ConverterFragment : Fragment() {
                     }
                     //Conversione tra BURRO e OLIO
                     else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_oil_text_title))) {
-                        var x = converter_et_fromconvert.text.toString()
+                        val x = converter_et_fromconvert.text.toString()
                         try {
                             var n_x = x.toDouble()
                             if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_butter_text_title))) {
@@ -183,7 +183,7 @@ class ConverterFragment : Fragment() {
                     }
                     //Conversione tra BICCHIERI e MILLILITRI
                     else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_ml_text_title))) {
-                        var x = converter_et_fromconvert.text.toString()
+                        val x = converter_et_fromconvert.text.toString()
                         try {
                             var n_x = x.toDouble()
                             if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_glass_text_title))) {
@@ -198,7 +198,7 @@ class ConverterFragment : Fragment() {
                     }
                     //Conversione tra YOGURT e LATTE
                     else if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_milk_text_title))) {
-                        var x = converter_et_fromconvert.text.toString()
+                        val x = converter_et_fromconvert.text.toString()
                         try {
                             var n_x = x.toDouble()
                             if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_yogurt_text_title))) {
