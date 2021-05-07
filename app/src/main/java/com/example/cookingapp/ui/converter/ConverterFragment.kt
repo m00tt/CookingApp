@@ -14,6 +14,9 @@ import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import kotlinx.android.synthetic.main.fragment_converter.*
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
+import java.util.*
 
 /*
 
@@ -21,7 +24,6 @@ TO-DO LIST - MOTT
 
 * 1. PASSARE VALORI TRA LANDSCAPE E PORTRAIT
 * 2. VERIFICARE SE NECESSARIO RENDERE LE FUNZIONI PUBLIC IN MODO CHE SIANO RAGGIUNGIBILI DA ALTRI PACKAGE PER LE CONVERSIONI
-
 
 * */
 
@@ -149,7 +151,15 @@ class ConverterFragment : Fragment() {
             //Ogni volta che avviene un cambiamento del testo della EditText
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val myResources = getResources()  //Verifica della resource table
-                val precision = DecimalFormat("#.##") //Dichiarazione della precisione double
+                val otherSymbols = DecimalFormatSymbols()
+                otherSymbols.decimalSeparator = '.'
+                otherSymbols.groupingSeparator = ','
+                val pattern = "###.##"
+                val df = DecimalFormat(pattern, otherSymbols)
+                //NumberFormat decimalFormat = new DecimalFormat(pattern, new DecimalFormatSymbols(Locale.US))
+                //val format = decimalFormat.format(123456789.123)
+                //val precision = DecimalFormat("#########,###")
+                val precision = DecimalFormat("#.##", otherSymbols) //Dichiarazione della precisione double
                 if (converter_et_fromconvert.text.length > 0) {
                     //Conversione tra GRAMMI e CUCCHIAI
                     if (converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_gr_text_title)) || converter_tv_fromconvert.text.equals(myResources.getText(R.string.converter_spoon_text_title))) {
@@ -217,6 +227,26 @@ class ConverterFragment : Fragment() {
 
             }
         })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if(savedInstanceState != null){
+            converter_tv_fromconvert.setText(savedInstanceState.getString("tv_fromconvert"))
+            converter_tv_toconvert.setText(savedInstanceState.getString("tv_toconvert"))
+            converter_et_fromconvert.setText(savedInstanceState.getString("et_fromconvert"))
+            converter_et_toconvert.setText(savedInstanceState.getString("et_toconvert"))
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("tv_fromconvert", converter_tv_fromconvert.text.toString())
+        outState.putString("tv_toconvert", converter_tv_toconvert.text.toString())
+        outState.putString("et_fromconvert", converter_et_fromconvert.text.toString())
+        outState.putString("et_toconvert", converter_et_toconvert.text.toString())
     }
 
     private fun gr_spoonConvertor(value: Double, dir: Int): Double {
