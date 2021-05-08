@@ -3,6 +3,7 @@ package com.example.cookingapp.ui.converter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,24 +20,17 @@ import java.text.NumberFormat
 import java.util.*
 
 /*
-
-TO-DO LIST - MOTT
-
-* 1. PASSARE VALORI TRA LANDSCAPE E PORTRAIT
-* 2. VERIFICARE SE NECESSARIO RENDERE LE FUNZIONI PUBLIC IN MODO CHE SIANO RAGGIUNGIBILI DA ALTRI PACKAGE PER LE CONVERSIONI
-
-* */
-
-
-//Dichiarazione costanti utilizzate per funzioni di conversione
-val FROM_GR_TO_SPOON = 0
-val FROM_SPOON_TO_GR = 1
-val FROM_BUTTER_TO_OIL = 0
-val FROM_OIL_TO_BUTTER = 1
-val FROM_GLASS_TO_ML = 0
-val FROM_ML_TO_GLASS = 1
-val FROM_YOGURT_TO_MILK = 0
-val FROM_MILK_TO_YOGURT = 1
+    Dichiarazione costanti utilizzate per funzioni di conversione
+    Valori public per essere raggiungibili da altri fragments
+*/
+public val FROM_GR_TO_SPOON = 0
+public val FROM_SPOON_TO_GR = 1
+public val FROM_BUTTER_TO_OIL = 0
+public val FROM_OIL_TO_BUTTER = 1
+public val FROM_GLASS_TO_ML = 0
+public val FROM_ML_TO_GLASS = 1
+public val FROM_YOGURT_TO_MILK = 0
+public val FROM_MILK_TO_YOGURT = 1
 
 
 
@@ -57,6 +51,7 @@ class ConverterFragment : Fragment() {
         this.converterViewModel.text.observe(viewLifecycleOwner, Observer {
             //textView.text = it
         })
+
         return root
     }
 
@@ -146,6 +141,7 @@ class ConverterFragment : Fragment() {
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
             }
 
             //Ogni volta che avviene un cambiamento del testo della EditText
@@ -154,11 +150,6 @@ class ConverterFragment : Fragment() {
                 val otherSymbols = DecimalFormatSymbols()
                 otherSymbols.decimalSeparator = '.'
                 otherSymbols.groupingSeparator = ','
-                val pattern = "###.##"
-                val df = DecimalFormat(pattern, otherSymbols)
-                //NumberFormat decimalFormat = new DecimalFormat(pattern, new DecimalFormatSymbols(Locale.US))
-                //val format = decimalFormat.format(123456789.123)
-                //val precision = DecimalFormat("#########,###")
                 val precision = DecimalFormat("#.##", otherSymbols) //Dichiarazione della precisione double
                 if (converter_et_fromconvert.text.length > 0) {
                     //Conversione tra GRAMMI e CUCCHIAI
@@ -229,17 +220,7 @@ class ConverterFragment : Fragment() {
         })
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if(savedInstanceState != null){
-            converter_tv_fromconvert.setText(savedInstanceState.getString("tv_fromconvert"))
-            converter_tv_toconvert.setText(savedInstanceState.getString("tv_toconvert"))
-            converter_et_fromconvert.setText(savedInstanceState.getString("et_fromconvert"))
-            converter_et_toconvert.setText(savedInstanceState.getString("et_toconvert"))
-        }
-    }
-
+    //salvataggio dello stato in modo da passare valori tra Portrait e Landscape
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -249,7 +230,26 @@ class ConverterFragment : Fragment() {
         outState.putString("et_toconvert", converter_et_toconvert.text.toString())
     }
 
-    private fun gr_spoonConvertor(value: Double, dir: Int): Double {
+    //assegnamento dello stato salvato in precedenza
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        //Se l'istanza salvata non è null, allora ripristino i valori salvati
+        if(savedInstanceState != null){
+            converter_tv_fromconvert.setText(savedInstanceState.getString("tv_fromconvert"))
+            converter_tv_toconvert.setText(savedInstanceState.getString("tv_toconvert"))
+            converter_et_fromconvert.setText(savedInstanceState.getString("et_fromconvert"))
+            converter_et_toconvert.setText(savedInstanceState.getString("et_toconvert"))
+        }
+    }
+
+
+    /*
+        FUNZIONI PUBLIC DI CONVERSIONE RAGGIUNGIBILI ANCHE DA ALTRI FRAGMENTS
+    */
+
+    //funzione di conversione da Grammi a Cucchiai, e viceversa
+    public fun gr_spoonConvertor(value: Double, dir: Int): Double {
         //conversione da Grammi a Cucchiai
         if(dir == FROM_GR_TO_SPOON){
             return value / 15
@@ -261,7 +261,8 @@ class ConverterFragment : Fragment() {
 
     }
 
-    private fun butter_oilConvertor(value: Double, dir: Int): Double {
+    //funzione di conversione da Burro a Olio, e viceversa
+    public fun butter_oilConvertor(value: Double, dir: Int): Double {
         //conversione da Burro a Olio
         if(dir == FROM_BUTTER_TO_OIL){
             return (value * 80) / 100
@@ -273,7 +274,8 @@ class ConverterFragment : Fragment() {
 
     }
 
-    private fun glass_mlConvertor(value: Double, dir: Int): Double {
+    //funzione di conversione da Bicchieri a Millilitri, e viceversa
+    public fun glass_mlConvertor(value: Double, dir: Int): Double {
         //conversione da Bicchiere a ML
         if(dir == FROM_GLASS_TO_ML){
             return value * 200
@@ -284,7 +286,8 @@ class ConverterFragment : Fragment() {
         }
     }
 
-    private fun yogurt_milkConvertor(value: Double, dir: Int): Double {
+    //funzione di conversione da Yogurt a Latte, e viceversa
+    public fun yogurt_milkConvertor(value: Double, dir: Int): Double {
         //conversione da Yogurt a Latte
         if(dir == FROM_YOGURT_TO_MILK){
             return (value * 80) / 100
