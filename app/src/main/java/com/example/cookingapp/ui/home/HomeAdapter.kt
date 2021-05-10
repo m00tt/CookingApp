@@ -5,12 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import com.example.cookingapp.R
+import com.example.cookingapp.Recipe
 
-class HomeAdapter(private val context: Context, private val data: Array<String>) : BaseAdapter() {
+class HomeAdapter(private val context: Context, private val data: ArrayList<Recipe>) : BaseAdapter(), Filterable {
+    private var mOriginalValues : ArrayList<Recipe>? = data
+    private var mDisplayedValues : ArrayList<Recipe>? = data
+
     override fun getCount(): Int {
-        return data.size
+        return mDisplayedValues!!.size
     }
 
     override fun getItem(position: Int): Any {
@@ -35,19 +41,63 @@ class HomeAdapter(private val context: Context, private val data: Array<String>)
             val durata = newView.findViewById<TextView>(R.id.textViewDurata)
             val portata= newView.findViewById<TextView>(R.id.textViewPortata)
 
-            //prendiamo i dati dalla fonte di informazioni
-            val recipes=data[position].split(" ")
-
-            //assegniamo i dati alle view appena recuperate
-            name.text=recipes[0]
-            difficoltà.text=recipes[1]
-            durata.text=recipes[2]+" minuti"
-            portata.text=recipes[3]
+            //assegno i dati alle view
+            name.text=mDisplayedValues?.get(position)?.name
+            difficoltà.text=mDisplayedValues?.get(position)?.difficoltà
+            durata.text= mDisplayedValues?.get(position)?.durata.toString()
+            portata.text=mDisplayedValues?.get(position)?.portata
 
         }
 
         return newView
 
+    }
+
+    //metodo che serve per la searchBar per filtrare i vari elementi
+    override fun getFilter(): Filter {
+        return object: Filter(){
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+
+                var cons=constraint
+                var FilteredArrList=ArrayList<Recipe>()
+                var results= FilterResults()
+
+                if(mOriginalValues==null)
+                    mOriginalValues=ArrayList<Recipe>(mDisplayedValues)
+                if (cons == null || cons.isEmpty()) {
+
+                    // set the Original result to return
+                    results.count = mOriginalValues!!.size
+                    results.values = mOriginalValues
+                } else {
+                    cons = cons.toString()
+                    for (i in mOriginalValues!!.indices) {
+                        val data = mOriginalValues!![i].name
+                        if (data.startsWith(cons.toString())) {
+                            FilteredArrList.add(
+                                Recipe(
+                                    mOriginalValues!![i].name,
+                                    mOriginalValues!![i].difficoltà,
+                                    mOriginalValues!![i].durata,
+                                    mOriginalValues!![i].portata
+                                )
+                            )
+                        }
+                    }
+                    // set the Filtered result to return
+                    results.count = FilteredArrList.size
+                    results.values = FilteredArrList
+                }
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+
+                mDisplayedValues=results?.values as ArrayList<Recipe>
+                notifyDataSetChanged()
+            }
+
+        }
     }
 
 }

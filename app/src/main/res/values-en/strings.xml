@@ -13,4 +13,5 @@
     <string name="converter_milk_text_title">Milk (ml)</string>
     <string name="converter_switch_button">Switch</string>
     <string name="converter_changeunits_button">Change units</string>
+    <string name="searchBar_text">Search…</string>
 </resources>
