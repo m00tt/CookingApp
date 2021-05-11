@@ -1,15 +1,15 @@
 package com.example.cookingapp.ui.home
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
+import android.widget.*
+import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
+import kotlinx.android.synthetic.main.row.view.*
 
 class HomeAdapter(private val context: Context, private val data: ArrayList<Recipe>) : BaseAdapter(), Filterable {
     private var mOriginalValues : ArrayList<Recipe>? = data
@@ -47,6 +47,21 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
             durata.text= mDisplayedValues?.get(position)?.durata.toString()
             portata.text=mDisplayedValues?.get(position)?.portata
 
+            //creo il istener per quando si clicca l'intera riga
+            newView.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    //Toast.makeText(context as MainActivity, "hai cliccato la riga $position", Toast.LENGTH_SHORT).show()
+
+                }
+            })
+
+            //creo il listener per quando si clicca il cuore
+            newView.heart.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    //Toast.makeText(context as MainActivity, "hai cliccato il cuore della ricetta ${mDisplayedValues?.get(position)?.name}", Toast.LENGTH_SHORT).show()
+
+                }
+            })
         }
 
         return newView
