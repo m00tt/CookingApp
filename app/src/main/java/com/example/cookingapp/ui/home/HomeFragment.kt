@@ -44,16 +44,18 @@ class HomeFragment : Fragment() {
         super.onStart()
 
         //aggiungo le ricette
-        mRecipeArrayList.add(Recipe("Ricetta 1", "Facile", "15 minuti", "Antipasto"))
-        mRecipeArrayList.add(Recipe("Ricetta 2", "Media", "20 minuti", "Primo"))
-        mRecipeArrayList.add(Recipe("Ricetta 3", "Facile", "10 minuti", "Secondo"))
-        mRecipeArrayList.add(Recipe("Ricetta 4", "Difficile", "30 minuti", "Dessert"))
-        mRecipeArrayList.add(Recipe("Ricetta 5", "Facile", "7 minuti", "Antipasto"))
-        mRecipeArrayList.add(Recipe("Ricetta 6", "Media", "25 minuti", "Primo"))
-        mRecipeArrayList.add(Recipe("Ricetta 7", "Facile", "15 minuti", "Dessert"))
-        mRecipeArrayList.add(Recipe("Ricetta 8", "Difficile", "60 minuti", "Antipasto"))
-        mRecipeArrayList.add(Recipe("Ricetta 9", "Facile", "7 minuti", "Secondo"))
-        mRecipeArrayList.add(Recipe("Ricetta 10", "Difficile", "40 minuti", "Antipasto"))
+        if(mRecipeArrayList.isEmpty()) {
+            mRecipeArrayList.add(Recipe("Ricetta 1", "Facile", "15 minuti", "Antipasto"))
+            mRecipeArrayList.add(Recipe("Ricetta 2", "Media", "20 minuti", "Primo"))
+            mRecipeArrayList.add(Recipe("Ricetta 3", "Facile", "10 minuti", "Secondo"))
+            mRecipeArrayList.add(Recipe("Ricetta 4", "Difficile", "30 minuti", "Dessert"))
+            mRecipeArrayList.add(Recipe("Ricetta 5", "Facile", "7 minuti", "Antipasto"))
+            mRecipeArrayList.add(Recipe("Ricetta 6", "Media", "25 minuti", "Primo"))
+            mRecipeArrayList.add(Recipe("Ricetta 7", "Facile", "15 minuti", "Dessert"))
+            mRecipeArrayList.add(Recipe("Ricetta 8", "Difficile", "60 minuti", "Antipasto"))
+            mRecipeArrayList.add(Recipe("Ricetta 9", "Facile", "7 minuti", "Secondo"))
+            mRecipeArrayList.add(Recipe("Ricetta 10", "Difficile", "40 minuti", "Antipasto"))
+        }
 
         //carico le ricette nella listView
         adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
