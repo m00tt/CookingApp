@@ -80,6 +80,7 @@
             android:translationY="110dp"
             app:fabSize="auto"
             app:maxImageSize="80dp"
-            app:srcCompat="@mipmap/ic_pencil_foreground" />
+            app:srcCompat="@mipmap/ic_pencil_foreground"
+            />
     </LinearLayout>
 </ScrollView>

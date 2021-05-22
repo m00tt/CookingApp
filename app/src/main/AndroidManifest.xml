@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/logo_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CookingApp">
+        <activity android:name=".RecipeActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

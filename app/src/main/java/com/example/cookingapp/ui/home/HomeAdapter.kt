@@ -1,14 +1,18 @@
 package com.example.cookingapp.ui.home
 
+import android.app.Activity
 import android.content.Context
-import android.graphics.Color
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
+import com.example.cookingapp.RecipeActivity
+import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.android.synthetic.main.row.view.*
 
 class HomeAdapter(private val context: Context, private val data: ArrayList<Recipe>) : BaseAdapter(), Filterable {
@@ -51,7 +55,12 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
             newView.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     //Toast.makeText(context as MainActivity, "hai cliccato la riga $position", Toast.LENGTH_SHORT).show()
-
+                    //creazione fragment ricetta singola
+                    val contesto = context as MainActivity
+                    val intent = Intent(contesto, RecipeActivity::class.java)
+                    intent.putExtra("recipe_data",name.text.toString())
+                    intent.putExtra("chiamante","home")
+                    contesto.startActivity(intent)
                 }
             })
 
@@ -90,12 +99,12 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                         val data = mOriginalValues!![i].name
                         if (data.startsWith(cons.toString())) {
                             FilteredArrList.add(
-                                Recipe(
-                                    mOriginalValues!![i].name,
-                                    mOriginalValues!![i].difficoltà,
-                                    mOriginalValues!![i].durata,
-                                    mOriginalValues!![i].portata
-                                )
+                                    Recipe(
+                                            mOriginalValues!![i].name,
+                                            mOriginalValues!![i].difficoltà,
+                                            mOriginalValues!![i].durata,
+                                            mOriginalValues!![i].portata
+                                    )
                             )
                         }
                     }

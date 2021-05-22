@@ -1,5 +1,6 @@
 package com.example.cookingapp.ui.recipe
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_recipe.*
 class RecipeFragment : Fragment() {
 
     private lateinit var recipeViewModel: RecipeViewModel
+    private var editable = false
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -34,10 +36,24 @@ class RecipeFragment : Fragment() {
         })
         fab_edit.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                editRecipe()
+                if(!editable) {
+                    editRecipe()
+                    editable=true
+                }
+                else
+                {
+                    saveRecipe()
+                    editable = false
+                }
             }
         })
         return root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().title = "Ricetta singola"
     }
 
     fun editRecipe() {
