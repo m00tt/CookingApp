@@ -14,4 +14,16 @@
     <string name="converter_switch_button">Switch</string>
     <string name="converter_changeunits_button">Change units</string>
     <string name="searchBar_text">Search…</string>
+    <string name="popup_difficoltà">Difficulty</string>
+    <string name="popup_facile">Easy</string>
+    <string name="popup_medio">Medium</string>
+    <string name="popup_difficile">Hard</string>
+    <string name="popup_portata">Dish</string>
+    <string name="popup_antipasto">Starter</string>
+    <string name="popup_primo">First Course</string>
+    <string name="popup_secondo">Main Course</string>
+    <string name="popup_dessert">Dessert</string>
+    <string name="popup_veloce">Fast</string>
+    <string name="popup_durata">Time</string>
+    <string name="popup_lunga">Slow</string>
 </resources>

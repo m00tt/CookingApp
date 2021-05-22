@@ -19,4 +19,16 @@
     <string name="converter_hint" translatable="false">0.0</string>
     <string name="converter_switch_button">Inverti</string>
     <string name="converter_changeunits_button">Cambia unità</string>
+    <string name="popup_difficoltà">Difficoltà</string>
+    <string name="popup_facile">Facile</string>
+    <string name="popup_medio">Media</string>
+    <string name="popup_difficile">Difficile</string>
+    <string name="popup_portata">Portata</string>
+    <string name="popup_antipasto">Antipasto</string>
+    <string name="popup_primo">Primo</string>
+    <string name="popup_secondo">Secondo</string>
+    <string name="popup_dessert">Dessert</string>
+    <string name="popup_durata">Durata</string>
+    <string name="popup_veloce">Veloce</string>
+    <string name="popup_lunga">Lunga</string>
 </resources>

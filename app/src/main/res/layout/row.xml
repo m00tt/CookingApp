@@ -118,13 +118,13 @@
     <ImageView
         android:id="@+id/heart"
         android:layout_width="33dp"
-        android:layout_height="38dp"
+        android:layout_height="23dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="15dp"
         android:layout_weight="0"
-        app:srcCompat="@drawable/heart" />
+        app:srcCompat="@drawable/heart"
+        android:layout_marginEnd="15dp" />
 
 
 </LinearLayout>

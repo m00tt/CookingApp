@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,7 +19,7 @@ import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     //private lateinit var homeViewModel: HomeViewModel
     private val mRecipeArrayList = ArrayList<Recipe>()
@@ -72,6 +74,27 @@ class HomeFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable) {}
         })
+
+        //aggiungo il listener all'imageButton per il filtro
+        img_filter.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val popup = PopupMenu(context as MainActivity,v)
+                popup.setOnMenuItemClickListener(this@HomeFragment)
+                popup.inflate(R.menu.popup_menu)
+                popup.show()
+            }
+        })
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        //TODO: implementare funzionamento del filtro
+        when (item?.itemId){
+            R.id.Facile -> return true
+            R.id.Media -> return true
+            R.id.Difficile -> return true
+            //R.id.Dessert -> return true
+            else -> return false
+        }
     }
 
 }

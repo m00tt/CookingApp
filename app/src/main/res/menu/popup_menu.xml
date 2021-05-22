@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/Difficoltà"
+        android:title="@string/popup_difficoltà">
+        <menu>
+            <item android:id="@+id/Facile"
+                android:title="@string/popup_facile"/>
+            <item android:id="@+id/Media"
+                android:title="@string/popup_medio"/>
+            <item android:id="@+id/Difficile"
+                android:title="@string/popup_difficile"/>
+        </menu>
+    </item>
+    <item android:id="@+id/Portata"
+        android:title="@string/popup_portata">
+        <menu>
+            <item android:id="@+id/Antipasto"
+                android:title="@string/popup_antipasto"/>
+            <item android:id="@+id/Primo"
+                android:title="@string/popup_primo"/>
+            <item android:id="@+id/Secondo"
+                android:title="@string/popup_secondo"/>
+            <item android:id="@+id/Dessert"
+                android:title="@string/popup_dessert"/>
+        </menu>
+    </item>
+    <item android:id="@+id/Durata"
+        android:title="@string/popup_durata">
+        <menu>
+            <item android:id="@+id/Veloce"
+                android:title="@string/popup_veloce"/>
+            <item android:id="@+id/Media_durata"
+                android:title="@string/popup_medio"/>
+            <item android:id="@+id/Lunga"
+                android:title="@string/popup_lunga"/>
+        </menu>
+    </item>
+
+</menu>
