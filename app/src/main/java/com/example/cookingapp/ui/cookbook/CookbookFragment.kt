@@ -12,8 +12,6 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.R
-import com.example.cookingapp.ui.recipe.RecipeFragment
-import kotlinx.android.synthetic.main.fragment_cookbook.*
 
 
 class CookbookFragment : Fragment() {
