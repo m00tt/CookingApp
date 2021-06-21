@@ -1,7 +1,11 @@
 package com.example.cookingapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,6 +15,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cookingapp.ui.cookbook.CookbookFragment
 import com.example.cookingapp.ui.home.HomeFragment
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_shoplist.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,12 +26,20 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        /*val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_cookbook, R.id.navigation_shoplist, R.id.navigation_converter))
-        setupActionBarWithNavController(navController, appBarConfiguration)*/
         navView.setupWithNavController(navController)
 
     }
+
+    fun onAddField(v: View) {
+        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val rowView: View = inflater.inflate(R.layout.row_shoplist, container, false)
+        // Add the new row before the add field button.
+        parent_lineal_layout.addView(rowView, parent_lineal_layout.childCount - 2)
+    }
+
+    fun onDelete(v: View) {
+        //if(parent_lineal_layout.childCount > 2)
+            parent_lineal_layout.removeView(v.parent as View)
+    }
+
 }

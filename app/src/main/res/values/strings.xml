@@ -31,4 +31,17 @@
     <string name="popup_durata">Durata</string>
     <string name="popup_veloce">Veloce</string>
     <string name="popup_lunga">Lunga</string>
+    <string-array name="shoplist_units">
+        <item>ML</item>
+        <item>CL</item>
+        <item>L</item>
+        <item>GR</item>
+        <item>HG</item>
+        <item>KG</item>
+        <item>Qty</item>
+    </string-array>
+    <string name="shoplist_icon_alt" translatable="false">Delete icon</string>
+    <string name="shoplist_product_hint">Prodotto</string>
+    <string name="shoplist_plus">Aggiungi</string>
+    <string name="shoplist_fab_share_alt">Condividi</string>
 </resources>
