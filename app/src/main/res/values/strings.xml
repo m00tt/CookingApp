@@ -44,4 +44,7 @@
     <string name="shoplist_product_hint">Prodotto</string>
     <string name="shoplist_plus">Aggiungi</string>
     <string name="shoplist_fab_share_alt">Condividi</string>
+    <string name="shopllist_fab_hint">Inserisci almeno un prodotto</string>
+    <string name="shoplist_compiler_check">Compila tutti i campi</string>
+    <string name="shoplist_separator_preposition">di</string>
 </resources>

@@ -15,71 +15,7 @@
         android:weightSum="100"
         tools:context=".ui.shoplist.ShoplistFragment">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:layout_weight="1">
 
-            <EditText
-                android:id="@+id/et_shoplist_product"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="2.5dp"
-                android:layout_marginRight="2.5dp"
-                android:layout_weight="55"
-                android:ems="10"
-                android:hint="@string/shoplist_product_hint"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/et_shoplist_qty"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="2.5dp"
-                android:layout_marginLeft="2.5dp"
-                android:layout_marginEnd="2.5dp"
-                android:layout_marginRight="2.5dp"
-                android:layout_weight="25"
-                android:ems="3"
-                android:hint="@string/converter_hint"
-                android:importantForAutofill="no"
-                android:inputType="numberDecimal" />
-
-            <Spinner
-                android:id="@+id/spin_shoplist_units"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="2.5dp"
-                android:layout_marginLeft="2.5dp"
-                android:layout_marginEnd="2.5dp"
-                android:layout_marginRight="2.5dp"
-                android:layout_weight="0.2"
-                android:entries="@array/shoplist_units" />
-
-            <ImageView
-                android:id="@+id/iv_shoplist_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="2.5dp"
-                android:layout_marginLeft="2.5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="5"
-                android:contentDescription="@string/shoplist_icon_alt"
-                android:onClick="onDelete"
-                app:srcCompat="@android:drawable/ic_menu_delete"
-                tools:ignore="OnClick" />
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/btn_shoplist_add"
@@ -105,6 +41,7 @@
             android:clickable="true"
             android:contentDescription="@string/shoplist_fab_share_alt"
             android:focusable="true"
+            android:onClick="getShoplistItems"
             android:src="@android:drawable/ic_menu_share" />
 
     </LinearLayout>
