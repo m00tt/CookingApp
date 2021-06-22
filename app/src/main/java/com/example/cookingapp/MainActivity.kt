@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            Toast.makeText(this, ret_str, Toast.LENGTH_SHORT).show()
             if(go) {
                 val sendIntent = Intent()
                 sendIntent.action = Intent.ACTION_SEND
