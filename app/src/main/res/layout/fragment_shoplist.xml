@@ -16,18 +16,15 @@
         tools:context=".ui.shoplist.ShoplistFragment">
 
 
-
         <Button
             android:id="@+id/btn_shoplist_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:onClick="onAddField"
-            android:text="@string/shoplist_plus"
-            tools:ignore="OnClick" />
+            android:text="@string/shoplist_plus" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton2"
+            android:id="@+id/shoplist_fab_share"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -41,7 +38,6 @@
             android:clickable="true"
             android:contentDescription="@string/shoplist_fab_share_alt"
             android:focusable="true"
-            android:onClick="getShoplistItems"
             android:src="@android:drawable/ic_menu_share" />
 
     </LinearLayout>
