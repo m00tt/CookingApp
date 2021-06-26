@@ -47,4 +47,7 @@
     <string name="signin_button">Sign-in</string>
     <string name="login_button" translatable="false">Login</string>
     <string name="signin_login_request"><u>Are you already a member? Login</u></string>
+    <string name="label_ingredienti">Ingredients:</string>
+    <string name="recipe_ingredient_hint">Ingredient</string>
+    <string name="recipe_ingredient_qty_hint">0</string>
 </resources>

@@ -11,14 +11,16 @@
         android:theme="@style/Theme.CookingApp">
         <activity android:name=".SigninActivity"></activity>
         <activity android:name=".LoginActivity">
+
+        </activity>
+        <activity android:name=".RecipeActivity" />
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeActivity" />
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

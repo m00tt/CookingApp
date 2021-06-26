@@ -2,11 +2,19 @@ package com.example.cookingapp
 
 import android.app.Activity
 import android.graphics.Color
+import android.view.LayoutInflater
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.content.res.Configuration
 import android.view.View
+import androidx.core.view.get
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.fragment_shoplist.*
+import kotlinx.android.synthetic.main.row_shoplist.*
+import kotlinx.android.synthetic.main.row_shoplist.view.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_recipe.*
@@ -40,6 +48,9 @@ class RecipeActivity : AppCompatActivity() {
         et_portata.isEnabled = false
         et_preparazione.isEnabled = false
 
+        //btn add ingredient not visible first
+        btn_ingredient_add.visibility = View.INVISIBLE
+
         val nome = intent.getStringExtra("recipe_data")
         et_recipe_name.setText(nome)
     }
@@ -53,7 +64,11 @@ class RecipeActivity : AppCompatActivity() {
                 else
                     saveRecipe()
             }
+
         })
+        btn_ingredient_add.setOnClickListener {
+            onAddIngredient()
+        }
     }
 
     fun editRecipe() {
@@ -75,6 +90,20 @@ class RecipeActivity : AppCompatActivity() {
 
         Log.v("editRecipe","editRecipe")
         editable = true
+
+        //set btn add ingredient visible
+        btn_ingredient_add.visibility = View.VISIBLE
+
+        var childCountParent = linear_ingredienti.childCount
+        for ((index) in (1 until childCountParent).withIndex()) {
+            if (linear_ingredienti[index].et_shoplist_product != null && linear_ingredienti[index].et_shoplist_qty != null && linear_ingredienti[index].spin_shoplist_units != null && linear_ingredienti[index].iv_shoplist_delete != null) {
+                linear_ingredienti[index].et_shoplist_product.isEnabled = true
+                linear_ingredienti[index].et_shoplist_qty.isEnabled = true
+                linear_ingredienti[index].spin_shoplist_units.isEnabled = true
+                linear_ingredienti[index].iv_shoplist_delete.isEnabled = true
+            }
+        }
+
         fab_edit.setImageResource(R.mipmap.ic_save_foreground)
     }
     fun saveRecipe(){
@@ -103,6 +132,26 @@ class RecipeActivity : AppCompatActivity() {
 
         Log.v("saveRecipe","SaveRecipe")
         editable = false
+
+        //set btn add ingredient not visible
+        btn_ingredient_add.visibility = View.INVISIBLE
+
+        var childCountParent = linear_ingredienti.childCount
+        for ((index) in (1 until childCountParent).withIndex()) {
+            if (linear_ingredienti[index].et_shoplist_product != null && linear_ingredienti[index].et_shoplist_qty != null && linear_ingredienti[index].spin_shoplist_units != null && linear_ingredienti[index].iv_shoplist_delete != null) {
+                linear_ingredienti[index].et_shoplist_product.isEnabled = false
+                linear_ingredienti[index].et_shoplist_qty.isEnabled = false
+                linear_ingredienti[index].spin_shoplist_units.isEnabled = false
+                linear_ingredienti[index].iv_shoplist_delete.isEnabled = false
+            }
+
+            /*
+            et_shoplist_product.isEnabled = false
+            et_shoplist_qty.isEnabled = false
+            spin_shoplist_units.isEnabled = false
+            iv_shoplist_delete.isEnabled = false*/
+        }
+
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
     }
     fun setPrefer(view: View)
@@ -114,6 +163,16 @@ class RecipeActivity : AppCompatActivity() {
         else {
             img_heart.setImageResource(R.drawable.heart)
             prefer = false
+        }
+    }
+
+    fun onAddIngredient() {
+        val inflater = this.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val toInflate: View = inflater.inflate(R.layout.row_shoplist, linear_ingredienti, false)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            linear_ingredienti.addView(toInflate, linear_ingredienti.childCount)
+        } else {
+            linear_ingredienti.addView(toInflate, linear_ingredienti.childCount - 1)
         }
     }
 }
