@@ -31,6 +31,7 @@
     <string name="popup_durata">Durata</string>
     <string name="popup_veloce">Veloce</string>
     <string name="popup_lunga">Lunga</string>
+    <string name="popup_tutte">Tutte le ricette</string>
     <string-array name="shoplist_units">
         <item>ML</item>
         <item>CL</item>

@@ -3,21 +3,15 @@ package com.example.cookingapp.ui.home
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.view.*
+import android.view.ContextMenu.ContextMenuInfo
+import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import kotlinx.android.synthetic.main.fragment_home.*
+
 
 class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
@@ -82,17 +76,70 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 popup.setOnMenuItemClickListener(this@HomeFragment)
                 popup.inflate(R.menu.popup_menu)
                 popup.show()
+
             }
         })
     }
 
+    //metodo che gestisce l'evento click degli elementi del popup_menu
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        //TODO: implementare funzionamento del filtro
         when (item?.itemId){
-            R.id.Facile -> return true
-            R.id.Media -> return true
-            R.id.Difficile -> return true
-            //R.id.Dessert -> return true
+            //gestione difficoltà
+            R.id.Facile -> {
+                //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Facile", Toast.LENGTH_SHORT).show()
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Facile")
+                return true}
+            R.id.Media -> {
+                //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Media", Toast.LENGTH_SHORT).show()
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Media")
+                return true}
+            R.id.Difficile -> {
+                //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Difficile", Toast.LENGTH_SHORT).show()
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Difficile")
+                return true}
+
+            //gestione durata
+            R.id.Veloce -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Veloce")
+                return true}
+            R.id.Media_durata -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Media_durata")
+                return true}
+            R.id.Lunga -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Lunga")
+                return true}
+
+            //gestione portata
+            R.id.Antipasto -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Antipasto")
+                return true}
+            R.id.Primo -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Primo")
+                return true}
+            R.id.Secondo -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Secondo")
+                return true}
+            R.id.Dessert -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Dessert")
+                return true}
+
+            //tutte le ricette
+            R.id.Tutte -> {
+                searchBar.text.clear()
+                adapter1?.filter?.filter("Tutte")
+                return true
+            }
+
             else -> return false
         }
     }
