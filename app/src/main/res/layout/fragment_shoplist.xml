@@ -16,6 +16,19 @@
         tools:context=".ui.shoplist.ShoplistFragment">
 
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:text="@string/add_shoplist_title"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
+
         <Button
             android:id="@+id/btn_shoplist_add"
             android:layout_width="wrap_content"

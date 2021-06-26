@@ -50,5 +50,9 @@
     <string name="shoplist_separator_preposition">di</string>
     <string name="login_email_hint" translatable="false">Email</string>
     <string name="login_password_hint" translatable="false">Password</string>
-    <string name="login_button">Login</string>
+    <string name="login_button">Accedi</string>
+    <string name="login_signin_request"><u>Oppure iscriviti</u></string>
+    <string name="add_shoplist_title">Componi la tua lista della spesa</string>
+    <string name="signin_button">Iscriviti</string>
+    <string name="signin_login_request"><u>Sei già iscritto? Accedi</u></string>
 </resources>

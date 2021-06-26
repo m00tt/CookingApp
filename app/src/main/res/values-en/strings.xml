@@ -42,5 +42,9 @@
     <string name="shoplist_compiler_check">Fill in all fields</string>
     <string name="shoplist_separator_preposition">of</string>
     <string name="popup_tutte">All recipes</string>
-    <string name="login_button" translatable="false">Entra</string>
+    <string name="login_signin_request"><u>Or sign-in</u></string>
+    <string name="add_shoplist_title">Compose your shopping list</string>
+    <string name="signin_button">Sign-in</string>
+    <string name="login_button" translatable="false">Login</string>
+    <string name="signin_login_request"><u>Are you already a member? Login</u></string>
 </resources>
