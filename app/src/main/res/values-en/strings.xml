@@ -41,4 +41,5 @@
     <string name="shopllist_fab_hint">" Enter at least one product"</string>
     <string name="shoplist_compiler_check">Fill in all fields</string>
     <string name="shoplist_separator_preposition">of</string>
+    <string name="login_button" translatable="false">Entra</string>
 </resources>

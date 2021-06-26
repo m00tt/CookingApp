@@ -47,4 +47,7 @@
     <string name="shopllist_fab_hint">Inserisci almeno un prodotto</string>
     <string name="shoplist_compiler_check">Compila tutti i campi</string>
     <string name="shoplist_separator_preposition">di</string>
+    <string name="login_email_hint" translatable="false">Email</string>
+    <string name="login_password_hint" translatable="false">Password</string>
+    <string name="login_button">Login</string>
 </resources>
