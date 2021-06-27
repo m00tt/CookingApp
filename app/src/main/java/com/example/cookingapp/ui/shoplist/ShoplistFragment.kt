@@ -43,10 +43,16 @@ class ShoplistFragment : Fragment() {
         shoplist_fab_share.setOnClickListener {
             var go = false
             var retstr = ""
-            val itemcount = parent_lineal_layout.childCount - 2
+            var itemcount = 0
             var index = 0
+            if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+                itemcount = parent_lineal_layout.childCount
+            }
+            else{
+                itemcount = parent_lineal_layout.childCount - 3
+                index = 1
+            }
             if (itemcount >= 1) {
-                retstr = ""
                 for (item in 0 until itemcount) {
                     if (parent_lineal_layout.getChildAt(index).et_shoplist_product != null) {
                         if (parent_lineal_layout[index].et_shoplist_product.text.isEmpty() || parent_lineal_layout[index].et_shoplist_qty.text.isEmpty()) {
