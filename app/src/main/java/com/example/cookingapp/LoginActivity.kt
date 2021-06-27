@@ -39,14 +39,14 @@ class LoginActivity : AppCompatActivity() {
 
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                 if(it.isSuccessful){
-                    Toast.makeText(this, "${resources.getText(R.string.welcome_message)}${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
                 else{
                     Toast.makeText(this, "${resources.getText(R.string.login_cred_error)}", Toast.LENGTH_SHORT).show()
-                    progress_login.visibility = View.INVISIBLE
+                    progress_login.visibility = View.GONE
                 }
             }
 
@@ -59,6 +59,7 @@ class LoginActivity : AppCompatActivity() {
         tv_login_signin.setOnClickListener {
             val intent = Intent(this, SigninActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
     }

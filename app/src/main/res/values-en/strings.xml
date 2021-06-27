@@ -50,9 +50,10 @@
     <string name="recipe_ingredient_hint">Ingredient</string>
     <string name="recipe_ingredient_qty_hint">0</string>
     <string name="signin_compile_error">" The data entered is not correct, please check"</string>
-    <string name="signin_password_length_error">" The password must be at least 8 characters long"</string>
+    <string name="signin_password_error">The password must have following requests:\nIt contains at least 8 characters and at most 20 characters.\nIt contains at least one digit.\nIt contains at least one upper case character.\nIt contains at least one lower case character.\nIt contains at least one special character which includes !@#$%*()-+=^.</string>
     <string name="welcome_message">"Welcome to "</string>
     <string name="login_button">Login</string>
     <string name="signin_error_message">Something went wrong, retry</string>
     <string name="login_cred_error">" Wrong email and / or password"</string>
+    <string name="signin_invalid_email">The email is invalid</string>
 </resources>
