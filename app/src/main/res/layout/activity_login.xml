@@ -9,7 +9,7 @@
     tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/iv_signin_logo"
+        android:id="@+id/iv_login_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -18,7 +18,7 @@
         app:srcCompat="@mipmap/logo_app_round" />
 
     <TextView
-        android:id="@+id/tv_signin_title"
+        android:id="@+id/tv_login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -37,7 +37,7 @@
         android:text="@string/login_button" />
 
     <EditText
-        android:id="@+id/et_signin_email"
+        android:id="@+id/et_login_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -49,7 +49,7 @@
         android:importantForAutofill="no" />
 
     <EditText
-        android:id="@+id/et_signin_password"
+        android:id="@+id/et_login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

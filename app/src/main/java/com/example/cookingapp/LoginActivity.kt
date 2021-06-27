@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_login.et_signin_email
-import kotlinx.android.synthetic.main.activity_login.et_signin_password
+import kotlinx.android.synthetic.main.activity_login.et_login_email
+import kotlinx.android.synthetic.main.activity_login.et_login_password
 import kotlinx.android.synthetic.main.activity_signin.*
 
 class LoginActivity : AppCompatActivity() {
@@ -26,12 +26,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btn_login.setOnClickListener {
-            val email:String = et_signin_email.text.toString().trim()
-            val password:String = et_signin_password.text.toString()
+            val email:String = et_login_email.text.toString().trim()
+            val password:String = et_login_password.text.toString()
 
             if (email.isEmpty() || password.isEmpty()){
-                et_signin_email.setError(resources.getString(R.string.signin_compile_error))
-                et_signin_password.setError(resources.getString(R.string.signin_compile_error))
+                et_login_email.setError(resources.getString(R.string.signin_compile_error))
+                et_login_password.setError(resources.getString(R.string.signin_compile_error))
                 return@setOnClickListener
             }
 
