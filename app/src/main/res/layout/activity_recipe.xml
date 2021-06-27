@@ -24,13 +24,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="35">
+                android:layout_weight="70"
+                android:minHeight="250dp">
 
 
                 <ImageView
                     android:id="@+id/img_recipe"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="250dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +95,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text="@string/label_recipe_difficolta"
                         android:textColor="@color/scritte" />
                 </LinearLayout>
                 <LinearLayout
@@ -116,7 +118,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text="@string/label_header_preparazione"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
                 <LinearLayout
@@ -139,7 +141,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text="@string/label_header_cottura"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
 
@@ -165,7 +167,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text="@string/label_header_dosi"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
                 <LinearLayout
@@ -188,7 +190,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text="@string/label_header_portata"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
                 <LinearLayout
@@ -212,6 +214,47 @@
                         android:layout_gravity="center_horizontal"
                         android:text="@string/shoplist_plus" />
 
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_preparazione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_preparazione"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/et_preparazione_descrizione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/inserimento_preparazione_hint" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_conservazione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_conservazione"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/et_conservazione"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/inserimento_conservazione" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -64,4 +64,13 @@
     <string name="signin_error_message">Qualcosa è andato storto, riprova</string>
     <string name="login_cred_error">Email e/o password errate</string>
     <string name="signin_invalid_email">L\'email non è valida</string>
+    <string name="label_preparazione">Preparazione:</string>
+    <string name="label_conservazione">Conservazione:</string>
+    <string name="inserimento_preparazione_hint">Inserisci la preparazione</string>
+    <string name="inserimento_conservazione">Inserisci il metodo di conservazione</string>
+    <string name="label_recipe_difficolta">Difficoltà</string>
+    <string name="label_header_preparazione">Preparazione</string>
+    <string name="label_header_cottura">Cottura</string>
+    <string name="label_header_dosi">Dosi</string>
+    <string name="label_header_portata">Portata</string>
 </resources>

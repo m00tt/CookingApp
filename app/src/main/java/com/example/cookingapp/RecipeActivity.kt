@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.content.res.Configuration
+import android.text.Editable
 import android.view.View
 import androidx.core.view.get
 import androidx.core.view.isInvisible
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.row_shoplist.view.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_recipe.*
+import kotlinx.android.synthetic.main.row_ingredient.*
+import kotlinx.android.synthetic.main.row_ingredient.view.*
 
 class RecipeActivity : AppCompatActivity() {
     var editable = false
@@ -26,8 +29,8 @@ class RecipeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
         val chiamante = intent.getStringExtra("chiamante")
-        if(chiamante == "home"){
-            Log.v("chiamante","homepage")
+        if (chiamante == "home") {
+            Log.v("chiamante", "homepage")
             //fab_edit.hide()
         }
 
@@ -39,6 +42,20 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         et_cottura.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
 
+
+        if (et_recipe_ingredient != null && et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
+            et_recipe_ingredient.background.setColorFilter(
+                Color.TRANSPARENT,
+                PorterDuff.Mode.SRC_IN
+            )
+            et_ingredient_qty.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+            et_preparazione_descrizione.background.setColorFilter(
+                Color.TRANSPARENT,
+                PorterDuff.Mode.SRC_IN
+            )
+            et_conservazione.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+        }
         //set editText not editable first
         et_recipe_name.isEnabled = false
         et_recipe_name.setTextColor(Color.BLACK)
@@ -47,6 +64,9 @@ class RecipeActivity : AppCompatActivity() {
         et_dosi.isEnabled = false
         et_portata.isEnabled = false
         et_preparazione.isEnabled = false
+
+        et_preparazione_descrizione.isEnabled = false
+        et_conservazione.isEnabled = false
 
         //btn add ingredient not visible first
         btn_ingredient_add.visibility = View.INVISIBLE
@@ -59,7 +79,7 @@ class RecipeActivity : AppCompatActivity() {
         super.onStart()
         fab_edit.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                if(!editable)
+                if (!editable)
                     editRecipe()
                 else
                     saveRecipe()
@@ -80,6 +100,17 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
         et_cottura.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
 
+        if (et_recipe_ingredient != null && et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
+            et_recipe_ingredient.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+            et_ingredient_qty.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+
+            et_preparazione_descrizione.background.setColorFilter(
+                Color.BLACK,
+                PorterDuff.Mode.SRC_IN
+            )
+            et_conservazione.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+
+        }
         //set editText editable
         et_recipe_name.isEnabled = true
         et_preparazione.isEnabled = true
@@ -88,7 +119,11 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.isEnabled = true
         et_cottura.isEnabled = true
 
-        Log.v("editRecipe","editRecipe")
+
+        et_preparazione_descrizione.isEnabled = true
+        et_conservazione.isEnabled = true
+
+        Log.v("editRecipe", "editRecipe")
         editable = true
 
         //set btn add ingredient visible
@@ -96,17 +131,18 @@ class RecipeActivity : AppCompatActivity() {
 
         var childCountParent = linear_ingredienti.childCount
         for ((index) in (1 until childCountParent).withIndex()) {
-            if (linear_ingredienti[index].et_shoplist_product != null && linear_ingredienti[index].et_shoplist_qty != null && linear_ingredienti[index].spin_shoplist_units != null && linear_ingredienti[index].iv_shoplist_delete != null) {
-                linear_ingredienti[index].et_shoplist_product.isEnabled = true
-                linear_ingredienti[index].et_shoplist_qty.isEnabled = true
-                linear_ingredienti[index].spin_shoplist_units.isEnabled = true
-                linear_ingredienti[index].iv_shoplist_delete.isEnabled = true
+            if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && linear_ingredienti[index].spin_ingredient_units != null && linear_ingredienti[index].iv_ingredient_delete != null) {
+                linear_ingredienti[index].et_recipe_ingredient.isEnabled = true
+                linear_ingredienti[index].et_ingredient_qty.isEnabled = true
+                linear_ingredienti[index].spin_ingredient_units.isEnabled = true
+                linear_ingredienti[index].iv_ingredient_delete.isEnabled = true
             }
         }
 
         fab_edit.setImageResource(R.mipmap.ic_save_foreground)
     }
-    fun saveRecipe(){
+
+    fun saveRecipe() {
         //remove black underline
         et_recipe_name.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         et_preparazione.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
@@ -115,6 +151,20 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         et_cottura.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
 
+        if (et_recipe_ingredient != null && et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
+            et_recipe_ingredient.background.setColorFilter(
+                Color.TRANSPARENT,
+                PorterDuff.Mode.SRC_IN
+            )
+            et_ingredient_qty.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+            et_preparazione_descrizione.background.setColorFilter(
+                Color.TRANSPARENT,
+                PorterDuff.Mode.SRC_IN
+            )
+            et_conservazione.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+        }
         //set editText not editable
         et_recipe_name.isEnabled = false
         et_preparazione.isEnabled = false
@@ -123,6 +173,10 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.isEnabled = false
         et_cottura.isEnabled = false
 
+
+        et_preparazione_descrizione.isEnabled = false
+        et_conservazione.isEnabled = false
+
         et_recipe_name.setTextColor(Color.BLACK)
         et_preparazione.setTextColor(resources.getColor(R.color.scritte))
         et_portata.setTextColor(resources.getColor(R.color.scritte))
@@ -130,7 +184,7 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.setTextColor(resources.getColor(R.color.scritte))
         et_cottura.setTextColor(resources.getColor(R.color.scritte))
 
-        Log.v("saveRecipe","SaveRecipe")
+        Log.v("saveRecipe", "SaveRecipe")
         editable = false
 
         //set btn add ingredient not visible
@@ -138,11 +192,11 @@ class RecipeActivity : AppCompatActivity() {
 
         var childCountParent = linear_ingredienti.childCount
         for ((index) in (1 until childCountParent).withIndex()) {
-            if (linear_ingredienti[index].et_shoplist_product != null && linear_ingredienti[index].et_shoplist_qty != null && linear_ingredienti[index].spin_shoplist_units != null && linear_ingredienti[index].iv_shoplist_delete != null) {
-                linear_ingredienti[index].et_shoplist_product.isEnabled = false
-                linear_ingredienti[index].et_shoplist_qty.isEnabled = false
-                linear_ingredienti[index].spin_shoplist_units.isEnabled = false
-                linear_ingredienti[index].iv_shoplist_delete.isEnabled = false
+            if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && linear_ingredienti[index].spin_ingredient_units != null && linear_ingredienti[index].iv_ingredient_delete != null) {
+                linear_ingredienti[index].et_recipe_ingredient.isEnabled = false
+                linear_ingredienti[index].et_ingredient_qty.isEnabled = false
+                linear_ingredienti[index].spin_ingredient_units.isEnabled = false
+                linear_ingredienti[index].iv_ingredient_delete.isEnabled = false
             }
 
             /*
@@ -154,13 +208,12 @@ class RecipeActivity : AppCompatActivity() {
 
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
     }
-    fun setPrefer(view: View)
-    {
-        if(!prefer) {
+
+    fun setPrefer(view: View) {
+        if (!prefer) {
             img_heart.setImageResource(R.drawable.heart_red)
             prefer = true
-        }
-        else {
+        } else {
             img_heart.setImageResource(R.drawable.heart)
             prefer = false
         }
@@ -168,11 +221,14 @@ class RecipeActivity : AppCompatActivity() {
 
     fun onAddIngredient() {
         val inflater = this.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val toInflate: View = inflater.inflate(R.layout.row_shoplist, linear_ingredienti, false)
+        val toInflate: View = inflater.inflate(R.layout.row_ingredient, linear_ingredienti, false)
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             linear_ingredienti.addView(toInflate, linear_ingredienti.childCount)
         } else {
             linear_ingredienti.addView(toInflate, linear_ingredienti.childCount - 1)
         }
+    }
+    fun onDeleteIngredient(v: View){
+        linear_ingredienti.removeView(v.parent as View)
     }
 }
