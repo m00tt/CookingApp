@@ -16,22 +16,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/btn_logout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                android:layout_weight="1"/>
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                android:layout_marginLeft="10dp"
+                app:srcCompat="@drawable/abc_vector_test"
+                android:background="@color/giallo"/>
 
             <ImageView
+                android:layout_marginRight="30dp"
                 android:id="@+id/logo_scritta"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 app:srcCompat="@drawable/logo_scritta" />
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                android:layout_weight="0"/>
 
         </LinearLayout>
 
