@@ -20,6 +20,7 @@ import com.example.cookingapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_converter.*
 import kotlinx.android.synthetic.main.fragment_shoplist.*
+import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
 
 
@@ -90,27 +91,33 @@ class ShoplistFragment : Fragment() {
         btn_shoplist_add.setOnClickListener {
             onAddField()
         }
-
     }
 
-    //salvataggio dello stato in modo da passare valori tra Portrait e Landscape
+    //salvataggio dello stato in modo da passare valori tra Portrait e Landscape e viceversa
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        var childCountParent = 0
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            outState.putInt("childParentCount", parent_lineal_layout.childCount)
-            childCountParent = parent_lineal_layout.childCount
+            val childCountParent = parent_lineal_layout.childCount
+            outState.putInt("childParentCount", childCountParent)
+            for((index) in (0 until childCountParent).withIndex()){
+                outState.putString("product$index", parent_lineal_layout[index].et_shoplist_product.text.toString())
+                outState.putString("value$index", parent_lineal_layout[index].et_shoplist_qty.text.toString())
+                outState.putInt("units$index", parent_lineal_layout[index].spin_shoplist_units.selectedItemPosition)
+            }
         }
         else{
-            outState.putInt("childParentCount", parent_lineal_layout.childCount -2)
-            childCountParent = parent_lineal_layout.childCount -2
+            val childCountParent = parent_lineal_layout.childCount -3
+            outState.putInt("childParentCount", childCountParent)
+            var index = 1
+            for((x) in (1..childCountParent).withIndex()){
+                outState.putString("product$index", parent_lineal_layout[index].et_shoplist_product.text.toString())
+                outState.putString("value$index", parent_lineal_layout[index].et_shoplist_qty.text.toString())
+                outState.putInt("units$index", parent_lineal_layout[index].spin_shoplist_units.selectedItemPosition)
+                index++
+            }
         }
-        for((index) in (0 until childCountParent).withIndex()){
-            outState.putString("product$index", parent_lineal_layout[index].et_shoplist_product.text.toString())
-            outState.putString("value$index", parent_lineal_layout[index].et_shoplist_qty.text.toString())
-            outState.putInt("units$index", parent_lineal_layout[index].spin_shoplist_units.selectedItemPosition)
-        }
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -118,12 +125,25 @@ class ShoplistFragment : Fragment() {
 
         //Se l'istanza salvata non è null, allora ripristino i valori salvati
         if(savedInstanceState != null){
-            for((index) in (0 until savedInstanceState.getInt("childParentCount")).withIndex()){
-                onAddField()
-                parent_lineal_layout[index].et_shoplist_product.setText(savedInstanceState.getString("product$index"))
-                parent_lineal_layout[index].et_shoplist_qty.setText(savedInstanceState.getString("value$index"))
-                parent_lineal_layout[index].spin_shoplist_units.setSelection(savedInstanceState.getInt("units$index"))
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+                var index = 1
+                for((x) in (1..savedInstanceState.getInt("childParentCount")).withIndex()){
+                    onAddField()
+                    parent_lineal_layout[index-1].et_shoplist_product.setText(savedInstanceState.getString("product$index"))
+                    parent_lineal_layout[index-1].et_shoplist_qty.setText(savedInstanceState.getString("value$index"))
+                    parent_lineal_layout[index-1].spin_shoplist_units.setSelection(savedInstanceState.getInt("units$index"))
+                    index++
+                }
             }
+            else{
+                for((index) in (0 until savedInstanceState.getInt("childParentCount")).withIndex()){
+                    onAddField()
+                    parent_lineal_layout[index+1].et_shoplist_product.setText(savedInstanceState.getString("product$index"))
+                    parent_lineal_layout[index+1].et_shoplist_qty.setText(savedInstanceState.getString("value$index"))
+                    parent_lineal_layout[index+1].spin_shoplist_units.setSelection(savedInstanceState.getInt("units$index"))
+                }
+            }
+
 
         }
     }

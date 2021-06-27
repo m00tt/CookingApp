@@ -30,8 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"
+            android:layout_margin="10dp"
             android:foregroundGravity="center"
             android:gravity="center"
             android:text="@string/add_shoplist_title"
@@ -43,15 +42,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:text="@string/shoplist_plus" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/shoplist_fab_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="30dp"
+            android:layout_gravity="center|end"
+            android:layout_margin="20dp"
             android:clickable="true"
             android:contentDescription="@string/shoplist_fab_share_alt"
             android:focusable="true"

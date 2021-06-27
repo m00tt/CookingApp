@@ -35,6 +35,4 @@ class MainActivity : AppCompatActivity() {
         parent_lineal_layout.removeView(v.parent as View)
     }
 
-
-
 }

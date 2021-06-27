@@ -60,7 +60,6 @@
         android:layout_weight="5"
         android:contentDescription="@string/shoplist_icon_alt"
         android:onClick="onDelete"
-        app:srcCompat="@android:drawable/ic_menu_delete"
-        />
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
 </LinearLayout>
