@@ -11,14 +11,12 @@ import kotlinx.android.synthetic.main.activity_signin.*
 
 class SigninActivity : AppCompatActivity() {
 
-    var mAuth:FirebaseAuth = TODO()
+    var mAuth:FirebaseAuth = FirebaseAuth.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signin)
-
-        mAuth = FirebaseAuth.getInstance();
     }
 
     override fun onStart() {
@@ -45,11 +43,6 @@ class SigninActivity : AppCompatActivity() {
 
             progress_signin.visibility = View.VISIBLE
 
-            if (mAuth.currentUser != null){
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful){
@@ -60,6 +53,7 @@ class SigninActivity : AppCompatActivity() {
                 }
                 else{
                     Toast.makeText(this, "${resources.getText(R.string.signin_error_message)}", Toast.LENGTH_SHORT).show()
+
                 }
             }
         }

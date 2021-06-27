@@ -13,13 +13,17 @@ import kotlinx.android.synthetic.main.activity_signin.*
 
 class LoginActivity : AppCompatActivity() {
 
-    var mAuth: FirebaseAuth = TODO()
+    var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        mAuth = FirebaseAuth.getInstance()
+        if (mAuth.currentUser != null){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         btn_login.setOnClickListener {
             val email:String = et_signin_email.text.toString().trim()
@@ -42,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 else{
                     Toast.makeText(this, "${resources.getText(R.string.login_cred_error)}", Toast.LENGTH_SHORT).show()
+                    progress_login.visibility = View.INVISIBLE
                 }
             }
 
