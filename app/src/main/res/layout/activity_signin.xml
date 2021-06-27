@@ -77,4 +77,11 @@
             android:text="@string/signin_login_request"
             android:textSize="15sp"
             android:textStyle="italic" />
+
+        <ProgressBar
+            android:id="@+id/progress_signin"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 </LinearLayout>

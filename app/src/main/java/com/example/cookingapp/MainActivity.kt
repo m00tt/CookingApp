@@ -14,6 +14,7 @@ import androidx.core.view.get
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_shoplist.*
 import kotlinx.android.synthetic.main.fragment_shoplist.view.*
@@ -33,6 +34,13 @@ class MainActivity : AppCompatActivity() {
 
     fun onDelete(v: View) {
         parent_lineal_layout.removeView(v.parent as View)
+    }
+
+    fun logout(v: View){
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }
