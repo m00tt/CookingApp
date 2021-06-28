@@ -13,13 +13,13 @@ import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import com.example.cookingapp.RecipeActivity
 import com.google.android.material.internal.ContextUtils.getActivity
+import kotlinx.android.synthetic.main.activity_recipe.*
 import kotlinx.android.synthetic.main.row.view.*
 
 class HomeAdapter(private val context: Context, private val data: ArrayList<Recipe>) :
     BaseAdapter(), Filterable {
     private var mOriginalValues: ArrayList<Recipe>? = data
     private var mDisplayedValues: ArrayList<Recipe>? = data
-    private lateinit var filteredItems: ArrayList<Recipe>
 
     override fun getCount(): Int {
         return mDisplayedValues!!.size
@@ -66,19 +66,11 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                 }
             })
 
-            //creo il listener per quando si clicca il cuore
-            newView.heart.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    //Toast.makeText(context as MainActivity, "hai cliccato il cuore della ricetta ${mDisplayedValues?.get(position)?.name}", Toast.LENGTH_SHORT).show()
-
-                }
-            })
         }
 
         return newView
 
     }
-
 
     //metodo che serve per la searchBar per filtrare i vari elementi
     override fun getFilter(): Filter {
@@ -97,7 +89,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                 }
 
                 //TODO: risolvere problema che quando si ricerca qualcosa mentre si sta filtrando torna alla lista di partenza non filtrata
-                // (provare utilizando un arrayList che tiene salvati gli elementi salvati e viene svuotata quando si preme su "tutte le ricette")
+                // (provare utilizando delle checkbox per salvarsi il filtro attivato")
                 //controllo per vedere se la chiamata avviene dalla searchBar o dal filtro
                 if ((constraint.toString().equals("Facile")) || (constraint.toString().equals("Media")) || (constraint.toString().equals("Difficile")))
                     tipo = "difficoltà"
@@ -120,6 +112,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                     results.values = mOriginalValues
                 } else {
                     cons = cons.toString()
+
                     for (i in mOriginalValues!!.indices) {
                         //in base da dove arriva la chiamata si filtra per nome o per difficoltà o per durata o per portata
                         when(tipo){

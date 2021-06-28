@@ -56,6 +56,9 @@
     <string name="signin_error_message">Something went wrong, retry</string>
     <string name="login_cred_error">" Wrong email and / or password"</string>
     <string name="signin_invalid_email">The email is invalid</string>
+    <string name="cookbook_tutte">All</string>
+    <string name="cookbook_mieRicette">My riceps</string>
+    <string name="cookbook_preferite">Favorite</string>
     <string name="label_preparazione">Preparation:</string>
     <string name="inserimento_preparazione_hint">Enter the preparation</string>
     <string name="inserimento_conservazione">Enter the storage method</string>
