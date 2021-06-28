@@ -22,8 +22,8 @@ import java.util.HashMap
 
 class SigninActivity : AppCompatActivity() {
 
-    val mAuth:FirebaseAuth = FirebaseAuth.getInstance()
-    val mDb:DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference()
+    private val mAuth:FirebaseAuth = FirebaseAuth.getInstance()
+    private val mDb:DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,14 @@ class SigninActivity : AppCompatActivity() {
             val password:String = et_signin_password.text.toString()
 
             var retErr = false
+            if(et_signin_name.text.isEmpty()){
+                et_signin_name.error = resources.getString(R.string.signin_compile_error)
+                retErr = true;
+            }
+            if(et_signin_surname.text.isEmpty()){
+                et_signin_surname.error = resources.getString(R.string.signin_compile_error)
+                retErr = true;
+            }
             if (!EMAIL_ADDRESS.matcher(email).matches()){
                 et_signin_email.error = resources.getString(R.string.signin_invalid_email)
                 retErr = true
@@ -61,19 +69,19 @@ class SigninActivity : AppCompatActivity() {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful){
 
-                    val toSaveUser: HashMap<String, String>? = HashMap()
-                    toSaveUser?.put("name", et_signin_name.text.toString())
-                    toSaveUser?.put("surname", et_signin_surname.text.toString())
-                    toSaveUser?.put("email", email)
+                    val toSaveUser: HashMap<String, String> = HashMap()
+                    toSaveUser.put("name", et_signin_name.text.toString())
+                    toSaveUser.put("surname", et_signin_surname.text.toString())
+                    toSaveUser.put("email", email)
                     mDb!!.push().setValue(toSaveUser)
 
-                    Toast.makeText(this, "${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "${et_signin_name.text}, ${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
                 else{
-                    Toast.makeText(this, "${resources.getText(R.string.signin_error_message)}", Toast.LENGTH_SHORT).show()
+                    et_signin_email.error = resources.getString(R.string.signin_error_message)
                     progress_signin.visibility = View.GONE
                 }
             }

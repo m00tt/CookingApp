@@ -30,8 +30,8 @@ class LoginActivity : AppCompatActivity() {
             val password:String = et_login_password.text.toString()
 
             if (email.isEmpty() || password.isEmpty()){
-                et_login_email.setError(resources.getString(R.string.signin_compile_error))
-                et_login_password.setError(resources.getString(R.string.signin_compile_error))
+                et_login_email.error = resources.getString(R.string.signin_compile_error)
+                et_login_password.error = resources.getString(R.string.signin_compile_error)
                 return@setOnClickListener
             }
 
@@ -39,13 +39,13 @@ class LoginActivity : AppCompatActivity() {
 
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                 if(it.isSuccessful){
-                    Toast.makeText(this, "${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
                 else{
-                    Toast.makeText(this, "${resources.getText(R.string.login_cred_error)}", Toast.LENGTH_SHORT).show()
+                    et_login_email.error = resources.getString(R.string.login_cred_error)
+                    et_login_password.error = resources.getString(R.string.login_cred_error)
                     progress_login.visibility = View.GONE
                 }
             }
