@@ -37,16 +37,40 @@
             android:text="@string/signin_button" />
 
         <EditText
-            android:id="@+id/et_signin_email"
+            android:id="@+id/et_signin_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/login_email_hint"
-            android:inputType="textEmailAddress"
+            android:hint="@string/signin_name_hint"
+            android:inputType="textPersonName"
             android:minWidth="300dp"
             android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/et_signin_surname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="@string/signin_surname_hint"
+            android:inputType="textPersonName"
+            android:minWidth="300dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/et_signin_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="@string/login_email_hint"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:minWidth="300dp" />
 
         <EditText
             android:id="@+id/et_signin_password"

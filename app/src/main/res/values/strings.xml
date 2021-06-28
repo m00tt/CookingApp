@@ -73,4 +73,6 @@
     <string name="label_header_cottura">Cottura</string>
     <string name="label_header_dosi">Dosi</string>
     <string name="label_header_portata">Portata</string>
+    <string name="signin_name_hint">Nome</string>
+    <string name="signin_surname_hint">Cognome</string>
 </resources>

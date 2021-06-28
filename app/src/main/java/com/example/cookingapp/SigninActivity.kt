@@ -13,13 +13,17 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_signin.*
 import kotlinx.android.synthetic.main.activity_signin.et_signin_email
 import kotlinx.android.synthetic.main.activity_signin.et_signin_password
-import java.util.regex.Pattern
 import android.util.Patterns.EMAIL_ADDRESS
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.ktx.database
+import java.util.HashMap
 
 class SigninActivity : AppCompatActivity() {
 
-    var mAuth:FirebaseAuth = FirebaseAuth.getInstance()
-
+    val mAuth:FirebaseAuth = FirebaseAuth.getInstance()
+    val mDb:DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +56,17 @@ class SigninActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-
             progress_signin.visibility = View.VISIBLE
-
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful){
+
+                    val toSaveUser: HashMap<String, String>? = HashMap()
+                    toSaveUser?.put("name", et_signin_name.text.toString())
+                    toSaveUser?.put("surname", et_signin_surname.text.toString())
+                    toSaveUser?.put("email", email)
+                    mDb!!.push().setValue(toSaveUser)
+
                     Toast.makeText(this, "${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
