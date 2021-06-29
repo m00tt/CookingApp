@@ -66,7 +66,7 @@
     <string name="label_recipe_difficolta">Difficulty</string>
     <string name="label_header_preparazione">Preparation</string>
     <string name="label_header_cottura">Cooking</string>
-    <string name="label_header_dosi">D</string>
+    <string name="label_header_dosi">Doses</string>
     <string name="label_header_portata">Scope</string>
     <string name="signin_name_hint">Name</string>
     <string name="signin_surname_hint">Surname</string>

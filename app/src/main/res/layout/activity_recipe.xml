@@ -95,7 +95,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="@string/label_recipe_difficolta"
+                        android:hint="@string/label_recipe_difficolta"
                         android:textColor="@color/scritte" />
                 </LinearLayout>
                 <LinearLayout
@@ -118,7 +118,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="@string/label_header_preparazione"
+                        android:hint="@string/label_header_preparazione"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
                 <LinearLayout
@@ -141,7 +141,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="@string/label_header_cottura"
+                        android:hint="@string/label_header_cottura"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
 
@@ -167,8 +167,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="@string/label_header_dosi"
-                        android:textColor="@color/scritte"/>
+                        android:hint="@string/label_header_dosi"
+                        android:textColor="@color/scritte" />
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/linear_portata"
@@ -190,7 +190,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="@string/label_header_portata"
+                        android:hint="@string/label_header_portata"
                         android:textColor="@color/scritte"/>
                 </LinearLayout>
                 <LinearLayout
