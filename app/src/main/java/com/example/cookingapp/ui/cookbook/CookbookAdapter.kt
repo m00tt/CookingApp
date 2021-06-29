@@ -59,7 +59,7 @@ class CookbookAdapter(private val context: Context, private val data: ArrayList<
                     val contesto = context as MainActivity
                     val intent = Intent(contesto, RecipeActivity::class.java)
                     intent.putExtra("recipe_data", name.text.toString())
-                    intent.putExtra("chiamante", "home")
+                    intent.putExtra("chiamante", "ricettario")
                     contesto.startActivity(intent)
                 }
             })

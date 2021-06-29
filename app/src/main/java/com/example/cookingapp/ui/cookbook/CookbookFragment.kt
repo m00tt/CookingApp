@@ -99,6 +99,10 @@ class CookbookFragment : Fragment() {
         fab_add.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //si apre l'activity di creazione ricetta
+                val contesto = context as MainActivity
+                val intent = Intent(contesto, RecipeActivity::class.java)
+                intent.putExtra("chiamante", "addRicetta")
+                startActivity(intent)
 
             }
         })

@@ -33,23 +33,36 @@ class RecipeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
-        setEditable(Color.TRANSPARENT, false)
 
+
+        //CONTROLLO CHIAMANTI E SETTAGGIO AZIONI
         chiamante = intent.getStringExtra("chiamante").toString()
-        if (chiamante == "home") {
-            //AZIONI DA ESEGUIRE NEL MOMENTO IN CUI L'ACTIVITY VIENE CHIAMATA DALL'HOME PAGE (PERMETTERE SOLO MODIFICA DELLE DOSI E RIADATTAMENTO PROPORZIONI
-            Log.v("chiamante", "homepage")
-            fab_edit.hide()
-            et_dosi.isEnabled = true
-            et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+        when (chiamante){
+            "home" -> {
+                Log.v("chiamante", "homepage")
+                fab_edit.hide()
+                btn_ingredient_add.visibility = View.INVISIBLE
+                val nome = intent.getStringExtra("recipe_data")
+                et_recipe_name.setText(nome)
+                setEditable(Color.TRANSPARENT, false)
+                et_dosi.isEnabled = true
+                et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+            }
+            "addRicetta" -> {
+                et_recipe_name.setText("Inserisci il nome della ricetta")
+                btn_ingredient_add.visibility = View.VISIBLE
+                setEditable(Color.BLACK, true)
+                editable = true
+                fab_edit.setImageResource(R.mipmap.ic_save_foreground)
+            }
+            else -> {
+                setEditable(Color.TRANSPARENT, false)
+                btn_ingredient_add.visibility = View.INVISIBLE
+                val nome = intent.getStringExtra("recipe_data")
+                et_recipe_name.setText(nome)
+            }
+
         }
-
-
-        //btn add ingredient not visible first
-        btn_ingredient_add.visibility = View.INVISIBLE
-
-        val nome = intent.getStringExtra("recipe_data")
-        et_recipe_name.setText(nome)
 
         et_dosi.setInputType(
             InputType.TYPE_CLASS_NUMBER or
@@ -110,14 +123,7 @@ class RecipeActivity : AppCompatActivity() {
         et_difficolta.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
         et_cottura.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
 
-        if (et_recipe_ingredient != null && et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
-            et_recipe_ingredient.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
-            et_ingredient_qty.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
 
-            et_preparazione_descrizione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
-            et_conservazione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
-
-        }
         //set editText editable
         et_recipe_name.isEnabled = action
         et_preparazione.isEnabled = action
@@ -130,7 +136,11 @@ class RecipeActivity : AppCompatActivity() {
         et_preparazione_descrizione.isEnabled = action
         et_conservazione.isEnabled = action
 
-
+        if(et_preparazione_descrizione!=null && et_conservazione!=null)
+        {
+            et_preparazione_descrizione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
+            et_conservazione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
+        }
     }
 
     fun editRecipe() {
@@ -150,12 +160,16 @@ class RecipeActivity : AppCompatActivity() {
                 linear_ingredienti[index].et_ingredient_qty.isEnabled = true
                 linear_ingredienti[index].spin_ingredient_units.isEnabled = true
                 linear_ingredienti[index].iv_ingredient_delete.isEnabled = true
+                if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
+                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+                }
+                if(linear_ingredienti[index].iv_ingredient_delete!=null)
+                    linear_ingredienti[index].iv_ingredient_delete.visibility = View.VISIBLE
             }
         }
 
         fab_edit.setImageResource(R.mipmap.ic_save_foreground)
-        if(iv_ingredient_delete!=null)
-            iv_ingredient_delete.visibility = View.VISIBLE
 
     }
 
@@ -183,6 +197,12 @@ class RecipeActivity : AppCompatActivity() {
                 linear_ingredienti[index].et_ingredient_qty.isEnabled = false
                 linear_ingredienti[index].spin_ingredient_units.isEnabled = false
                 linear_ingredienti[index].iv_ingredient_delete.isEnabled = false
+                if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
+                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+                }
+                if(linear_ingredienti[index].iv_ingredient_delete!=null)
+                    linear_ingredienti[index].iv_ingredient_delete.visibility = View.INVISIBLE
             }
 
             /*
@@ -193,8 +213,7 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
-        if(iv_ingredient_delete!=null)
-            iv_ingredient_delete.visibility = View.INVISIBLE
+
 
 
     }
