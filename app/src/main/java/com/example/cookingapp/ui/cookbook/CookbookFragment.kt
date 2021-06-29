@@ -1,5 +1,6 @@
 package com.example.cookingapp.ui.cookbook
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
+import com.example.cookingapp.RecipeActivity
 import com.example.cookingapp.ui.home.HomeAdapter
 import kotlinx.android.synthetic.main.fragment_cookbook.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -102,4 +104,5 @@ class CookbookFragment : Fragment() {
         })
 
     }
+
 }

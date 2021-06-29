@@ -1,7 +1,8 @@
 package com.example.cookingapp
 
+import android.accessibilityservice.GestureDescription
+import android.content.DialogInterface
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import kotlinx.android.synthetic.main.activity_recipe.*
@@ -20,20 +22,28 @@ import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
 
+
 class RecipeActivity : AppCompatActivity() {
     var editable = false
     var prefer = false
-    var actual = 0
+    var actualDose = 0
+    var initialDose = 0
+    var conversioneAutomatica = false
+    var chiamante = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
-        val chiamante = intent.getStringExtra("chiamante")
+        setEditable(Color.TRANSPARENT, false)
+
+        chiamante = intent.getStringExtra("chiamante").toString()
         if (chiamante == "home") {
+            //AZIONI DA ESEGUIRE NEL MOMENTO IN CUI L'ACTIVITY VIENE CHIAMATA DALL'HOME PAGE (PERMETTERE SOLO MODIFICA DELLE DOSI E RIADATTAMENTO PROPORZIONI
             Log.v("chiamante", "homepage")
-            //fab_edit.hide()
+            fab_edit.hide()
+            et_dosi.isEnabled = true
+            et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
         }
 
-        setEditable(Color.TRANSPARENT, false)
 
         //btn add ingredient not visible first
         btn_ingredient_add.visibility = View.INVISIBLE
@@ -46,6 +56,7 @@ class RecipeActivity : AppCompatActivity() {
                     InputType.TYPE_NUMBER_FLAG_DECIMAL or
                     InputType.TYPE_NUMBER_FLAG_SIGNED
         )
+
     }
 
 
@@ -60,6 +71,9 @@ class RecipeActivity : AppCompatActivity() {
             }
 
         })
+
+
+
         btn_ingredient_add.setOnClickListener {
             onAddIngredient()
         }
@@ -73,14 +87,19 @@ class RecipeActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!et_dosi.text.isEmpty()) {
-                    actual = et_dosi.text.toString().toInt()
-                    Log.e("valore actual", actual.toString())
+                if(chiamante == "home") {
+                    if (!et_dosi.text.isEmpty()) {
+                        actualDose = et_dosi.text.toString().toInt()
+                        Log.e("valore actual", actualDose.toString())
+                    }
+                    dosesProportion()
                 }
-
             }
         })
+
+
     }
+
 
     fun setEditable(colore: Int, action: Boolean) {
         //add black underline
@@ -115,6 +134,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun editRecipe() {
+
         setEditable(Color.BLACK, true)
 
         Log.v("editRecipe", "editRecipe")
@@ -176,6 +196,7 @@ class RecipeActivity : AppCompatActivity() {
         if(iv_ingredient_delete!=null)
             iv_ingredient_delete.visibility = View.INVISIBLE
 
+
     }
 
     fun setPrefer(view: View) {
@@ -204,7 +225,10 @@ class RecipeActivity : AppCompatActivity() {
 
     fun dosesProportion() {
         ///TODO: realizzare funzione di proporzione fra le dosi
-        var actual = et_dosi.text as Int
-
+        if(initialDose!=0) {
+            Log.v("valore actual", actualDose.toString())
+            Log.v("valore initial", initialDose.toString())
+        }
+        initialDose = actualDose
     }
 }
