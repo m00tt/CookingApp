@@ -20,6 +20,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
     BaseAdapter(), Filterable {
     private var mOriginalValues: ArrayList<Recipe>? = data
     private var mDisplayedValues: ArrayList<Recipe>? = data
+    private var filteredValues: ArrayList<Recipe>?=data
 
     override fun getCount(): Int {
         return mDisplayedValues!!.size
@@ -72,14 +73,16 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
 
     }
 
+    //TODO: risolvere problema che quando si ricerca qualcosa mentre si sta filtrando torna alla lista di partenza non filtrata
+    // (provare ricevendo una stringa contenente i filtri selezionati, separati l'uno dall'altro da uno spazio)
     //metodo che serve per la searchBar per filtrare i vari elementi
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                var tipo = "ricerca"
-                lateinit var  data: String
+                //var tipo = "ricerca"
+                //lateinit var  data: String
                 val results = FilterResults()
-
+                /*
                 //controllo se è stato selezionato il filtro "tutte"
                 if(constraint.toString().equals("Tutte"))
                 {
@@ -89,7 +92,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                 }
 
                 //TODO: risolvere problema che quando si ricerca qualcosa mentre si sta filtrando torna alla lista di partenza non filtrata
-                // (provare utilizando delle checkbox per salvarsi il filtro attivato")
+                // (provare utilizando un arrayList che tiene salvati gli elementi salvati e viene svuotata quando si preme su "tutte le ricette")
                 //controllo per vedere se la chiamata avviene dalla searchBar o dal filtro
                 if ((constraint.toString().equals("Facile")) || (constraint.toString().equals("Media")) || (constraint.toString().equals("Difficile")))
                     tipo = "difficoltà"
@@ -98,21 +101,20 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                     var durata=constraint.toString()
                 }
                 if ((constraint.toString().equals("Antipasto")) || (constraint.toString().equals("Primo")) || (constraint.toString().equals("Secondo")) || (constraint.toString().equals("Dessert")))
-                    tipo="portata"
+                    tipo="portata"*/
 
-                var cons = constraint
-                val FilteredArrList = ArrayList<Recipe>()
+                var FilteredArrList = ArrayList<Recipe>()
 
                 if (mOriginalValues == null)
                     mOriginalValues = ArrayList<Recipe>(mDisplayedValues)
-                if (cons == null || cons.isEmpty()) {
+                if (constraint == null || constraint.isEmpty()) {
 
                     // set the Original result to return
                     results.count = mOriginalValues!!.size
                     results.values = mOriginalValues
                 } else {
-                    cons = cons.toString()
-
+                    FilteredArrList=ricerca(constraint,FilteredArrList)
+                    /*cons = constraint.toString()
                     for (i in mOriginalValues!!.indices) {
                         //in base da dove arriva la chiamata si filtra per nome o per difficoltà o per durata o per portata
                         when(tipo){
@@ -175,7 +177,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                                 }
                             }
                         }
-                    }
+                    }*/
                     // set the Filtered result to return
                     results.count = FilteredArrList.size
                     results.values = FilteredArrList
@@ -190,6 +192,26 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
             }
 
         }
+    }
+
+    private fun ricerca(constraint:CharSequence?, FilteredArrList:ArrayList<Recipe>):ArrayList<Recipe>
+    {
+        lateinit var  data: String
+        var cons = constraint.toString()
+        for (i in mOriginalValues!!.indices) {
+            data = mOriginalValues!![i].name
+            if (data.startsWith(cons.toString())) {
+                FilteredArrList.add(
+                    Recipe(
+                        mOriginalValues!![i].name,
+                        mOriginalValues!![i].difficoltà,
+                        mOriginalValues!![i].durata,
+                        mOriginalValues!![i].portata
+                    )
+                )
+            }
+        }
+        return FilteredArrList
     }
 
 

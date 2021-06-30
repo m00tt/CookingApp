@@ -1,11 +1,16 @@
 package com.example.cookingapp.ui.home
 
+import android.content.ClipData
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.*
+import androidx.core.graphics.component1
+import androidx.core.view.children
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
@@ -18,6 +23,8 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     //private lateinit var homeViewModel: HomeViewModel
     private val mRecipeArrayList = ArrayList<Recipe>()
     private var adapter1: HomeAdapter? = null
+    lateinit var menu:Menu
+    lateinit var checkati:String
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -69,17 +76,19 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             override fun afterTextChanged(s: Editable) {}
         })
 
+        val popup = PopupMenu(context as MainActivity,img_filter)
+        popup.setOnMenuItemClickListener(this@HomeFragment)
+        popup.inflate(R.menu.popup_menu)
+        menu=popup.menu
+
         //aggiungo il listener all'imageButton per il filtro
         img_filter.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val popup = PopupMenu(context as MainActivity,v)
-                popup.setOnMenuItemClickListener(this@HomeFragment)
-                popup.inflate(R.menu.popup_menu)
                 popup.show()
-
             }
         })
     }
+
 
     //metodo che gestisce l'evento click degli elementi del popup_menu
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -88,60 +97,150 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             R.id.Facile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Facile", Toast.LENGTH_SHORT).show()
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Facile")
+                menu.findItem(R.id.Media).setChecked(false)
+                menu.findItem(R.id.Difficile).setChecked(false)
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Media -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Media", Toast.LENGTH_SHORT).show()
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Media")
+                menu.findItem(R.id.Facile).setChecked(false)
+                menu.findItem(R.id.Difficile).setChecked(false)
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Difficile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Difficile", Toast.LENGTH_SHORT).show()
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Difficile")
+                menu.findItem(R.id.Media).setChecked(false)
+                menu.findItem(R.id.Facile).setChecked(false)
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
 
             //gestione durata
             R.id.Veloce -> {
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Veloce")
+                menu.findItem(R.id.Media_durata).setChecked(false)
+                menu.findItem(R.id.Lunga).setChecked(false)
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Media_durata -> {
+                menu.findItem(R.id.Veloce).setChecked(false)
+                menu.findItem(R.id.Lunga).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Media_durata")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Lunga -> {
+                menu.findItem(R.id.Media_durata).setChecked(false)
+                menu.findItem(R.id.Veloce).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Lunga")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
 
             //gestione portata
             R.id.Antipasto -> {
+                menu.findItem(R.id.Primo).setChecked(false)
+                menu.findItem(R.id.Secondo).setChecked(false)
+                menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Antipasto")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Primo -> {
+                menu.findItem(R.id.Antipasto).setChecked(false)
+                menu.findItem(R.id.Secondo).setChecked(false)
+                menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Primo")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Secondo -> {
+                menu.findItem(R.id.Primo).setChecked(false)
+                menu.findItem(R.id.Antipasto).setChecked(false)
+                menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Secondo")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
             R.id.Dessert -> {
+                menu.findItem(R.id.Primo).setChecked(false)
+                menu.findItem(R.id.Secondo).setChecked(false)
+                menu.findItem(R.id.Antipasto).setChecked(false)
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Dessert")
+                setCheck(item)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true}
 
             //tutte le ricette
             R.id.Tutte -> {
                 searchBar.text.clear()
-                adapter1?.filter?.filter("Tutte")
+                menu.findItem(R.id.Facile).setChecked(false)
+                menu.findItem(R.id.Media).setChecked(false)
+                menu.findItem(R.id.Difficile).setChecked(false)
+                menu.findItem(R.id.Veloce).setChecked(false)
+                menu.findItem(R.id.Media_durata).setChecked(false)
+                menu.findItem(R.id.Lunga).setChecked(false)
+                menu.findItem(R.id.Antipasto).setChecked(false)
+                menu.findItem(R.id.Primo).setChecked(false)
+                menu.findItem(R.id.Secondo).setChecked(false)
+                menu.findItem(R.id.Dessert).setChecked(false)
+                checkati=controlCheck()
+                adapter1?.filter?.filter(checkati)
                 return true
             }
 
             else -> return false
         }
+    }
+
+    private fun setCheck(item:MenuItem?){
+        item!!.setChecked(!item.isChecked)
+    }
+
+    private fun controlCheck():String{
+        var controllo = ""
+
+        if(menu.findItem(R.id.Facile).isChecked)
+            controllo+="Facile "
+        if(menu.findItem(R.id.Media).isChecked)
+            controllo+="Media "
+        if(menu.findItem(R.id.Difficile).isChecked)
+            controllo+="Difficile "
+        if(menu.findItem(R.id.Veloce).isChecked)
+            controllo+="Veloce "
+        if(menu.findItem(R.id.Media_durata).isChecked)
+            controllo+="Media_durata "
+        if(menu.findItem(R.id.Lunga).isChecked)
+            controllo+="Lunga "
+        if(menu.findItem(R.id.Antipasto).isChecked)
+            controllo+="Antipasto "
+        if(menu.findItem(R.id.Primo).isChecked)
+            controllo+="Primo "
+        if(menu.findItem(R.id.Secondo).isChecked)
+            controllo+="Secondo "
+        if(menu.findItem(R.id.Dessert).isChecked)
+            controllo+="Dessert "
+
+        if(controllo=="")
+            controllo="Tutte"
+
+        Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
+        return  controllo
     }
 
 }

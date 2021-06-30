@@ -1,5 +1,6 @@
 package com.example.cookingapp.ui.cookbook
 
+import android.graphics.Color
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -4,35 +4,55 @@
         android:title="@string/popup_difficoltà">
         <menu>
             <item android:id="@+id/Facile"
-                android:title="@string/popup_facile"/>
+                android:title="@string/popup_facile"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Media"
-                android:title="@string/popup_medio"/>
+                android:title="@string/popup_medio"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Difficile"
-                android:title="@string/popup_difficile"/>
+                android:title="@string/popup_difficile"
+                android:checked="false"
+                android:checkable="true"/>
         </menu>
     </item>
     <item android:id="@+id/Durata"
         android:title="@string/popup_durata">
         <menu>
             <item android:id="@+id/Veloce"
-                android:title="@string/popup_veloce"/>
+                android:title="@string/popup_veloce"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Media_durata"
-                android:title="@string/popup_medio"/>
+                android:title="@string/popup_medio"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Lunga"
-                android:title="@string/popup_lunga"/>
+                android:title="@string/popup_lunga"
+                android:checked="false"
+                android:checkable="true" />
         </menu>
     </item>
     <item android:id="@+id/Portata"
         android:title="@string/popup_portata">
         <menu>
             <item android:id="@+id/Antipasto"
-                android:title="@string/popup_antipasto"/>
+                android:title="@string/popup_antipasto"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Primo"
-                android:title="@string/popup_primo"/>
+                android:title="@string/popup_primo"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Secondo"
-                android:title="@string/popup_secondo"/>
+                android:title="@string/popup_secondo"
+                android:checked="false"
+                android:checkable="true"/>
             <item android:id="@+id/Dessert"
-                android:title="@string/popup_dessert"/>
+                android:title="@string/popup_dessert"
+                android:checked="false"
+                android:checkable="true"/>
         </menu>
     </item>
     <item android:id="@+id/Tutte"

@@ -15,15 +15,21 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_recipe.*
+import kotlinx.android.synthetic.main.activity_signin.*
 import kotlinx.android.synthetic.main.fragment_shoplist.*
 import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
+import java.util.HashMap
 
 
 class RecipeActivity : AppCompatActivity() {
+    //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
+    var mRecipeReference: DatabaseReference? = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+
     var editable = false
     var prefer = false
     var actualDose = 0
@@ -47,6 +53,9 @@ class RecipeActivity : AppCompatActivity() {
                 setEditable(Color.TRANSPARENT, false)
                 et_dosi.isEnabled = true
                 et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+
+                //leggere ricetta DB
+
             }
             "addRicetta" -> {
                 et_recipe_name.setText("Inserisci il nome della ricetta")
@@ -174,6 +183,19 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
+        var childCountParent = linear_ingredienti.childCount
+
+        //prendo tutti i campi da inserire nel DB
+        var nome=(et_recipe_name.text).toString()
+        var difficoltà=et_difficolta.text.toString()
+        var preparazione=et_preparazione.text.toString()
+        var cottura=et_cottura.text.toString()
+        var dosi=et_dosi.text.toString()
+        var portata=et_portata.text.toString()
+        var ingredienti=ArrayList<String>()
+        var descrizione=et_preparazione_descrizione.text.toString()
+        var conservazione=et_conservazione.text.toString()
+
         //remove black underline
         setEditable(Color.TRANSPARENT, false)
 
@@ -190,7 +212,7 @@ class RecipeActivity : AppCompatActivity() {
         //set btn add ingredient not visible
         btn_ingredient_add.visibility = View.INVISIBLE
 
-        var childCountParent = linear_ingredienti.childCount
+
         for ((index) in (1 until childCountParent).withIndex()) {
             if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && linear_ingredienti[index].spin_ingredient_units != null && linear_ingredienti[index].iv_ingredient_delete != null) {
                 linear_ingredienti[index].et_recipe_ingredient.isEnabled = false
@@ -200,6 +222,11 @@ class RecipeActivity : AppCompatActivity() {
                 if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
                     linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
                     linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+
+                    var tmp=linear_ingredienti[index].et_recipe_ingredient.text.toString() + ";" + linear_ingredienti[index].et_ingredient_qty.text.toString() +
+                            ";" + linear_ingredienti[index].spin_ingredient_units.selectedItem.toString()
+                    ingredienti.add(tmp)
                 }
                 if(linear_ingredienti[index].iv_ingredient_delete!=null)
                     linear_ingredienti[index].iv_ingredient_delete.visibility = View.INVISIBLE
@@ -214,7 +241,9 @@ class RecipeActivity : AppCompatActivity() {
 
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
 
-
+        //inserimento nel DB
+        val ricetta=Recipe(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione, prefer)
+        mRecipeReference?.child(ricetta.getId())?.setValue(ricetta)
 
     }
 
@@ -250,4 +279,6 @@ class RecipeActivity : AppCompatActivity() {
         }
         initialDose = actualDose
     }
+
+
 }
