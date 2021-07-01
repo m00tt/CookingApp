@@ -68,12 +68,12 @@ class SigninActivity : AppCompatActivity() {
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful){
-
+                    val newID:String = FirebaseAuth.getInstance().currentUser!!.uid
                     val toSaveUser: HashMap<String, String> = HashMap()
                     toSaveUser.put("name", et_signin_name.text.toString())
                     toSaveUser.put("surname", et_signin_surname.text.toString())
                     toSaveUser.put("email", email)
-                    mDb!!.push().setValue(toSaveUser)
+                    mDb!!.child(newID).setValue(toSaveUser)
 
                     Toast.makeText(this, "${et_signin_name.text}, ${resources.getText(R.string.welcome_message)} ${resources.getText(R.string.app_name)}", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
