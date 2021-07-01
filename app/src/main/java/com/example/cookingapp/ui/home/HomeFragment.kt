@@ -312,4 +312,10 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             mRecipeReference!!.removeEventListener(mRecipesChildListener)
     }
 
+    override fun onPause() {
+        super.onPause()
+        //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
+        mRecipeArrayList.clear()
+    }
+
 }
