@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.*
@@ -15,10 +16,15 @@ import androidx.fragment.app.Fragment
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
+    //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
+    var mRecipeReference: DatabaseReference? = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    //creiamo il listener
+    private var mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
 
     //private lateinit var homeViewModel: HomeViewModel
     private val mRecipeArrayList = ArrayList<Recipe>()
@@ -45,7 +51,9 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     override fun onStart() {
         super.onStart()
-
+        //aggiungiamo il listener appena creato
+        mRecipeReference!!.addChildEventListener(mRecipesChildListener)
+        /*
         //aggiungo le ricette
         if(mRecipeArrayList.isEmpty()) {
             mRecipeArrayList.add(Recipe("Ricetta 1", "Facile", "15 minuti", "Antipasto"))
@@ -58,7 +66,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             mRecipeArrayList.add(Recipe("Ricetta 8", "Difficile", "60 minuti", "Antipasto"))
             mRecipeArrayList.add(Recipe("Ricetta 9", "Facile", "7 minuti", "Secondo"))
             mRecipeArrayList.add(Recipe("Ricetta 10", "Difficile", "40 minuti", "Antipasto"))
-        }
+        }*/
 
         //carico le ricette nella listView
         adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
@@ -216,31 +224,92 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         var controllo = ""
 
         if(menu.findItem(R.id.Facile).isChecked)
-            controllo+="Facile "
+            controllo+="Facile;"
         if(menu.findItem(R.id.Media).isChecked)
-            controllo+="Media "
+            controllo+="Media;"
         if(menu.findItem(R.id.Difficile).isChecked)
-            controllo+="Difficile "
+            controllo+="Difficile;"
         if(menu.findItem(R.id.Veloce).isChecked)
-            controllo+="Veloce "
+            controllo+="Veloce;"
         if(menu.findItem(R.id.Media_durata).isChecked)
-            controllo+="Media_durata "
+            controllo+="Media_durata;"
         if(menu.findItem(R.id.Lunga).isChecked)
-            controllo+="Lunga "
+            controllo+="Lunga;"
         if(menu.findItem(R.id.Antipasto).isChecked)
-            controllo+="Antipasto "
+            controllo+="Antipasto;"
         if(menu.findItem(R.id.Primo).isChecked)
-            controllo+="Primo "
+            controllo+="Primo;"
         if(menu.findItem(R.id.Secondo).isChecked)
-            controllo+="Secondo "
+            controllo+="Secondo;"
         if(menu.findItem(R.id.Dessert).isChecked)
-            controllo+="Dessert "
+            controllo+="Dessert;"
 
         if(controllo=="")
             controllo="Tutte"
 
         Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
         return  controllo
+    }
+
+    //metodo che restituisce il listener
+    private fun getRecipesChildEventListner(): ChildEventListener {
+        val childEventListener = object : ChildEventListener {
+            //dobbiamo fare la gestione dell'operazione di lettura (ovvero quando e dove ci interessa leggere)
+
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("TAG", "onChildAdded: ${snapshot.key!!}")
+
+                //prendiamo i valori dentro lo snapshot e i mettiamo in una variabile
+                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
+                //prendiamo la lista dei dati che è collegata all'adapter e gli aggiungiamo il newRecipe
+                mRecipeArrayList.add(Recipe(newRecipe!!.ident, newRecipe.name, newRecipe.difficoltà, newRecipe.durata, newRecipe.portata))
+                //rigeneriamo l'adapter così va a rilggere i dati e si ridisegna
+                adapter1?.notifyDataSetChanged()
+            }
+
+            //se vogliamo gestire anche i cambiamenti dei nodi avvenuti direttamente dal DB
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("TAG", "onChildChanged: ${snapshot.key!!}")
+
+                //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente che arriva come snapshot e cambiare le relative informazioni
+                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                val recipeKey=snapshot.key
+                mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }?.set(newRecipe!!)
+
+                adapter1?.notifyDataSetChanged()
+            }
+
+            //se vogliamo gestire anche i nodi rimossi
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                Log.d("TAG", "onChildRemoved: ${snapshot.key!!}")
+
+                //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente da eliminare anche in locale
+                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                val recipeKey=snapshot.key
+                var elimineted_recipe=mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
+                mRecipeArrayList.remove(elimineted_recipe)
+
+                adapter1?.notifyDataSetChanged()
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d("TAG", "onChildMoved: ${snapshot.key!!}")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "onCancelled: ${error.toException()}")
+            }
+
+        }
+        return childEventListener
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        //rimuoviamo il listener (se non è null)
+        if (mRecipesChildListener != null)
+            mRecipeReference!!.removeEventListener(mRecipesChildListener)
     }
 
 }

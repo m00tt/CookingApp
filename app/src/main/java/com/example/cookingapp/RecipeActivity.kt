@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
+import java.time.LocalDate
 import java.util.HashMap
 
 
@@ -242,8 +243,13 @@ class RecipeActivity : AppCompatActivity() {
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
 
         //inserimento nel DB
-        val ricetta=Recipe(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione, prefer)
-        mRecipeReference?.child(ricetta.getId())?.setValue(ricetta)
+        val nCottura=cottura.split(" ")
+        val nPreparazione=preparazione.split(" ")
+        val durata=(nCottura[0].toInt())+(nPreparazione[0].toInt())
+        val id= nome+ LocalDate.now().toString()
+        val ricetta=Recipe(id,nome, difficoltà, preparazione, cottura,
+            "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
+        mRecipeReference?.child(ricetta.toString())?.setValue(ricetta)
 
     }
 

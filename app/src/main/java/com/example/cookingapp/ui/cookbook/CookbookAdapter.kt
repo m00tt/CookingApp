@@ -56,9 +56,10 @@ class CookbookAdapter(private val context: Context, private val data: ArrayList<
                 override fun onClick(v: View?) {
                     //Toast.makeText(context as MainActivity, "hai cliccato la riga $position", Toast.LENGTH_SHORT).show()
                     //apertura activity ricetta singola
+                    val id=mDisplayedValues?.get(position)?.ident
                     val contesto = context as MainActivity
                     val intent = Intent(contesto, RecipeActivity::class.java)
-                    intent.putExtra("recipe_data", name.text.toString())
+                    intent.putExtra("recipe_data", id.toString())
                     intent.putExtra("chiamante", "ricettario")
                     contesto.startActivity(intent)
                 }
