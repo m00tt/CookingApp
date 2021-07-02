@@ -1,8 +1,6 @@
 package com.example.cookingapp
 
-import android.accessibilityservice.GestureDescription
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -18,7 +16,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
@@ -31,17 +28,18 @@ import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.HashMap
-import java.util.jar.Manifest
 
 
 class RecipeActivity : AppCompatActivity() {
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    private val userID:String = FirebaseAuth.getInstance().currentUser!!.uid
-    private var mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
-    private val mUserRecipesReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users_recipes").child(userID)
+    private val userID: String = FirebaseAuth.getInstance().currentUser!!.uid
+    private var mRecipeReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Recipes")
+    private val mUserRecipesReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Users_recipes").child(userID)
 
     private val OPERATION_CAPTURE_PHOTO = 1
 
@@ -49,8 +47,9 @@ class RecipeActivity : AppCompatActivity() {
     var prefer = false
     var actualDose = 0
     var initialDose = 0
-    var conversioneAutomatica = false
     var chiamante = ""
+
+    //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
@@ -58,7 +57,7 @@ class RecipeActivity : AppCompatActivity() {
 
         //CONTROLLO CHIAMANTI E SETTAGGIO AZIONI
         chiamante = intent.getStringExtra("chiamante").toString()
-        when (chiamante){
+        when (chiamante) {
             "home" -> {
                 Log.v("chiamante", "homepage")
                 fab_edit.hide()
@@ -82,8 +81,10 @@ class RecipeActivity : AppCompatActivity() {
             else -> {
                 setEditable(Color.TRANSPARENT, false)
                 btn_ingredient_add.visibility = View.INVISIBLE
-                val nome = intent.getStringExtra("recipe_data")
-                et_recipe_name.setText(nome)
+                val idRicetta = intent.getStringExtra("recipe_data")
+                if (idRicetta != null) {
+                    leggiRicettaDB(idRicetta)
+                }
             }
 
         }
@@ -124,7 +125,7 @@ class RecipeActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(chiamante == "home") {
+                if (chiamante == "home") {
                     if (!et_dosi.text.isEmpty()) {
                         actualDose = et_dosi.text.toString().toInt()
                         Log.e("valore actual", actualDose.toString())
@@ -136,11 +137,17 @@ class RecipeActivity : AppCompatActivity() {
 
 
         img_recipe.setOnClickListener {
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), OPERATION_CAPTURE_PHOTO)
-            }
-            else {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.CAMERA),
+                    OPERATION_CAPTURE_PHOTO
+                )
+            } else {
                 val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
             }
@@ -155,14 +162,14 @@ class RecipeActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == OPERATION_CAPTURE_PHOTO && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == OPERATION_CAPTURE_PHOTO && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             img_recipe.performClick()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             OPERATION_CAPTURE_PHOTO -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
@@ -197,8 +204,7 @@ class RecipeActivity : AppCompatActivity() {
         et_preparazione_descrizione.isEnabled = action
         et_conservazione.isEnabled = action
 
-        if(et_preparazione_descrizione!=null && et_conservazione!=null)
-        {
+        if (et_preparazione_descrizione != null && et_conservazione != null) {
             et_preparazione_descrizione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
             et_conservazione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
         }
@@ -222,10 +228,16 @@ class RecipeActivity : AppCompatActivity() {
                 linear_ingredienti[index].spin_ingredient_units.isEnabled = true
                 linear_ingredienti[index].iv_ingredient_delete.isEnabled = true
                 if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
-                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
-                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(
+                        Color.BLACK,
+                        PorterDuff.Mode.SRC_IN
+                    )
+                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(
+                        Color.BLACK,
+                        PorterDuff.Mode.SRC_IN
+                    )
                 }
-                if(linear_ingredienti[index].iv_ingredient_delete!=null)
+                if (linear_ingredienti[index].iv_ingredient_delete != null)
                     linear_ingredienti[index].iv_ingredient_delete.visibility = View.VISIBLE
             }
         }
@@ -238,15 +250,15 @@ class RecipeActivity : AppCompatActivity() {
         var childCountParent = linear_ingredienti.childCount
 
         //prendo tutti i campi da inserire nel DB
-        var nome=(et_recipe_name.text).toString()
-        var difficoltà=et_difficolta.text.toString()
-        var preparazione=et_preparazione.text.toString()
-        var cottura=et_cottura.text.toString()
-        var dosi=et_dosi.text.toString()
-        var portata=et_portata.text.toString()
-        var ingredienti=ArrayList<String>()
-        var descrizione=et_preparazione_descrizione.text.toString()
-        var conservazione=et_conservazione.text.toString()
+        var nome = (et_recipe_name.text).toString()
+        var difficoltà = et_difficolta.text.toString()
+        var preparazione = et_preparazione.text.toString()
+        var cottura = et_cottura.text.toString()
+        var dosi = et_dosi.text.toString()
+        var portata = et_portata.text.toString()
+        var ingredienti = ArrayList<String>()
+        var descrizione = et_preparazione_descrizione.text.toString()
+        var conservazione = et_conservazione.text.toString()
 
         //remove black underline
         setEditable(Color.TRANSPARENT, false)
@@ -272,15 +284,22 @@ class RecipeActivity : AppCompatActivity() {
                 linear_ingredienti[index].spin_ingredient_units.isEnabled = false
                 linear_ingredienti[index].iv_ingredient_delete.isEnabled = false
                 if (linear_ingredienti[index].et_recipe_ingredient != null && linear_ingredienti[index].et_ingredient_qty != null && et_preparazione_descrizione != null && et_conservazione != null) {
-                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
-                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+                    linear_ingredienti[index].et_recipe_ingredient.background.setColorFilter(
+                        Color.TRANSPARENT,
+                        PorterDuff.Mode.SRC_IN
+                    )
+                    linear_ingredienti[index].et_ingredient_qty.background.setColorFilter(
+                        Color.TRANSPARENT,
+                        PorterDuff.Mode.SRC_IN
+                    )
 
 
-                    var tmp=linear_ingredienti[index].et_recipe_ingredient.text.toString() + ";" + linear_ingredienti[index].et_ingredient_qty.text.toString() +
-                            ";" + linear_ingredienti[index].spin_ingredient_units.selectedItem.toString()
+                    var tmp =
+                        linear_ingredienti[index].et_recipe_ingredient.text.toString() + ";" + linear_ingredienti[index].et_ingredient_qty.text.toString() +
+                                ";" + linear_ingredienti[index].spin_ingredient_units.selectedItem.toString()
                     ingredienti.add(tmp)
                 }
-                if(linear_ingredienti[index].iv_ingredient_delete!=null)
+                if (linear_ingredienti[index].iv_ingredient_delete != null)
                     linear_ingredienti[index].iv_ingredient_delete.visibility = View.INVISIBLE
             }
 
@@ -294,25 +313,26 @@ class RecipeActivity : AppCompatActivity() {
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
 
         //inserimento nel DB
-        val nCottura=cottura.split(" ")
-        val nPreparazione=preparazione.split(" ")
-        val durata=(nCottura[0].toInt())+(nPreparazione[0].toInt())
-        val id_tmp= nome+ LocalDateTime.now()
-        var id=""
+        val nCottura = cottura.split(" ")
+        val nPreparazione = preparazione.split(" ")
+        val durata = (nCottura[0].toInt()) + (nPreparazione[0].toInt())
+        val id_tmp = nome + LocalDateTime.now()
+        var id = ""
         //per togliere i . e i : dall'id (non supportati da firebase)
-        for(i in id_tmp.indices)
-        {
-            if(id_tmp[i]=='.')
+        for (i in id_tmp.indices) {
+            if (id_tmp[i] == '.')
                 continue
-            if(id_tmp[i]==':')
+            if (id_tmp[i] == ':')
                 continue
-            id+=id_tmp[i]
+            id += id_tmp[i]
 
 
         }
 
-        val ricetta=Recipe(id,nome, difficoltà, preparazione, cottura,
-            "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
+        val ricetta = Recipe(
+            id, nome, difficoltà, preparazione, cottura,
+            "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
+        )
         mRecipeReference?.child(ricetta.toString())?.setValue(ricetta)
 
     }
@@ -342,13 +362,41 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun dosesProportion() {
-        ///TODO: realizzare funzione di proporzione fra le dosi
-        if(initialDose!=0) {
+        ///TODO: realizzare funzione di proporzione fra le dosi, usare variabili lette da db
+
+        if (initialDose != 0) {
             Log.v("valore actual", actualDose.toString())
             Log.v("valore initial", initialDose.toString())
         }
         initialDose = actualDose
     }
+
+    fun leggiRicettaDB(idRicetta: String) {
+        mRecipeReference.orderByChild("ident").equalTo(idRicetta)
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
+                    println(dataSnapshot.key)
+
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
 
 
 }
