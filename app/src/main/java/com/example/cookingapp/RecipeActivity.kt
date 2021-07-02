@@ -62,8 +62,10 @@ class RecipeActivity : AppCompatActivity() {
                 Log.v("chiamante", "homepage")
                 fab_edit.hide()
                 btn_ingredient_add.visibility = View.INVISIBLE
-                val nome = intent.getStringExtra("recipe_data")
-                et_recipe_name.setText(nome)
+                val idRicetta = intent.getStringExtra("recipe_data")
+                if (idRicetta != null) {
+                    leggiRicettaDB(idRicetta)
+                }
                 setEditable(Color.TRANSPARENT, false)
                 et_dosi.isEnabled = true
                 et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
@@ -375,24 +377,41 @@ class RecipeActivity : AppCompatActivity() {
         mRecipeReference.orderByChild("ident").equalTo(idRicetta)
             .addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
-                    println(dataSnapshot.key)
+                    //prendo il nodo interessato e lo metto in un oggetto di tipo Ricetta
+                    val ricetta:Recipe?= dataSnapshot.getValue(Recipe::class.java)
+                    Log.e("nome", ricetta!!.name)
+                    //setto tutti i campi con i dati relativi a quella determinata ricetta
+                    et_recipe_name.setText(ricetta.name)
+                    et_difficolta.setText(ricetta.difficoltà)
+                    et_preparazione.setText(ricetta.preparazione)
+                    et_cottura.setText(ricetta.cottura)
+                    et_dosi.setText(ricetta.dosi)
+                    et_portata.setText(ricetta.portata)
+                    val ingredienti:ArrayList<String> = ricetta.ingredienti
+                    for(i in ingredienti)
+                    {
+                        //inserire gli ingredienti
+                    }
+                    et_preparazione_descrizione.setText(ricetta.descrizione)
+                    et_conservazione.setText(ricetta.conservazione)
+                    if(ricetta.preferiti)
+                    {
+                        img_heart.setImageResource(R.drawable.heart_red)
+                    }
 
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Log.e("The read failed: " ,error.getMessage())
                 }
             })
     }
