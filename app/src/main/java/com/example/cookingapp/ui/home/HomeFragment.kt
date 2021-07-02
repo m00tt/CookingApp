@@ -1,17 +1,11 @@
 package com.example.cookingapp.ui.home
 
-import android.content.ClipData
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
-import android.view.ContextMenu.ContextMenuInfo
 import android.widget.*
-import androidx.core.graphics.component1
-import androidx.core.view.children
-import androidx.core.view.get
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
@@ -22,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    var mRecipeReference: DatabaseReference? = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private var mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
     //creiamo il listener
     private var mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
 
@@ -45,6 +39,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             listView.adapter=HomeAdapter(context as MainActivity, it)
         })
         return root*/
+
         return inflater.inflate(R.layout.fragment_home, container, false)
 
     }
@@ -52,21 +47,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
     override fun onStart() {
         super.onStart()
         //aggiungiamo il listener appena creato
-        mRecipeReference!!.addChildEventListener(mRecipesChildListener)
-        /*
-        //aggiungo le ricette
-        if(mRecipeArrayList.isEmpty()) {
-            mRecipeArrayList.add(Recipe("Ricetta 1", "Facile", "15 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 2", "Media", "20 minuti", "Primo"))
-            mRecipeArrayList.add(Recipe("Ricetta 3", "Facile", "10 minuti", "Secondo"))
-            mRecipeArrayList.add(Recipe("Ricetta 4", "Difficile", "30 minuti", "Dessert"))
-            mRecipeArrayList.add(Recipe("Ricetta 5", "Facile", "7 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 6", "Media", "25 minuti", "Primo"))
-            mRecipeArrayList.add(Recipe("Ricetta 7", "Facile", "15 minuti", "Dessert"))
-            mRecipeArrayList.add(Recipe("Ricetta 8", "Difficile", "60 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 9", "Facile", "7 minuti", "Secondo"))
-            mRecipeArrayList.add(Recipe("Ricetta 10", "Difficile", "40 minuti", "Antipasto"))
-        }*/
+        mRecipeReference.addChildEventListener(mRecipesChildListener)
 
         //carico le ricette nella listView
         adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
@@ -286,7 +267,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente da eliminare anche in locale
                 val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
                 val recipeKey=snapshot.key
-                var elimineted_recipe=mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
+                val elimineted_recipe=mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
                 mRecipeArrayList.remove(elimineted_recipe)
 
                 adapter1?.notifyDataSetChanged()
@@ -306,10 +287,8 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     override fun onStop() {
         super.onStop()
-
-        //rimuoviamo il listener (se non è null)
-        if (mRecipesChildListener != null)
-            mRecipeReference!!.removeEventListener(mRecipesChildListener)
+        //rimuoviamo il listener
+        mRecipeReference.removeEventListener(mRecipesChildListener)
     }
 
     override fun onPause() {

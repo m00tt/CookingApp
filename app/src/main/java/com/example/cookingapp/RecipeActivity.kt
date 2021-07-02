@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.HashMap
 import java.util.jar.Manifest
 
@@ -296,7 +297,20 @@ class RecipeActivity : AppCompatActivity() {
         val nCottura=cottura.split(" ")
         val nPreparazione=preparazione.split(" ")
         val durata=(nCottura[0].toInt())+(nPreparazione[0].toInt())
-        val id= nome+ LocalDate.now().toString()
+        val id_tmp= nome+ LocalDateTime.now()
+        var id=""
+        //per togliere i . e i : dall'id (non supportati da firebase)
+        for(i in id_tmp.indices)
+        {
+            if(id_tmp[i]=='.')
+                continue
+            if(id_tmp[i]==':')
+                continue
+            id+=id_tmp[i]
+
+
+        }
+
         val ricetta=Recipe(id,nome, difficoltà, preparazione, cottura,
             "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
         mRecipeReference?.child(ricetta.toString())?.setValue(ricetta)

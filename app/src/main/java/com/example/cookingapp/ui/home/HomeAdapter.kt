@@ -74,7 +74,6 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
         return newView
 
     }
-
     //TODO: risolvere problema che quando si ricerca qualcosa mentre si sta filtrando torna alla lista di partenza non filtrata
     // (provare ricevendo una stringa contenente i filtri selezionati, separati l'uno dall'altro da uno spazio)
     //metodo che serve per la searchBar per filtrare i vari elementi
