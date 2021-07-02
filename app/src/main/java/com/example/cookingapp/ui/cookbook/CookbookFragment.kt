@@ -1,8 +1,14 @@
 package com.example.cookingapp.ui.cookbook
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,17 +27,23 @@ import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import com.example.cookingapp.RecipeActivity
 import com.example.cookingapp.ui.home.HomeAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_cookbook.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.list_view
+import kotlinx.android.synthetic.main.row.*
+import java.io.File
 
 
 class CookbookFragment : Fragment() {
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    var mRecipeReference: DatabaseReference? = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private val userID:String = FirebaseAuth.getInstance().currentUser!!.uid
+    private val mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private val mFavouriteReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Favourites").child(userID)
+    private val mUserRecipesReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users_recipes").child(userID)
     //creiamo il listener
-    private var mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
+    private val mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
 
     private val mRecipeArrayList = ArrayList<Recipe>()
     private var adapter1: CookbookAdapter? = null
@@ -63,23 +75,9 @@ class CookbookFragment : Fragment() {
     }
     override fun onStart() {
         super.onStart()
+
         //aggiungiamo il listener appena creato
         mRecipeReference!!.addChildEventListener(mRecipesChildListener)
-
-        /*
-        //aggiungo le ricette
-        if(mRecipeArrayList.isEmpty()) {
-            mRecipeArrayList.add(Recipe("Ricetta 1", "Facile", "15 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 2", "Media", "20 minuti", "Primo"))
-            mRecipeArrayList.add(Recipe("Ricetta 3", "Facile", "10 minuti", "Secondo"))
-            mRecipeArrayList.add(Recipe("Ricetta 4", "Difficile", "30 minuti", "Dessert"))
-            mRecipeArrayList.add(Recipe("Ricetta 5", "Facile", "7 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 6", "Media", "25 minuti", "Primo"))
-            mRecipeArrayList.add(Recipe("Ricetta 7", "Facile", "15 minuti", "Dessert"))
-            mRecipeArrayList.add(Recipe("Ricetta 8", "Difficile", "60 minuti", "Antipasto"))
-            mRecipeArrayList.add(Recipe("Ricetta 9", "Facile", "7 minuti", "Secondo"))
-            mRecipeArrayList.add(Recipe("Ricetta 10", "Difficile", "40 minuti", "Antipasto"))
-        }*/
 
         //carico le ricette nella listView
         adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
@@ -187,5 +185,7 @@ class CookbookFragment : Fragment() {
         //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
         mRecipeArrayList.clear()
     }
+
+
 
 }

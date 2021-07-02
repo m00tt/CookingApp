@@ -1,20 +1,28 @@
 package com.example.cookingapp
 
 import android.accessibilityservice.GestureDescription
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.get
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_recipe.*
 import kotlinx.android.synthetic.main.activity_signin.*
@@ -25,11 +33,16 @@ import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
 import java.time.LocalDate
 import java.util.HashMap
+import java.util.jar.Manifest
 
 
 class RecipeActivity : AppCompatActivity() {
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    var mRecipeReference: DatabaseReference? = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private val userID:String = FirebaseAuth.getInstance().currentUser!!.uid
+    private var mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private val mUserRecipesReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users_recipes").child(userID)
+
+    private val OPERATION_CAPTURE_PHOTO = 1
 
     var editable = false
     var prefer = false
@@ -121,6 +134,43 @@ class RecipeActivity : AppCompatActivity() {
         })
 
 
+        img_recipe.setOnClickListener {
+            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), OPERATION_CAPTURE_PHOTO)
+            }
+            else {
+                val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
+            }
+        }
+
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == OPERATION_CAPTURE_PHOTO && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            img_recipe.performClick()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode) {
+            OPERATION_CAPTURE_PHOTO -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
+                }
+            }
+            else -> {
+                Toast.makeText(this, "Unrecognized request code", Toast.LENGTH_SHORT)
+            }
+        }
     }
 
 
