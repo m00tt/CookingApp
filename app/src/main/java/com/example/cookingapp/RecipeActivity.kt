@@ -1,6 +1,8 @@
 package com.example.cookingapp
 
+import android.accessibilityservice.GestureDescription
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -16,6 +18,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
@@ -28,7 +31,10 @@ import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.HashMap
+import java.util.jar.Manifest
 
 
 class RecipeActivity : AppCompatActivity() {
@@ -47,6 +53,7 @@ class RecipeActivity : AppCompatActivity() {
     var prefer = false
     var actualDose = 0
     var initialDose = 0
+    var conversioneAutomatica = false
     var chiamante = ""
 
     //dichiarazione attributi ricetta letti da db
@@ -176,6 +183,9 @@ class RecipeActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
 
+                    //Eliminazione foto da DB
+                    //FirebaseStoreManager().onDeleteImage("ID_Ricetta")
+
                     //Inserimento foto nel DB, da gestire solamente quando l'utente salva le modifiche della ricetta.
                     FirebaseStoreManager().onCaptureImageData(
                         this,
@@ -185,6 +195,7 @@ class RecipeActivity : AppCompatActivity() {
                         resources.getString(R.string.uploading_done),
                         resources.getString(R.string.uploading_error)
                     )
+                    //FirebaseStoreManager().onCaptureImageData(this, data, "ID_Ricetta", resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
                 }
             }
             else -> {
