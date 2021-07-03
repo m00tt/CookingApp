@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -39,6 +40,15 @@ class FirebaseStoreManager {
         val bb = bytes.toByteArray();
 
         uploadImageFirebase(mContext, bb, imgName, uploadingMessage, uploadingDoneMessage, uploadingErrorMessage)
+    }
+
+    fun onDeleteImage(imgName: String){
+        val imgStorageReference:StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://cookingapp-97c73.appspot.com/images/$imgName.jpg")
+        imgStorageReference.delete().addOnSuccessListener {
+            Log.e("IMAGE DELETION", "Image deleted")
+        }.addOnFailureListener{
+            Log.e("IMAGE DELETION", "Error")
+        }
     }
 
 
