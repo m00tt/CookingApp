@@ -71,4 +71,7 @@
     <string name="signin_name_hint">Name</string>
     <string name="signin_surname_hint">Surname</string>
     <string name="inserisci_nome_ricetta">Insert recipe name</string>
+    <string name="photo_uploading_message">Uploading image...</string>
+    <string name="uploading_error">Something went wrong...</string>
+    <string name="uploading_done">Photo has been saved!</string>
 </resources>

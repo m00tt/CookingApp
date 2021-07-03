@@ -79,4 +79,7 @@
     <string name="signin_name_hint">Nome</string>
     <string name="signin_surname_hint">Cognome</string>
     <string name="inserisci_nome_ricetta">Inserisci il nome della ricetta</string>
+    <string name="photo_uploading_message">Sto salvando la foto...</string>
+    <string name="uploading_error">Qualcosa è andato storto...</string>
+    <string name="uploading_done">La foto è stata salvata!</string>
 </resources>
