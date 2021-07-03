@@ -446,16 +446,24 @@ class RecipeActivity : AppCompatActivity() {
             })
     }
 
+
     fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
     {
         mRecipeReference.orderByChild("ident").equalTo(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
+                if (snapshot.exists()) { //eseguo l'update della ricetta già esistente
                     Log.e("esiste","lo snapshot esiste")
+                    //calcolo la durata
+                    val nCottura = cottura.split(" ")
+                    val nPreparazione = preparazione.split(" ")
+                    val durata = (nCottura[0].toInt()) + (nPreparazione[0].toInt())
                     //si va a modificare la ricetta già esistente
-
+                    Log.e("dosi",dosi)
+                    val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
+                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
+                    mRecipeReference.child(ricetta_modificata.toString()).setValue(ricetta_modificata)
                 }
-                else {
+                else { //inserisco la ricetta nel DB
                     Log.e("non esiste", "lo snapshot non esiste")
                     //inserimento nel DB
                     val nCottura = cottura.split(" ")
