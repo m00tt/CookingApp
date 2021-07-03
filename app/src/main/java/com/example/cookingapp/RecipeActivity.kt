@@ -56,6 +56,7 @@ class RecipeActivity : AppCompatActivity() {
     var conversioneAutomatica = false
     var chiamante = ""
     var idRicetta=""
+    var ricetta=Recipe()
 
     //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -363,12 +364,24 @@ class RecipeActivity : AppCompatActivity() {
 
     fun dosesProportion() {
         ///TODO: realizzare funzione di proporzione fra le dosi, usare variabili lette da db
+        Log.e("ciao", ricetta.dosi)
+        var newQuantita = 0
+        var childCountParent = linear_ingredienti.childCount
+        var c = 0
+        for ((index) in (1 until childCountParent).withIndex()) {
+            Log.v("INDEX",index.toString())
+            if (index > 0) {
+                var tmp = ricetta.ingredienti[c].split(";")
+                newQuantita = (((tmp[1].toInt() * actualDose) / ricetta.dosi.toInt()))
+                Log.v("nome ingrediente", tmp[0])
+                Log.v("dose attuale", actualDose.toString())
+                Log.v("newQuantita", newQuantita.toString())
+                linear_ingredienti[index].et_ingredient_qty.setText(newQuantita.toString())
 
-        if (initialDose != 0) {
-            Log.v("valore actual", actualDose.toString())
-            Log.v("valore initial", initialDose.toString())
+                c++
+            }
         }
-        initialDose = actualDose
+
     }
 
     fun leggiRicettaDB(idRicetta: String) {
@@ -376,8 +389,8 @@ class RecipeActivity : AppCompatActivity() {
             .addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
                     //prendo il nodo interessato e lo metto in un oggetto di tipo Ricetta
-                    val ricetta: Recipe? = dataSnapshot.getValue(Recipe::class.java)
-                    Log.e("nome", ricetta!!.name)
+                    ricetta = dataSnapshot.getValue(Recipe::class.java)!!
+                    Log.e("nome", ricetta.name)
                     //setto tutti i campi con i dati relativi a quella determinata ricetta
                     et_recipe_name.setText(ricetta.name)
                     et_difficolta.setText(ricetta.difficoltà)
@@ -480,11 +493,11 @@ class RecipeActivity : AppCompatActivity() {
                         id += id_tmp[i]
                     }
 
-                    val ricetta = Recipe(
+                    val nuova_ricetta = Recipe(
                         id, nome, difficoltà, preparazione, cottura,
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
                     )
-                    mRecipeReference.child(ricetta.toString()).setValue(ricetta)
+                    mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
                 }
             }
 
@@ -493,6 +506,8 @@ class RecipeActivity : AppCompatActivity() {
         })
 
     }
+
+
 
 
 }
