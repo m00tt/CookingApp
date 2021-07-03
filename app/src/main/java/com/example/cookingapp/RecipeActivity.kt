@@ -166,6 +166,9 @@ class RecipeActivity : AppCompatActivity() {
             OPERATION_CAPTURE_PHOTO -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
+
+                    //Inserimento foto nel DB, da gestire solamente quando l'utente salva le modifiche della ricetta.
+                    FirebaseStoreManager().onCaptureImageData(this, data, "ID_Ricetta", resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
                 }
             }
             else -> {
