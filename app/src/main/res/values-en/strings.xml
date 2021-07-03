@@ -74,4 +74,5 @@
     <string name="photo_uploading_message">Uploading image...</string>
     <string name="uploading_error">Something went wrong...</string>
     <string name="uploading_done">Photo has been saved!</string>
+    <string name="minutes">Minutes</string>
 </resources>

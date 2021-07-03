@@ -52,8 +52,6 @@ class RecipeActivity : AppCompatActivity() {
     var editable = false
     var prefer = false
     var actualDose = 0
-    var initialDose = 0
-    var conversioneAutomatica = false
     var chiamante = ""
     var idRicetta=""
     var ricetta=Recipe()
@@ -63,7 +61,15 @@ class RecipeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
-
+        et_min.isEnabled=false
+        et_min2.isEnabled=false
+        et_min3.isEnabled=false
+        et_min.setTextColor(Color.LTGRAY)
+        et_min2.setTextColor(Color.LTGRAY)
+        et_min3.setTextColor(Color.LTGRAY)
+        et_min.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+        et_min2.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+        et_min3.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         //CONTROLLO CHIAMANTI E SETTAGGIO AZIONI
         chiamante = intent.getStringExtra("chiamante").toString()
         when (chiamante) {
@@ -76,6 +82,10 @@ class RecipeActivity : AppCompatActivity() {
                 leggiRicettaDB(idRicetta)
 
                 setEditable(Color.TRANSPARENT, false)
+                et_preparazione.setTextColor(Color.LTGRAY)
+                et_dosi.setTextColor(Color.BLACK)
+                et_cottura.setTextColor(Color.LTGRAY)
+
                 et_dosi.isEnabled = true
                 et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
 
@@ -83,14 +93,18 @@ class RecipeActivity : AppCompatActivity() {
 
             }
             "addRicetta" -> {
-                et_recipe_name.setText("Inserisci il nome della ricetta")
                 btn_ingredient_add.visibility = View.VISIBLE
                 setEditable(Color.BLACK, true)
                 editable = true
                 fab_edit.setImageResource(R.mipmap.ic_save_foreground)
+                img_heart.visibility = View.INVISIBLE
             }
             else -> {
                 setEditable(Color.TRANSPARENT, false)
+
+                et_preparazione.setTextColor(Color.LTGRAY)
+                et_dosi.setTextColor(Color.LTGRAY)
+                et_cottura.setTextColor(Color.LTGRAY)
                 btn_ingredient_add.visibility = View.INVISIBLE
 
                 idRicetta = intent.getStringExtra("recipe_data")!!
@@ -104,8 +118,22 @@ class RecipeActivity : AppCompatActivity() {
                     InputType.TYPE_NUMBER_FLAG_DECIMAL or
                     InputType.TYPE_NUMBER_FLAG_SIGNED
         )
+        et_preparazione.setInputType(
+            InputType.TYPE_CLASS_NUMBER or
+                    InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                    InputType.TYPE_NUMBER_FLAG_SIGNED
+        )
+        et_cottura.setInputType(
+            InputType.TYPE_CLASS_NUMBER or
+                    InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                    InputType.TYPE_NUMBER_FLAG_SIGNED
+        )
+        btn_back_recipe.setOnClickListener{
+            finish()
+        }
 
     }
+
 
 
     override fun onStart() {
@@ -119,6 +147,7 @@ class RecipeActivity : AppCompatActivity() {
             }
 
         })
+
 
 
 
@@ -206,19 +235,20 @@ class RecipeActivity : AppCompatActivity() {
     fun setEditable(colore: Int, action: Boolean) {
         //add black underline
         et_recipe_name.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
+        et_recipe_name.setTextColor(resources.getColor(R.color.scritte))
         et_preparazione.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
-        et_portata.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
         et_dosi.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
-        et_difficolta.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
         et_cottura.background.setColorFilter(colore, PorterDuff.Mode.SRC_IN)
 
-
+        et_preparazione.setTextColor(Color.BLACK)
+        et_dosi.setTextColor(Color.BLACK)
+        et_cottura.setTextColor(Color.BLACK)
         //set editText editable
         et_recipe_name.isEnabled = action
         et_preparazione.isEnabled = action
-        et_portata.isEnabled = action
+        sp_portata.isEnabled = action
         et_dosi.isEnabled = action
-        et_difficolta.isEnabled = action
+        sp_difficolta.isEnabled = action
         et_cottura.isEnabled = action
 
 
@@ -272,11 +302,13 @@ class RecipeActivity : AppCompatActivity() {
 
         //prendo tutti i campi da inserire nel DB
         val nome = (et_recipe_name.text).toString()
-        val difficoltà = et_difficolta.text.toString()
+        val difficoltà = sp_difficolta.selectedItem.toString()
         val preparazione = et_preparazione.text.toString()
         val cottura = et_cottura.text.toString()
+        et_preparazione.setText(preparazione)
+        et_cottura.setText(cottura)
         val dosi = et_dosi.text.toString()
-        val portata = et_portata.text.toString()
+        val portata = sp_portata.selectedItem.toString()
         val ingredienti = ArrayList<String>()
         val descrizione = et_preparazione_descrizione.text.toString()
         val conservazione = et_conservazione.text.toString()
@@ -284,12 +316,10 @@ class RecipeActivity : AppCompatActivity() {
         //remove black underline
         setEditable(Color.TRANSPARENT, false)
 
-        et_recipe_name.setTextColor(Color.BLACK)
-        et_preparazione.setTextColor(resources.getColor(R.color.scritte))
-        et_portata.setTextColor(resources.getColor(R.color.scritte))
-        et_dosi.setTextColor(resources.getColor(R.color.scritte))
-        et_difficolta.setTextColor(resources.getColor(R.color.scritte))
-        et_cottura.setTextColor(resources.getColor(R.color.scritte))
+        et_recipe_name.setTextColor(resources.getColor(R.color.scritte))
+        et_preparazione.setTextColor(Color.LTGRAY)
+        et_dosi.setTextColor(Color.LTGRAY)
+        et_cottura.setTextColor(Color.LTGRAY)
 
         Log.v("saveRecipe", "SaveRecipe")
         editable = false
@@ -324,11 +354,6 @@ class RecipeActivity : AppCompatActivity() {
                     linear_ingredienti[index].iv_ingredient_delete.visibility = View.INVISIBLE
             }
 
-            /*
-            et_shoplist_product.isEnabled = false
-            et_shoplist_qty.isEnabled = false
-            spin_shoplist_units.isEnabled = false
-            iv_shoplist_delete.isEnabled = false*/
         }
 
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
@@ -363,7 +388,6 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun dosesProportion() {
-        ///TODO: realizzare funzione di proporzione fra le dosi, usare variabili lette da db
         Log.e("ciao", ricetta.dosi)
         var newQuantita = 0
         var childCountParent = linear_ingredienti.childCount
@@ -393,11 +417,24 @@ class RecipeActivity : AppCompatActivity() {
                     Log.e("nome", ricetta.name)
                     //setto tutti i campi con i dati relativi a quella determinata ricetta
                     et_recipe_name.setText(ricetta.name)
-                    et_difficolta.setText(ricetta.difficoltà)
-                    et_preparazione.setText(ricetta.preparazione)
-                    et_cottura.setText(ricetta.cottura)
+                    when(ricetta.difficoltà)
+                    {
+                        "Facile"->{ sp_difficolta.setSelection(0) }
+                        "Media"->{sp_difficolta.setSelection(1)}
+                        "Difficile"->{sp_difficolta.setSelection(2)}
+                    }
+                    val prepTMP = ricetta.preparazione.split(" ")
+                    val cottTMP = ricetta.cottura.split(" ")
+                    et_preparazione.setText(prepTMP[0])
+                    et_cottura.setText(cottTMP[0])
                     et_dosi.setText(ricetta.dosi)
-                    et_portata.setText(ricetta.portata)
+                    when(ricetta.portata)
+                    {
+                        "Antipasto"->{ sp_portata.setSelection(0) }
+                        "Primo"->{sp_portata.setSelection(1)}
+                        "Secondo"->{sp_portata.setSelection(2)}
+                        "Dessert"->{sp_portata.setSelection(3)}
+                    }
                     val ingredienti: ArrayList<String> = ricetta.ingredienti
                     var count = 1
                     for (i in ingredienti) {
@@ -433,6 +470,10 @@ class RecipeActivity : AppCompatActivity() {
                         }
                         linear_ingredienti[count].spin_ingredient_units.setSelection(selection)
                         Log.v("sd", i)
+                        linear_ingredienti[count].et_recipe_ingredient.isEnabled=false
+                        linear_ingredienti[count].et_ingredient_qty.isEnabled=false
+                        linear_ingredienti[count].spin_ingredient_units.isEnabled=false
+                        linear_ingredienti[count].iv_ingredient_delete.visibility=View.INVISIBLE
                         count++
                     }
                     et_preparazione_descrizione.setText(ricetta.descrizione)
@@ -467,9 +508,7 @@ class RecipeActivity : AppCompatActivity() {
                 if (snapshot.exists()) { //eseguo l'update della ricetta già esistente
                     Log.e("esiste","lo snapshot esiste")
                     //calcolo la durata
-                    val nCottura = cottura.split(" ")
-                    val nPreparazione = preparazione.split(" ")
-                    val durata = (nCottura[0].toInt()) + (nPreparazione[0].toInt())
+                    val durata = (cottura.toInt()) + (cottura.toInt())
                     //si va a modificare la ricetta già esistente
                     Log.e("dosi",dosi)
                     val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
@@ -479,9 +518,7 @@ class RecipeActivity : AppCompatActivity() {
                 else { //inserisco la ricetta nel DB
                     Log.e("non esiste", "lo snapshot non esiste")
                     //inserimento nel DB
-                    val nCottura = cottura.split(" ")
-                    val nPreparazione = preparazione.split(" ")
-                    val durata = (nCottura[0].toInt()) + (nPreparazione[0].toInt())
+                    val durata = (cottura.toInt()) + (cottura.toInt())
                     val id_tmp = nome + LocalDateTime.now()
                     var id = ""
                     //per togliere i . e i : dall'id (non supportati da firebase)
@@ -494,7 +531,7 @@ class RecipeActivity : AppCompatActivity() {
                     }
 
                     val nuova_ricetta = Recipe(
-                        id, nome, difficoltà, preparazione, cottura,
+                        id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
                     )
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)

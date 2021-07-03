@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:id="@+id/main_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,15 +17,34 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="65">
+            android:layout_weight="65"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:background="@color/giallo"
+                android:minHeight="40dp">
+
+                <ImageButton
+                    android:id="@+id/btn_back_recipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@color/giallo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/abc_vector_test" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="70"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:minHeight="250dp">
 
 
@@ -37,19 +57,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:mipmap/sym_def_app_icon" />
+                    app:srcCompat="@android:drawable/ic_menu_camera" />
 
                 <ImageView
                     android:id="@+id/img_heart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:onClick="setPrefer"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/heart"
-                    app:layout_constraintWidth_max="40dp"
                     app:layout_constraintHeight_max="40dp"
-                    android:layout_marginRight="8dp"
-                    android:onClick="setPrefer"/>
+                    app:layout_constraintWidth_max="40dp"
+                    app:srcCompat="@drawable/heart" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -58,10 +78,10 @@
                 android:id="@+id/linearData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="65"
-                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp">
+                android:layout_weight="65"
+                android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/et_recipe_name"
@@ -69,35 +89,36 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:ems="10"
+                    android:hint="@string/inserisci_nome_ricetta"
                     android:inputType="textPersonName"
                     android:singleLine="false"
-                    android:text="Name"
+                    android:textColor="@color/scritte"
                     android:textSize="24sp" />
 
                 <LinearLayout
                     android:id="@+id/linear_difficolta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="15dp">
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/img_difficolta"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_weight="4.5"
                         app:srcCompat="@drawable/dashboard" />
 
-                    <EditText
-                        android:id="@+id/et_difficolta"
+                    <Spinner
+                        android:id="@+id/sp_difficolta"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:hint="@string/label_recipe_difficolta"
-                        android:textColor="@color/scritte" />
+                        android:entries="@array/difficulty_units" />
+
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/linear_preparazione"
                     android:layout_width="match_parent"
@@ -108,19 +129,35 @@
                         android:id="@+id/img_preparazione"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_weight="0.65"
                         app:srcCompat="@drawable/preparazione" />
 
                     <EditText
                         android:id="@+id/et_preparazione"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.6"
                         android:ems="10"
-                        android:inputType="textPersonName"
                         android:hint="@string/label_header_preparazione"
-                        android:textColor="@color/scritte"/>
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <EditText
+                        android:id="@+id/et_min"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.35"
+                        android:ems="10"
+                        android:hint="@string/label_header_preparazione"
+                        android:inputType="textPersonName"
+
+                        android:text="@string/minutes"
+                        android:textSize="16dp"
+
+                        />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/linear_cottura"
                     android:layout_width="match_parent"
@@ -131,18 +168,30 @@
                         android:id="@+id/img_cottura"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_weight="0.65"
                         app:srcCompat="@drawable/cottura" />
 
                     <EditText
                         android:id="@+id/et_cottura"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.6"
                         android:ems="10"
-                        android:inputType="textPersonName"
                         android:hint="@string/label_header_cottura"
-                        android:textColor="@color/scritte"/>
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <EditText
+                        android:id="@+id/et_min2"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.35"
+                        android:ems="10"
+                        android:hint="@string/label_header_preparazione"
+                        android:inputType="textPersonName"
+                        android:text="@string/minutes"
+                        android:textSize="16dp" />
                 </LinearLayout>
 
 
@@ -150,26 +199,38 @@
                     android:id="@+id/linear_dosi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/img_dosi"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_weight="0.65"
                         app:srcCompat="@drawable/dosi" />
 
                     <EditText
                         android:id="@+id/et_dosi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.6"
                         android:ems="10"
-                        android:inputType="textPersonName"
                         android:hint="@string/label_header_dosi"
-                        android:textColor="@color/scritte" />
+                        android:inputType="textPersonName"
+                        android:textColor="@color/black"
+                        android:textSize="16dp" />
+
+                    <EditText
+                        android:id="@+id/et_min3"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_weight="0.35"
+                        android:ems="10"
+                        android:hint="@string/label_header_preparazione"
+                        android:inputType="textPersonName"
+                        android:text="@string/minutes"
+                        android:textSize="16dp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/linear_portata"
                     android:layout_width="match_parent"
@@ -180,33 +241,34 @@
                         android:id="@+id/img_portata"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_weight="4.5"
                         app:srcCompat="@drawable/plate" />
 
-                    <EditText
-                        android:id="@+id/et_portata"
+                    <Spinner
+                        android:id="@+id/sp_portata"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="45dp"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:hint="@string/label_header_portata"
-                        android:textColor="@color/scritte"/>
+                        android:entries="@array/portata_units" />
+
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/linear_ingredienti"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_ingredienti"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_ingredienti"
+                        android:textColor="@color/scritte"
                         android:textSize="18dp"
                         android:textStyle="bold" />
+
                     <Button
                         android:id="@+id/btn_ingredient_add"
                         android:layout_width="wrap_content"
@@ -215,17 +277,19 @@
                         android:text="@string/shoplist_plus" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_preparazione"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_preparazione"
+                        android:textColor="@color/scritte"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
@@ -239,14 +303,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_conservazione"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/label_conservazione"
+                        android:textColor="@color/scritte"
                         android:textSize="18dp"
                         android:textStyle="bold" />
 
@@ -267,12 +332,12 @@
         android:id="@+id/fab_edit"
         android:layout_width="62dp"
         android:layout_height="59dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:layout_weight="35"
         android:clickable="true"
         app:fabSize="auto"
         app:maxImageSize="80dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
         app:srcCompat="@mipmap/ic_pencil_foreground" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

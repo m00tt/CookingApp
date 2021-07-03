@@ -41,6 +41,18 @@
         <item>KG</item>
         <item>Qty</item>
     </string-array>
+    <string-array name="difficulty_units">
+        <item>Facile</item>
+        <item>Media</item>
+        <item>Difficile</item>
+    </string-array>
+    <string-array name="portata_units">
+        <item>Antipasto</item>
+        <item>Primo</item>
+        <item>Secondo</item>
+        <item>Dessert</item>
+    </string-array>
+    <string name="minutes">Minuti</string>
     <string name="shoplist_icon_alt" translatable="false">Delete icon</string>
     <string name="shoplist_product_hint">Prodotto</string>
     <string name="shoplist_plus">Aggiungi</string>
