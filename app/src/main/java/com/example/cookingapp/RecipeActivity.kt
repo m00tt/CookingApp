@@ -1,15 +1,14 @@
 package com.example.cookingapp
 
+import android.accessibilityservice.GestureDescription
 import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -19,18 +18,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.get
-import com.google.android.material.internal.ContextUtils.getActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_recipe.*
+import kotlinx.android.synthetic.main.activity_signin.*
+import kotlinx.android.synthetic.main.fragment_shoplist.*
+import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
-import java.io.*
+import kotlinx.android.synthetic.main.row_shoplist.*
+import kotlinx.android.synthetic.main.row_shoplist.view.*
+import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.HashMap
+import java.util.jar.Manifest
 
 
 class RecipeActivity : AppCompatActivity() {
@@ -38,7 +42,6 @@ class RecipeActivity : AppCompatActivity() {
     private val userID:String = FirebaseAuth.getInstance().currentUser!!.uid
     private var mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
     private val mUserRecipesReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users_recipes").child(userID)
-
 
     private val OPERATION_CAPTURE_PHOTO = 1
 
@@ -131,15 +134,15 @@ class RecipeActivity : AppCompatActivity() {
             }
         })
 
-        //TODO("Da gestire solo quando è abilitata la modifica")
+
         img_recipe.setOnClickListener {
             if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
             {
                 ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), OPERATION_CAPTURE_PHOTO)
             }
             else {
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, OPERATION_CAPTURE_PHOTO)
+                val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
             }
         }
 
@@ -161,37 +164,14 @@ class RecipeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
             OPERATION_CAPTURE_PHOTO -> {
-                if (resultCode == Activity.RESULT_OK && data!=null) {
-                    val thumb:Bitmap = data.extras!!.get("data") as Bitmap
-                    img_recipe.setImageBitmap(thumb)
-
-                    //TODO("Salvataggio img to DB, da spostare quando viene premuto il FAB di salvataggio")
-                    FirebaseStoreManager().onCaptureImageData(this, data, "ID_RICETTA", resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
                 }
             }
+            else -> {
+                Toast.makeText(this, "Unrecognized request code", Toast.LENGTH_SHORT)
+            }
         }
-    }
-
-    private fun bitmapToFile(bitmap:Bitmap): Uri {
-        // Get the context wrapper
-        val wrapper = ContextWrapper(applicationContext)
-
-        // Initialize a new file instance to save bitmap object
-        var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
-        file = File(file,"${UUID.randomUUID()}.jpg")
-
-        try{
-            // Compress the bitmap and save in jpg format
-            val stream: OutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
-            stream.flush()
-            stream.close()
-        }catch (e: IOException){
-            e.printStackTrace()
-        }
-
-        // Return the saved bitmap uri
-        return Uri.parse(file.absolutePath)
     }
 
 
