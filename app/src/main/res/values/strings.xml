@@ -42,15 +42,15 @@
         <item>Qty</item>
     </string-array>
     <string-array name="difficulty_units">
-        <item>Facile</item>
-        <item>Media</item>
-        <item>Difficile</item>
+        <item>@string/popup_facile</item>
+        <item>@string/popup_medio</item>
+        <item>@string/popup_difficile</item>
     </string-array>
     <string-array name="portata_units">
-        <item>Antipasto</item>
-        <item>Primo</item>
-        <item>Secondo</item>
-        <item>Dessert</item>
+        <item>@string/popup_antipasto</item>
+        <item>@string/popup_primo</item>
+        <item>@string/popup_secondo</item>
+        <item>@string/popup_dessert</item>
     </string-array>
     <string name="minutes">Minuti</string>
     <string name="shoplist_icon_alt" translatable="false">Delete icon</string>
