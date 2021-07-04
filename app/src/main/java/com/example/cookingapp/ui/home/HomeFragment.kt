@@ -14,22 +14,25 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
-class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
+class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    private var mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
+    private var mRecipeReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Recipes")
+
     //creiamo il listener
     private var mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
 
     //private lateinit var homeViewModel: HomeViewModel
     private val mRecipeArrayList = ArrayList<Recipe>()
     private var adapter1: HomeAdapter? = null
-    lateinit var menu:Menu
-    lateinit var checkati:String
+    lateinit var menu: Menu
+    lateinit var checkati: String
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         /*homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -65,10 +68,10 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
             override fun afterTextChanged(s: Editable) {}
         })
 
-        val popup = PopupMenu(context as MainActivity,img_filter)
+        val popup = PopupMenu(context as MainActivity, img_filter)
         popup.setOnMenuItemClickListener(this@HomeFragment)
         popup.inflate(R.menu.popup_menu)
-        menu=popup.menu
+        menu = popup.menu
 
         //aggiungo il listener all'imageButton per il filtro
         img_filter.setOnClickListener(object : View.OnClickListener {
@@ -81,7 +84,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
 
     //metodo che gestisce l'evento click degli elementi del popup_menu
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        when (item?.itemId){
+        when (item?.itemId) {
             //gestione difficoltà
             R.id.Facile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Facile", Toast.LENGTH_SHORT).show()
@@ -89,27 +92,30 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 menu.findItem(R.id.Media).setChecked(false)
                 menu.findItem(R.id.Difficile).setChecked(false)
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Media -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Media", Toast.LENGTH_SHORT).show()
                 searchBar.text.clear()
                 menu.findItem(R.id.Facile).setChecked(false)
                 menu.findItem(R.id.Difficile).setChecked(false)
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Difficile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Difficile", Toast.LENGTH_SHORT).show()
                 searchBar.text.clear()
                 menu.findItem(R.id.Media).setChecked(false)
                 menu.findItem(R.id.Facile).setChecked(false)
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
 
             //gestione durata
             R.id.Veloce -> {
@@ -117,25 +123,28 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 menu.findItem(R.id.Media_durata).setChecked(false)
                 menu.findItem(R.id.Lunga).setChecked(false)
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Media_durata -> {
                 menu.findItem(R.id.Veloce).setChecked(false)
                 menu.findItem(R.id.Lunga).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Lunga -> {
                 menu.findItem(R.id.Media_durata).setChecked(false)
                 menu.findItem(R.id.Veloce).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
 
             //gestione portata
             R.id.Antipasto -> {
@@ -144,36 +153,40 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Primo -> {
                 menu.findItem(R.id.Antipasto).setChecked(false)
                 menu.findItem(R.id.Secondo).setChecked(false)
                 menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Secondo -> {
                 menu.findItem(R.id.Primo).setChecked(false)
                 menu.findItem(R.id.Antipasto).setChecked(false)
                 menu.findItem(R.id.Dessert).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
             R.id.Dessert -> {
                 menu.findItem(R.id.Primo).setChecked(false)
                 menu.findItem(R.id.Secondo).setChecked(false)
                 menu.findItem(R.id.Antipasto).setChecked(false)
                 searchBar.text.clear()
                 setCheck(item)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
-                return true}
+                return true
+            }
 
             //tutte le ricette
             R.id.Tutte -> {
@@ -188,7 +201,7 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 menu.findItem(R.id.Primo).setChecked(false)
                 menu.findItem(R.id.Secondo).setChecked(false)
                 menu.findItem(R.id.Dessert).setChecked(false)
-                checkati=controlCheck()
+                checkati = controlCheck()
                 adapter1?.filter?.filter(checkati)
                 return true
             }
@@ -197,39 +210,39 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
         }
     }
 
-    private fun setCheck(item:MenuItem?){
+    private fun setCheck(item: MenuItem?) {
         item!!.setChecked(!item.isChecked)
     }
 
-    private fun controlCheck():String{
+    private fun controlCheck(): String {
         var controllo = ""
 
-        if(menu.findItem(R.id.Facile).isChecked)
-            controllo+="Facile;"
-        if(menu.findItem(R.id.Media).isChecked)
-            controllo+="Media;"
-        if(menu.findItem(R.id.Difficile).isChecked)
-            controllo+="Difficile;"
-        if(menu.findItem(R.id.Veloce).isChecked)
-            controllo+="Veloce;"
-        if(menu.findItem(R.id.Media_durata).isChecked)
-            controllo+="Media_durata;"
-        if(menu.findItem(R.id.Lunga).isChecked)
-            controllo+="Lunga;"
-        if(menu.findItem(R.id.Antipasto).isChecked)
-            controllo+="Antipasto;"
-        if(menu.findItem(R.id.Primo).isChecked)
-            controllo+="Primo;"
-        if(menu.findItem(R.id.Secondo).isChecked)
-            controllo+="Secondo;"
-        if(menu.findItem(R.id.Dessert).isChecked)
-            controllo+="Dessert;"
+        if (menu.findItem(R.id.Facile).isChecked)
+            controllo += "Facile;"
+        if (menu.findItem(R.id.Media).isChecked)
+            controllo += "Media;"
+        if (menu.findItem(R.id.Difficile).isChecked)
+            controllo += "Difficile;"
+        if (menu.findItem(R.id.Veloce).isChecked)
+            controllo += "Veloce;"
+        if (menu.findItem(R.id.Media_durata).isChecked)
+            controllo += "Media_durata;"
+        if (menu.findItem(R.id.Lunga).isChecked)
+            controllo += "Lunga;"
+        if (menu.findItem(R.id.Antipasto).isChecked)
+            controllo += "Antipasto;"
+        if (menu.findItem(R.id.Primo).isChecked)
+            controllo += "Primo;"
+        if (menu.findItem(R.id.Secondo).isChecked)
+            controllo += "Secondo;"
+        if (menu.findItem(R.id.Dessert).isChecked)
+            controllo += "Dessert;"
 
-        if(controllo=="")
-            controllo="Tutte"
+        if (controllo == "")
+            controllo = "Tutte"
 
         Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
-        return  controllo
+        return controllo
     }
 
     //metodo che restituisce il listener
@@ -241,9 +254,41 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 Log.d("TAG", "onChildAdded: ${snapshot.key!!}")
 
                 //prendiamo i valori dentro lo snapshot e i mettiamo in una variabile
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
+                val newRecipe =
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
                 //prendiamo la lista dei dati che è collegata all'adapter e gli aggiungiamo il newRecipe
-                mRecipeArrayList.add(Recipe(newRecipe!!.ident, newRecipe.name, newRecipe.difficoltà, newRecipe.durata, newRecipe.portata))
+                var diff = ""
+                var port = ""
+                var dur = newRecipe!!.durata
+                when (newRecipe.difficoltà) {
+                    "Facile" -> {
+                        diff = getString(R.string.popup_facile)
+                    }
+                    "Media" -> {
+                        diff = getString(R.string.popup_medio)
+                    }
+                    "Difficile" -> {
+                        diff = getString(R.string.popup_difficile)
+                    }
+                }
+                when (newRecipe.portata) {
+                    "Antipasto" -> {
+                        port = getString(R.string.popup_antipasto)
+                    }
+                    "Primo" -> {
+                        port = getString(R.string.popup_primo)
+                    }
+                    "Secondo" -> {
+                        port = getString(R.string.popup_secondo)
+                    }
+                    "Dessert" -> {
+                        port = getString(R.string.popup_dessert)
+                    }
+                }
+                var tmp = dur.split(" ")
+                dur = tmp[0] + " " + getString(R.string.minutes)
+
+                mRecipeArrayList.add(Recipe(newRecipe!!.ident, newRecipe.name, diff, dur, port))
                 //rigeneriamo l'adapter così va a rilggere i dati e si ridisegna
                 adapter1?.notifyDataSetChanged()
             }
@@ -253,8 +298,9 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 Log.d("TAG", "onChildChanged: ${snapshot.key!!}")
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente che arriva come snapshot e cambiare le relative informazioni
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
-                val recipeKey=snapshot.key
+                val newRecipe =
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                val recipeKey = snapshot.key
                 mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }?.set(newRecipe!!)
 
                 adapter1?.notifyDataSetChanged()
@@ -265,9 +311,9 @@ class HomeFragment : Fragment() , PopupMenu.OnMenuItemClickListener{
                 Log.d("TAG", "onChildRemoved: ${snapshot.key!!}")
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente da eliminare anche in locale
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
-                val recipeKey=snapshot.key
-                val elimineted_recipe=mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
+                val recipeKey = snapshot.key
+                val elimineted_recipe =
+                    mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
                 mRecipeArrayList.remove(elimineted_recipe)
 
                 adapter1?.notifyDataSetChanged()

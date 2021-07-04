@@ -75,4 +75,7 @@
     <string name="uploading_error">Something went wrong...</string>
     <string name="uploading_done">Photo has been saved!</string>
     <string name="minutes">Minutes</string>
+    <string name="facile">Easy</string>
+    <string name="media">Medium</string>
+    <string name="difficile">Difficult</string>
 </resources>

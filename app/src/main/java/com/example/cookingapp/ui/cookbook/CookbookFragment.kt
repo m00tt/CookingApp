@@ -38,10 +38,17 @@ import java.io.File
 
 class CookbookFragment : Fragment() {
     //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
-    private val userID:String = FirebaseAuth.getInstance().currentUser!!.uid
-    private val mRecipeReference: DatabaseReference = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Recipes")
-    private val mFavouriteReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Favourites").child(userID)
-    private val mUserRecipesReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users_recipes").child(userID)
+    private val userID: String = FirebaseAuth.getInstance().currentUser!!.uid
+    private val mRecipeReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Recipes")
+    private val mFavouriteReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Favourites").child(userID)
+    private val mUserRecipesReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Users_recipes").child(userID)
+
     //creiamo il listener
     private val mRecipesChildListener: ChildEventListener = getRecipesChildEventListner()
 
@@ -51,9 +58,9 @@ class CookbookFragment : Fragment() {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         /*cookbookViewModel =
                 ViewModelProvider(this).get(CookbookViewModel::class.java)
@@ -73,6 +80,7 @@ class CookbookFragment : Fragment() {
         requireActivity().title = "Ricettario"
 
     }
+
     override fun onStart() {
         super.onStart()
 
@@ -128,9 +136,42 @@ class CookbookFragment : Fragment() {
                 Log.d("TAG", "onChildAdded: ${snapshot.key!!}")
 
                 //prendiamo i valori dentro lo snapshot e i mettiamo in una variabile
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Recipe
+                val newRecipe =
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
                 //prendiamo la lista dei dati che è collegata all'adapter e gli aggiungiamo il newRecipe
-                mRecipeArrayList.add(Recipe(newRecipe!!.ident, newRecipe.name, newRecipe.difficoltà, newRecipe.durata, newRecipe.portata))
+                var diff = ""
+                var port = ""
+                var dur = newRecipe!!.durata
+                when (newRecipe.difficoltà) {
+                    "Facile" -> {
+                        diff = getString(R.string.popup_facile)
+                    }
+                    "Media" -> {
+                        diff = getString(R.string.popup_medio)
+                    }
+                    "Difficile" -> {
+                        diff = getString(R.string.popup_difficile)
+                    }
+                }
+                when (newRecipe.portata) {
+                    "Antipasto" -> {
+                        port = getString(R.string.popup_antipasto)
+                    }
+                    "Primo" -> {
+                        port = getString(R.string.popup_primo)
+                    }
+                    "Secondo" -> {
+                        port = getString(R.string.popup_secondo)
+                    }
+                    "Dessert" -> {
+                        port = getString(R.string.popup_dessert)
+                    }
+                }
+                var tmp = dur.split(" ")
+                dur = tmp[0] + " " + getString(R.string.minutes)
+
+
+                mRecipeArrayList.add(Recipe(newRecipe.ident, newRecipe.name, diff, dur, port))
                 //rigeneriamo l'adapter così va a rilggere i dati e si ridisegna
                 adapter1?.notifyDataSetChanged()
             }
@@ -140,8 +181,9 @@ class CookbookFragment : Fragment() {
                 Log.d("TAG", "onChildChanged: ${snapshot.key!!}")
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente che arriva come snapshot e cambiare le relative informazioni
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
-                val recipeKey=snapshot.key
+                val newRecipe =
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                val recipeKey = snapshot.key
                 mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }?.set(newRecipe!!)
 
                 adapter1?.notifyDataSetChanged()
@@ -152,9 +194,11 @@ class CookbookFragment : Fragment() {
                 Log.d("TAG", "onChildRemoved: ${snapshot.key!!}")
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente da eliminare anche in locale
-                val newRecipe = snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
-                val recipeKey=snapshot.key
-                var elimineted_recipe=mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
+                val newRecipe =
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                val recipeKey = snapshot.key
+                var elimineted_recipe =
+                    mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
                 mRecipeArrayList.remove(elimineted_recipe)
 
                 adapter1?.notifyDataSetChanged()
@@ -185,7 +229,6 @@ class CookbookFragment : Fragment() {
         //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
         mRecipeArrayList.clear()
     }
-
 
 
 }
