@@ -61,7 +61,7 @@ class RecipeActivity : AppCompatActivity() {
     var chiamante = ""
     var idRicetta=""
     var ricetta=Recipe()
-
+    lateinit var fotoRicetta: Intent
     //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,19 +180,21 @@ class RecipeActivity : AppCompatActivity() {
 
 
         img_recipe.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.CAMERA),
-                    OPERATION_CAPTURE_PHOTO
-                )
-            } else {
-                val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
+            if(editable) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        OPERATION_CAPTURE_PHOTO
+                    )
+                } else {
+                    val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
+                }
             }
         }
 
@@ -219,6 +221,7 @@ class RecipeActivity : AppCompatActivity() {
                     val imgName = "ID_Ricetta"
 
                     //ESEMPIO CHE PRENDE LA FOTO DALLO STORAGE IN BASE ALL'ID DELLA RICETTA ED IMPOSTA L'IMAGEVIEW
+                    /*
                     val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
                     val idImgRef = mStorageReference.child("images/${imgName}.jpg")
                     thread {
@@ -228,12 +231,14 @@ class RecipeActivity : AppCompatActivity() {
                             Log.e("IMAGE DOWNLOAD", "Error")
                         }
                     }
+                    */
+                    //INSERIMENTO IMMAGINE NELL'IMAGE VIEW DELLA RICETTA
+                    img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
 
-                    //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-                    FirebaseStoreManager().onCaptureImageData(this, data, imgName, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
+                    fotoRicetta = data
 
                     //ESEMPIO ELIMINAZIONE FOTO DALLO STORAGE (imgName = ID della ricetta)
-                    FirebaseStoreManager().onDeleteImage(imgName)
+                    //FirebaseStoreManager().onDeleteImage(imgName)
                 }
             }
             else -> {
@@ -381,6 +386,8 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
+        //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
+        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
         inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
 
@@ -504,6 +511,18 @@ class RecipeActivity : AppCompatActivity() {
                     }
                     et_preparazione_descrizione.setText(ricetta.descrizione)
                     et_conservazione.setText(ricetta.conservazione)
+
+                    //CATTURA IMMAGINE RICETTA DAL DB
+                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+                    val idImgRef = mStorageReference.child("images/${idRicetta}.jpg")
+                    thread {
+                        idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
+                            img_recipe.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                        }.addOnFailureListener {
+                            Log.e("IMAGE DOWNLOAD", "Error")
+                        }
+                    }
+
                     if (ricetta.preferiti) {
                         img_heart.setImageResource(R.drawable.heart_red)
                     }
