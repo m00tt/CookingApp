@@ -205,30 +205,20 @@
                         android:id="@+id/img_dosi"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.65"
+                        android:layout_weight="0.9"
                         app:srcCompat="@drawable/dosi" />
 
                     <EditText
                         android:id="@+id/et_dosi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
+                        android:layout_weight="0.21"
                         android:ems="10"
                         android:hint="@string/label_header_dosi"
                         android:inputType="textPersonName"
                         android:textColor="@color/black"
                         android:textSize="16dp" />
 
-                    <EditText
-                        android:id="@+id/et_min3"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_weight="0.35"
-                        android:ems="10"
-                        android:hint="@string/label_header_preparazione"
-                        android:inputType="textPersonName"
-                        android:text="@string/minutes"
-                        android:textSize="16dp" />
                 </LinearLayout>
 
                 <LinearLayout

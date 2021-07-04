@@ -63,13 +63,10 @@ class RecipeActivity : AppCompatActivity() {
 
         et_min.isEnabled=false
         et_min2.isEnabled=false
-        et_min3.isEnabled=false
         et_min.setTextColor(Color.LTGRAY)
         et_min2.setTextColor(Color.LTGRAY)
-        et_min3.setTextColor(Color.LTGRAY)
         et_min.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         et_min2.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
-        et_min3.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
         //CONTROLLO CHIAMANTI E SETTAGGIO AZIONI
         chiamante = intent.getStringExtra("chiamante").toString()
         when (chiamante) {
@@ -128,6 +125,7 @@ class RecipeActivity : AppCompatActivity() {
                     InputType.TYPE_NUMBER_FLAG_DECIMAL or
                     InputType.TYPE_NUMBER_FLAG_SIGNED
         )
+
         btn_back_recipe.setOnClickListener{
             finish()
         }
@@ -302,17 +300,30 @@ class RecipeActivity : AppCompatActivity() {
 
         //prendo tutti i campi da inserire nel DB
         val nome = (et_recipe_name.text).toString()
-        val difficoltà = sp_difficolta.selectedItem.toString()
+        var difficoltà = sp_difficolta.selectedItem.toString()
         val preparazione = et_preparazione.text.toString()
         val cottura = et_cottura.text.toString()
         et_preparazione.setText(preparazione)
         et_cottura.setText(cottura)
         val dosi = et_dosi.text.toString()
-        val portata = sp_portata.selectedItem.toString()
+        var portata = sp_portata.selectedItem.toString()
         val ingredienti = ArrayList<String>()
         val descrizione = et_preparazione_descrizione.text.toString()
         val conservazione = et_conservazione.text.toString()
 
+        when(sp_difficolta.selectedItemPosition)
+        {
+            0->difficoltà="Facile"
+            1->difficoltà="Media"
+            2->difficoltà="Difficile"
+        }
+        when(sp_portata.selectedItemPosition)
+        {
+            0->portata="Antipasto"
+            1->portata="Primo"
+            2->portata="Secondo"
+            3->portata="Dessert"
+        }
         //remove black underline
         setEditable(Color.TRANSPARENT, false)
 
