@@ -504,10 +504,8 @@ class RecipeActivity : AppCompatActivity() {
                     }
                     et_preparazione_descrizione.setText(ricetta.descrizione)
                     et_conservazione.setText(ricetta.conservazione)
-                    if (ricetta.preferiti) {
-                        img_heart.setImageResource(R.drawable.heart_red)
-                    }
 
+                    checkPreferiti()
                     //editabilità item row_ingredient
                 }
 
@@ -526,6 +524,29 @@ class RecipeActivity : AppCompatActivity() {
             })
     }
 
+    fun checkPreferiti()
+    {
+        mFavouriteReference.child(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    Log.e("esiste","è prefirito")
+                    //la ricetta è preferita di quell'utente
+                    prefer=true
+                    img_heart.setImageResource(R.drawable.heart_red)
+                }
+                else {
+                    Log.e("non esiste", "non è preferito")
+                    //la ricetta non è preferita di quell'utente
+                    prefer=false
+                    img_heart.setImageResource(R.drawable.heart)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
 
     fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
     {
@@ -538,7 +559,7 @@ class RecipeActivity : AppCompatActivity() {
                     //si va a modificare la ricetta già esistente
                     Log.e("dosi",dosi)
                     val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
-                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
+                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
                     mRecipeReference.child(ricetta_modificata.toString()).setValue(ricetta_modificata)
                 }
                 else { //inserisco la ricetta nel DB
@@ -558,8 +579,7 @@ class RecipeActivity : AppCompatActivity() {
 
                     val nuova_ricetta = Recipe(
                         id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
-                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
-                    )
+                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
                     //si aggiunge la ricetta alla lista delle ricette create dall'utente
                     mUserRecipesReference.child(id).setValue(id)
@@ -575,11 +595,9 @@ class RecipeActivity : AppCompatActivity() {
     fun favourite(comando:String) {
         if (comando.equals("inserisci")) {
             mFavouriteReference.child(idRicetta).setValue(idRicetta)
-            mRecipeReference.child(idRicetta).child("preferiti").setValue(true)
         }
         if (comando.equals("togli")) {
             mFavouriteReference.child(idRicetta).removeValue()
-            mRecipeReference.child(idRicetta).child("preferiti").setValue(false)
         }
     }
 

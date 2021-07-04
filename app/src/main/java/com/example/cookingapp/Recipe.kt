@@ -18,7 +18,6 @@ class Recipe
     var descrizione=""
     var conservazione=""
     var ingredienti=ArrayList<String>()
-    var preferiti:Boolean=false
     var ident=""
 
     constructor ()
@@ -33,7 +32,7 @@ class Recipe
 
     }
 
-    constructor(id:String, name: String, difficoltà: String, preparazione: String, cottura: String,durata: String, dosi:String, portata: String, ingredienti:ArrayList<String>, descrizione:String, conservazione:String, preferiti:Boolean ) {
+    constructor(id:String, name: String, difficoltà: String, preparazione: String, cottura: String,durata: String, dosi:String, portata: String, ingredienti:ArrayList<String>, descrizione:String, conservazione:String) {
         this.ident=id
         this.name=name
         this.difficoltà=difficoltà
@@ -45,7 +44,6 @@ class Recipe
         this.ingredienti=ingredienti
         this.descrizione=descrizione
         this.conservazione=conservazione
-        this.preferiti=preferiti
     }
 
 
@@ -62,7 +60,6 @@ class Recipe
         this.ingredienti=newRecipe.ingredienti
         this.descrizione=newRecipe.descrizione
         this.conservazione=newRecipe.conservazione
-        this.preferiti=newRecipe.preferiti
     }
 
     //restituisce la stringa che sarà usata per identificare un oggetto di tipo Recipe
