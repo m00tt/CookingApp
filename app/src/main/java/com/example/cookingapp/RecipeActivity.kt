@@ -46,6 +46,8 @@ class RecipeActivity : AppCompatActivity() {
     private val mUserRecipesReference: DatabaseReference =
         FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("Users_recipes").child(userID)
+    private val mFavouriteReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Favourites").child(userID)
+
 
     private val OPERATION_CAPTURE_PHOTO = 1
 
@@ -367,9 +369,11 @@ class RecipeActivity : AppCompatActivity() {
         if (!prefer) {
             img_heart.setImageResource(R.drawable.heart_red)
             prefer = true
+            favourite("inserisci")
         } else {
             img_heart.setImageResource(R.drawable.heart)
             prefer = false
+            favourite("togli")
         }
     }
 
@@ -535,6 +539,8 @@ class RecipeActivity : AppCompatActivity() {
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
                     )
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
+                    //si aggiunge la ricetta alla lista delle ricette create dall'utente
+                    mUserRecipesReference.child(id).setValue(id)
                 }
             }
 
@@ -543,6 +549,19 @@ class RecipeActivity : AppCompatActivity() {
         })
 
     }
+
+    fun favourite(comando:String) {
+        if (comando.equals("inserisci")) {
+            mFavouriteReference.child(idRicetta).setValue(idRicetta)
+            mRecipeReference.child(idRicetta).child("preferiti").setValue(true)
+        }
+        if (comando.equals("togli")) {
+            mFavouriteReference.child(idRicetta).removeValue()
+            mRecipeReference.child(idRicetta).child("preferiti").setValue(false)
+        }
+    }
+
+
 
 
 
