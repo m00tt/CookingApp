@@ -94,4 +94,6 @@
     <string name="photo_uploading_message">Sto salvando la foto...</string>
     <string name="uploading_error">Qualcosa è andato storto...</string>
     <string name="uploading_done">La foto è stata salvata!</string>
+    <string name="deletingImageWaiting">Sto eliminando l\'immagine...</string>
+    <string name="deletingDoneImage">L\'immagine è stata rimossa correttamente!</string>
 </resources>

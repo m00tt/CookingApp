@@ -78,4 +78,6 @@
     <string name="facile">Easy</string>
     <string name="media">Medium</string>
     <string name="difficile">Difficult</string>
+    <string name="deletingImageWaiting">Deleting the image...</string>
+    <string name="deletingDoneImage">The image has been removed correctly!</string>
 </resources>

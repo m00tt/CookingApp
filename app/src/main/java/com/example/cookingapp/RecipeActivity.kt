@@ -61,7 +61,7 @@ class RecipeActivity : AppCompatActivity() {
     var chiamante = ""
     var idRicetta=""
     var ricetta=Recipe()
-
+    lateinit var fotoRicetta: Intent
     //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +101,7 @@ class RecipeActivity : AppCompatActivity() {
                 editable = true
                 fab_edit.setImageResource(R.mipmap.ic_save_foreground)
                 img_heart.visibility = View.INVISIBLE
+
             }
             else -> {
                 setEditable(Color.TRANSPARENT, false)
@@ -146,8 +147,9 @@ class RecipeActivity : AppCompatActivity() {
             override fun onClick(v: View?) {
                 if (!editable)
                     editRecipe()
-                else
+                else {
                     saveRecipe()
+                }
             }
 
         })
@@ -180,19 +182,28 @@ class RecipeActivity : AppCompatActivity() {
 
 
         img_recipe.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.CAMERA),
-                    OPERATION_CAPTURE_PHOTO
-                )
-            } else {
-                val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
+            if(editable) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        OPERATION_CAPTURE_PHOTO
+                    )
+                } else {
+                    val i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(i, OPERATION_CAPTURE_PHOTO)
+                }
+            }
+        }
+
+        imgDeleteImage.setOnClickListener {
+            if(editable){
+                FirebaseStoreManager().onDeleteImage(this, idRicetta, resources.getString(R.string.deletingImageWaiting), resources.getString(R.string.deletingDoneImage), resources.getString(R.string.uploading_error))
+                img_recipe.setImageBitmap(null)
             }
         }
 
@@ -215,29 +226,9 @@ class RecipeActivity : AppCompatActivity() {
         when (requestCode) {
             OPERATION_CAPTURE_PHOTO -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    //ID della ricetta
-                    val imgName = "ID_Ricetta"
-
-                    //ESEMPIO CHE PRENDE LA FOTO DALLO STORAGE IN BASE ALL'ID DELLA RICETTA ED IMPOSTA L'IMAGEVIEW
-                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
-                    val idImgRef = mStorageReference.child("images/${imgName}.jpg")
-                    thread {
-                        idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
-                            img_recipe.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
-                        }.addOnFailureListener {
-                            Log.e("IMAGE DOWNLOAD", "Error")
-                        }
-                    }
-
-                    //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-                    FirebaseStoreManager().onCaptureImageData(this, data, imgName, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
-
-                    //ESEMPIO ELIMINAZIONE FOTO DALLO STORAGE (imgName = ID della ricetta)
-                    FirebaseStoreManager().onDeleteImage(imgName)
+                    img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
+                    fotoRicetta = data
                 }
-            }
-            else -> {
-                Toast.makeText(this, "Unrecognized request code", Toast.LENGTH_SHORT)
             }
         }
     }
@@ -276,8 +267,9 @@ class RecipeActivity : AppCompatActivity() {
 
         setEditable(Color.BLACK, true)
 
-        Log.v("editRecipe", "editRecipe")
         editable = true
+
+        imgDeleteImage.visibility = View.VISIBLE
 
         //set btn add ingredient visible
         btn_ingredient_add.visibility = View.VISIBLE
@@ -309,6 +301,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
+
         val childCountParent = linear_ingredienti.childCount
 
         //prendo tutti i campi da inserire nel DB
@@ -346,7 +339,7 @@ class RecipeActivity : AppCompatActivity() {
         et_cottura.setTextColor(Color.LTGRAY)
 
         Log.v("saveRecipe", "SaveRecipe")
-        editable = false
+
 
         //set btn add ingredient not visible
         btn_ingredient_add.visibility = View.INVISIBLE
@@ -380,11 +373,15 @@ class RecipeActivity : AppCompatActivity() {
 
         }
 
-        fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
 
         inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
+        //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
+
+        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
 
+        editable = false
+        fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
     }
 
     fun setPrefer(view: View) {
@@ -505,6 +502,18 @@ class RecipeActivity : AppCompatActivity() {
                     et_preparazione_descrizione.setText(ricetta.descrizione)
                     et_conservazione.setText(ricetta.conservazione)
 
+                    //CATTURA IMMAGINE RICETTA DAL DB
+                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+                    val idImgRef = mStorageReference.child("images/${idRicetta}.jpg")
+                    thread {
+                        idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
+                            img_recipe.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                        }.addOnFailureListener {
+                            Log.e("IMAGE DOWNLOAD", "Error")
+                        }
+                    }
+
+
                     checkPreferiti()
                     //editabilità item row_ingredient
                 }
@@ -547,7 +556,11 @@ class RecipeActivity : AppCompatActivity() {
         })
     }
 
+    fun aggiuntaImmagine(id:String)
+    {
+        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, id, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
+    }
     fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
     {
         mRecipeReference.orderByChild("ident").equalTo(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -561,6 +574,7 @@ class RecipeActivity : AppCompatActivity() {
                     val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
                     mRecipeReference.child(ricetta_modificata.toString()).setValue(ricetta_modificata)
+                    aggiuntaImmagine(idRicetta)
                 }
                 else { //inserisco la ricetta nel DB
                     Log.e("non esiste", "lo snapshot non esiste")
@@ -576,14 +590,15 @@ class RecipeActivity : AppCompatActivity() {
                             continue
                         id += id_tmp[i]
                     }
-
                     val nuova_ricetta = Recipe(
                         id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
+                    aggiuntaImmagine(id)
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
                     //si aggiunge la ricetta alla lista delle ricette create dall'utente
                     mUserRecipesReference.child(id).setValue(id)
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
