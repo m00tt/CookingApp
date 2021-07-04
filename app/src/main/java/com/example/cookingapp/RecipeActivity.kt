@@ -198,6 +198,13 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
+        img_recipe.setOnClickListener {
+            if(editable){
+                FirebaseStoreManager().onDeleteImage(this, idRicetta, resources.getString(R.string.deletingImageWaiting), resources.getString(R.string.deletingDoneImage), resources.getString(R.string.uploading_error))
+                img_recipe.setImageBitmap(null)
+            }
+        }
+
 
     }
 
@@ -217,32 +224,9 @@ class RecipeActivity : AppCompatActivity() {
         when (requestCode) {
             OPERATION_CAPTURE_PHOTO -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    //ID della ricetta
-                    val imgName = "ID_Ricetta"
-
-                    //ESEMPIO CHE PRENDE LA FOTO DALLO STORAGE IN BASE ALL'ID DELLA RICETTA ED IMPOSTA L'IMAGEVIEW
-                    /*
-                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
-                    val idImgRef = mStorageReference.child("images/${imgName}.jpg")
-                    thread {
-                        idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
-                            img_recipe.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
-                        }.addOnFailureListener {
-                            Log.e("IMAGE DOWNLOAD", "Error")
-                        }
-                    }
-                    */
-                    //INSERIMENTO IMMAGINE NELL'IMAGE VIEW DELLA RICETTA
                     img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
-
                     fotoRicetta = data
-
-                    //ESEMPIO ELIMINAZIONE FOTO DALLO STORAGE (imgName = ID della ricetta)
-                    //FirebaseStoreManager().onDeleteImage(imgName)
                 }
-            }
-            else -> {
-                Toast.makeText(this, "Unrecognized request code", Toast.LENGTH_SHORT)
             }
         }
     }
@@ -283,6 +267,8 @@ class RecipeActivity : AppCompatActivity() {
 
         Log.v("editRecipe", "editRecipe")
         editable = true
+
+        imgDeleteImage.visibility = View.VISIBLE
 
         //set btn add ingredient visible
         btn_ingredient_add.visibility = View.VISIBLE

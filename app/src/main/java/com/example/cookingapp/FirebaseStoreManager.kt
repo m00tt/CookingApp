@@ -49,14 +49,20 @@ class FirebaseStoreManager {
         uploadImageFirebase(mContext, bb, imgName, uploadingMessage, uploadingDoneMessage, uploadingErrorMessage)
     }
 
-    fun onDeleteImage(imgName: String){
+    fun onDeleteImage(mContext:Context, imgName: String, deletingMessage:String, deletingDoneMessage:String, deletingErrorMessage:String){
+        mProgress = ProgressDialog(mContext)
+        mProgress.setMessage(deletingMessage)
+        mProgress.show()
+
         val imgStorageReference:StorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://cookingapp-97c73.appspot.com/images/$imgName.jpg")
 
         thread {
             imgStorageReference.delete().addOnSuccessListener {
-                Log.e("IMAGE DELETION", "Image deleted")
+                Toast.makeText(mContext, deletingDoneMessage, Toast.LENGTH_SHORT).show()
+                mProgress.hide()
             }.addOnFailureListener{
-                Log.e("IMAGE DELETION", "Error")
+                Toast.makeText(mContext, deletingErrorMessage, Toast.LENGTH_SHORT).show()
+                mProgress.hide()
             }
         }
 
