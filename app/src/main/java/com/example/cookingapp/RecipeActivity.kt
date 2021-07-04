@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -24,6 +25,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.get
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_recipe.*
 import kotlinx.android.synthetic.main.activity_signin.*
 import kotlinx.android.synthetic.main.fragment_shoplist.*
@@ -35,6 +38,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.HashMap
 import java.util.jar.Manifest
+import kotlin.concurrent.thread
 
 
 class RecipeActivity : AppCompatActivity() {
@@ -211,18 +215,25 @@ class RecipeActivity : AppCompatActivity() {
         when (requestCode) {
             OPERATION_CAPTURE_PHOTO -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    img_recipe.setImageBitmap(data.extras?.get("data") as Bitmap)
+                    //ID della ricetta
+                    val imgName = "ID_Ricetta"
 
-                    //Inserimento foto nel DB, da gestire solamente quando l'utente salva le modifiche della ricetta.
-                    FirebaseStoreManager().onCaptureImageData(
-                        this,
-                        data,
-                        "ID_Ricetta",
-                        resources.getString(R.string.photo_uploading_message),
-                        resources.getString(R.string.uploading_done),
-                        resources.getString(R.string.uploading_error)
-                    )
-                    FirebaseStoreManager().onCaptureImageData(this, data, "ID_Ricetta", resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
+                    //ESEMPIO CHE PRENDE LA FOTO DALLO STORAGE IN BASE ALL'ID DELLA RICETTA ED IMPOSTA L'IMAGEVIEW
+                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+                    val idImgRef = mStorageReference.child("images/${imgName}.jpg")
+                    thread {
+                        idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
+                            img_recipe.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                        }.addOnFailureListener {
+                            Log.e("IMAGE DOWNLOAD", "Error")
+                        }
+                    }
+
+                    //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
+                    FirebaseStoreManager().onCaptureImageData(this, data, imgName, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
+
+                    //ESEMPIO ELIMINAZIONE FOTO DALLO STORAGE (imgName = ID della ricetta)
+                    FirebaseStoreManager().onDeleteImage(imgName)
                 }
             }
             else -> {
