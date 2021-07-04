@@ -3,6 +3,7 @@ package com.example.cookingapp.ui.home
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,11 @@ import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import com.example.cookingapp.RecipeActivity
 import com.google.android.material.internal.ContextUtils.getActivity
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_recipe.*
 import kotlinx.android.synthetic.main.row.view.*
+import kotlin.concurrent.thread
 
 class HomeAdapter(private val context: Context, private val data: ArrayList<Recipe>) :
     BaseAdapter(), Filterable {
@@ -43,11 +47,24 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
 
         if (newView != null) {
 
-            //prendiamo le view definite nel file di layout e le assegniamo a delle variabili
+            //prendiamo le view definite nel file di layout e le assegnamo a delle variabili
             val name = newView.findViewById<TextView>(R.id.textViewName)
             val difficoltà = newView.findViewById<TextView>(R.id.textViewDifficoltà)
             val durata = newView.findViewById<TextView>(R.id.textViewDurata)
             val portata = newView.findViewById<TextView>(R.id.textViewPortata)
+
+            val id=mDisplayedValues?.get(position)?.ident
+            //CATTURA IMMAGINE RICETTA DAL DB
+
+            val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+            val idImgRef = mStorageReference.child("images/${id}.jpg")
+            thread {
+                idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
+                    newView.imageView.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }.addOnFailureListener {
+                    Log.e("IMAGE DOWNLOAD", "Error")
+                }
+            }
 
             //assegno i dati alle view
             name.text = mDisplayedValues?.get(position)?.name
@@ -62,7 +79,8 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                     //apertura activity ricetta singola
                     val contesto = context as MainActivity
                     val intent = Intent(contesto, RecipeActivity::class.java)
-                    val id=mDisplayedValues?.get(position)?.ident
+
+
                     intent.putExtra("recipe_data", id.toString())
                     intent.putExtra("chiamante", "home")
                     contesto.startActivity(intent)

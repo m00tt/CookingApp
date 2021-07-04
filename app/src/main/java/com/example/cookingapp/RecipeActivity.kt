@@ -265,7 +265,6 @@ class RecipeActivity : AppCompatActivity() {
 
         setEditable(Color.BLACK, true)
 
-        Log.v("editRecipe", "editRecipe")
         editable = true
 
         imgDeleteImage.visibility = View.VISIBLE
@@ -300,6 +299,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
+        Log.e("stato","SAVERECIPE")
         val childCountParent = linear_ingredienti.childCount
 
         //prendo tutti i campi da inserire nel DB
@@ -337,7 +337,7 @@ class RecipeActivity : AppCompatActivity() {
         et_cottura.setTextColor(Color.LTGRAY)
 
         Log.v("saveRecipe", "SaveRecipe")
-        editable = false
+
 
         //set btn add ingredient not visible
         btn_ingredient_add.visibility = View.INVISIBLE
@@ -371,13 +371,15 @@ class RecipeActivity : AppCompatActivity() {
 
         }
 
-        fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
-        //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
         inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
+        //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
+        Toast.makeText(this,idRicetta,Toast.LENGTH_LONG).show()
+        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
 
+        editable = false
+        fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
     }
 
     fun setPrefer(view: View) {
@@ -565,6 +567,8 @@ class RecipeActivity : AppCompatActivity() {
                         id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
                     )
+                    idRicetta=id
+                    Log.e("id:",idRicetta)
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
                     //si aggiunge la ricetta alla lista delle ricette create dall'utente
                     mUserRecipesReference.child(id).setValue(id)

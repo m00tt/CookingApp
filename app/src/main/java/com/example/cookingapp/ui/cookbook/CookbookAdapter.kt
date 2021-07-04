@@ -2,6 +2,8 @@ package com.example.cookingapp.ui.cookbook
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,10 @@ import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import com.example.cookingapp.RecipeActivity
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.row.view.*
+import kotlin.concurrent.thread
 
 class CookbookAdapter(private val context: Context, private val data: ArrayList<Recipe>) :
     BaseAdapter(), Filterable {
@@ -51,12 +57,28 @@ class CookbookAdapter(private val context: Context, private val data: ArrayList<
             durata.text = mDisplayedValues?.get(position)?.durata.toString()
             portata.text = mDisplayedValues?.get(position)?.portata
 
+            val id=mDisplayedValues?.get(position)?.ident
+            Log.v("id ricetta", id.toString())
+
+            //CATTURA IMMAGINE RICETTA DAL DB
+
+            val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+            val idImgRef = mStorageReference.child("images/${id}.jpg")
+            thread {
+                idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
+                    newView.imageView.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                }.addOnFailureListener {
+                    Log.e("IMAGE DOWNLOAD", "Error")
+                }
+            }
+
+
             //creo il istener per quando si clicca l'intera riga
             newView.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     //Toast.makeText(context as MainActivity, "hai cliccato la riga $position", Toast.LENGTH_SHORT).show()
                     //apertura activity ricetta singola
-                    val id=mDisplayedValues?.get(position)?.ident
+
                     val contesto = context as MainActivity
                     val intent = Intent(contesto, RecipeActivity::class.java)
                     intent.putExtra("recipe_data", id.toString())
