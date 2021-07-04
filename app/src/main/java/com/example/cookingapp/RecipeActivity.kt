@@ -101,6 +101,7 @@ class RecipeActivity : AppCompatActivity() {
                 editable = true
                 fab_edit.setImageResource(R.mipmap.ic_save_foreground)
                 img_heart.visibility = View.INVISIBLE
+
             }
             else -> {
                 setEditable(Color.TRANSPARENT, false)
@@ -146,8 +147,9 @@ class RecipeActivity : AppCompatActivity() {
             override fun onClick(v: View?) {
                 if (!editable)
                     editRecipe()
-                else
+                else {
                     saveRecipe()
+                }
             }
 
         })
@@ -299,7 +301,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
-        Log.e("stato","SAVERECIPE")
+
         val childCountParent = linear_ingredienti.childCount
 
         //prendo tutti i campi da inserire nel DB
@@ -374,7 +376,7 @@ class RecipeActivity : AppCompatActivity() {
 
         inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
         //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-        Toast.makeText(this,idRicetta,Toast.LENGTH_LONG).show()
+
         FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
 
@@ -533,7 +535,11 @@ class RecipeActivity : AppCompatActivity() {
             })
     }
 
+    fun aggiuntaImmagine(id:String)
+    {
+        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, id, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
 
+    }
     fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
     {
         mRecipeReference.orderByChild("ident").equalTo(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -547,6 +553,7 @@ class RecipeActivity : AppCompatActivity() {
                     val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer)
                     mRecipeReference.child(ricetta_modificata.toString()).setValue(ricetta_modificata)
+                    aggiuntaImmagine(idRicetta)
                 }
                 else { //inserisco la ricetta nel DB
                     Log.e("non esiste", "lo snapshot non esiste")
@@ -562,17 +569,16 @@ class RecipeActivity : AppCompatActivity() {
                             continue
                         id += id_tmp[i]
                     }
-
                     val nuova_ricetta = Recipe(
                         id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
                         "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione, prefer
                     )
-                    idRicetta=id
-                    Log.e("id:",idRicetta)
+                    aggiuntaImmagine(id)
                     mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
                     //si aggiunge la ricetta alla lista delle ricette create dall'utente
                     mUserRecipesReference.child(id).setValue(id)
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
