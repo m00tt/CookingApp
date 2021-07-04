@@ -198,7 +198,7 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
-        img_recipe.setOnClickListener {
+        imgDeleteImage.setOnClickListener {
             if(editable){
                 FirebaseStoreManager().onDeleteImage(this, idRicetta, resources.getString(R.string.deletingImageWaiting), resources.getString(R.string.deletingDoneImage), resources.getString(R.string.uploading_error))
                 img_recipe.setImageBitmap(null)
