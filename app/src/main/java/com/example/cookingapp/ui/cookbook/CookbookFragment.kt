@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.row.*
 
 
 class CookbookFragment : Fragment() {
-    //diciamo che vogliamo il riferimento al nodo users all'interno del quale vogliamo mettere le informazioni
     private val userID: String = FirebaseAuth.getInstance().currentUser!!.uid
     private val mRecipeReference: DatabaseReference =
         FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")

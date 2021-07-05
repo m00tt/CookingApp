@@ -78,12 +78,14 @@ class RecipeActivity : AppCompatActivity() {
         chiamante = intent.getStringExtra("chiamante").toString()
         when (chiamante) {
             "home" -> {
+                idRicetta = intent.getStringExtra("recipe_data")!!
+                //controllo se la ricetta è o meno creata dall'utente
+                checkUtente()
+                leggiRicettaDB(idRicetta)
+
                 Log.v("chiamante", "homepage")
                 fab_edit.hide()
                 btn_ingredient_add.visibility = View.INVISIBLE
-
-                idRicetta = intent.getStringExtra("recipe_data")!!
-                leggiRicettaDB(idRicetta)
 
                 setEditable(Color.TRANSPARENT, false)
                 et_preparazione.setTextColor(Color.LTGRAY)
@@ -104,6 +106,8 @@ class RecipeActivity : AppCompatActivity() {
             }
             else -> {
                 idRicetta = intent.getStringExtra("recipe_data")!!
+                //controllo se la ricetta è o meno creata dall'utente
+                checkUtente()
                 leggiRicettaDB(idRicetta)
                 setEditable(Color.TRANSPARENT, false)
 
@@ -569,6 +573,8 @@ class RecipeActivity : AppCompatActivity() {
                     //la ricetta è preferita di quell'utente
                     prefer=true
                     img_heart.setImageResource(R.drawable.heart_red)
+                    fab_edit.hide()
+
                 }
                 else {
                     Log.e("non esiste", "non è preferito")
@@ -649,6 +655,24 @@ class RecipeActivity : AppCompatActivity() {
         if (comando.equals("togli")) {
             mFavouriteReference.child(idRicetta).removeValue()
         }
+    }
+
+    fun checkUtente() {
+        mUserRecipesReference.child(idRicetta)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.e("utente", "ricetta utente")
+                        img_heart.visibility = View.INVISIBLE
+                    } else {
+                        Log.e("utente", "ricetta altro utente")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
     }
 
 
