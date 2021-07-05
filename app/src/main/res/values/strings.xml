@@ -97,4 +97,5 @@
     <string name="deletingImageWaiting">Sto eliminando l\'immagine...</string>
     <string name="deletingDoneImage">L\'immagine è stata rimossa correttamente!</string>
     <string name="elimina_ricetta">Elimina Ricetta</string>
+    <string name="shoplist_pre_message"><i>CookingApp</i>\nLa tua lista della spesa comprende:\n\n</string>
 </resources>

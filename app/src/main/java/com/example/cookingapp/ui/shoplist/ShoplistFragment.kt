@@ -42,7 +42,7 @@ class ShoplistFragment : Fragment() {
 
         shoplist_fab_share.setOnClickListener {
             var go = false
-            var retstr = ""
+            var retstr = resources.getString(R.string.shoplist_pre_message)
             var itemcount = 0
             var index = 0
             if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
