@@ -43,7 +43,6 @@ class CookbookFragment : Fragment() {
     private var adapter1: CookbookAdapter? = null
     private lateinit var cookbookViewModel: CookbookViewModel
 
-    //private var ricetteUtente=ArrayList<String>()
 
 
     override fun onCreateView(
@@ -155,7 +154,7 @@ class CookbookFragment : Fragment() {
                         port = getString(R.string.popup_dessert)
                     }
                 }
-                var tmp = dur.split(" ")
+                val tmp = dur.split(" ")
                 dur = tmp[0] + " " + getString(R.string.minutes)
 
 
@@ -185,7 +184,7 @@ class CookbookFragment : Fragment() {
                 val newRecipe =
                     snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
                 val recipeKey = snapshot.key
-                var elimineted_recipe =
+                val elimineted_recipe =
                     mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }
                 mRecipeArrayList.remove(elimineted_recipe)
 
@@ -206,31 +205,26 @@ class CookbookFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-
         //rimuoviamo il listener (se non è null)
-        if (mRecipesChildListener != null)
-            mRecipeReference!!.removeEventListener(mRecipesChildListener)
+        mRecipeReference.removeEventListener(mRecipesChildListener)
     }
 
     override fun onPause() {
         super.onPause()
-        //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
-        mRecipeArrayList.clear()
-        //ricetteUtente.clear()
+        //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra e si refreshano
+        loadRecipes(mUserRecipesReference)
     }
 
     private fun loadRecipes(riferimento: DatabaseReference)
     {
-        //aggiungiamo il listener appena creato
+        //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
         mRecipeArrayList.clear()
-        //ricetteUtente.clear()
-        //prendo tutte le ricette create dall'utente
+        //prendo tutte le ricette create dall'utente o tutte le ricette preferite dall'utente
         riferimento.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(ds in snapshot.children)
                 {
                     val r=ds.key
-                    //ricetteUtente.add(r!!)
                     mRecipeReference.orderByChild("ident").equalTo(r).addChildEventListener(mRecipesChildListener)
                 }
             }
