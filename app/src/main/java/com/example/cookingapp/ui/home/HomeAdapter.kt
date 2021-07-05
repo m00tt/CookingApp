@@ -251,7 +251,17 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                         }
                     }
                 } else{
-                        if (data.startsWith(stringhe[ele])) {
+                    var string_en=""
+                    when(stringhe[ele])
+                    {
+                        "Facile" -> string_en= context.resources.getString(R.string.popup_facile)
+                        "Media" -> string_en= context.resources.getString(R.string.popup_medio)
+                        "Difficile" -> string_en= context.resources.getString(R.string.popup_difficile)
+                        "Antipasto" -> string_en=context.resources.getString(R.string.popup_antipasto)
+                        "Primo" -> string_en=context.resources.getString(R.string.popup_primo)
+                        "Secondo" -> string_en=context.resources.getString(R.string.popup_secondo)
+                    }
+                        if (data.startsWith(stringhe[ele]) || data.startsWith(string_en)) {
                             FilteredArrList.add(
                                 Recipe(
                                     mOriginalValues!![i].ident,

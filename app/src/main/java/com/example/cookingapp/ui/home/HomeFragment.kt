@@ -88,103 +88,49 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             //gestione difficoltà
             R.id.Facile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Facile", Toast.LENGTH_SHORT).show()
-                searchBar.text.clear()
-                menu.findItem(R.id.Media).setChecked(false)
-                menu.findItem(R.id.Difficile).setChecked(false)
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Media, R.id.Difficile)
                 return true
             }
             R.id.Media -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Media", Toast.LENGTH_SHORT).show()
-                searchBar.text.clear()
-                menu.findItem(R.id.Facile).setChecked(false)
-                menu.findItem(R.id.Difficile).setChecked(false)
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Facile, R.id.Difficile)
                 return true
             }
             R.id.Difficile -> {
                 //Toast.makeText(context as MainActivity, "hai selezionato difficolta' Difficile", Toast.LENGTH_SHORT).show()
-                searchBar.text.clear()
-                menu.findItem(R.id.Media).setChecked(false)
-                menu.findItem(R.id.Facile).setChecked(false)
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Media, R.id.Facile)
                 return true
             }
 
             //gestione durata
             R.id.Veloce -> {
-                searchBar.text.clear()
-                menu.findItem(R.id.Media_durata).setChecked(false)
-                menu.findItem(R.id.Lunga).setChecked(false)
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Media_durata, R.id.Lunga)
                 return true
             }
             R.id.Media_durata -> {
-                menu.findItem(R.id.Veloce).setChecked(false)
-                menu.findItem(R.id.Lunga).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Veloce, R.id.Lunga)
                 return true
             }
             R.id.Lunga -> {
-                menu.findItem(R.id.Media_durata).setChecked(false)
-                menu.findItem(R.id.Veloce).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter(item,R.id.Veloce, R.id.Media_durata)
                 return true
             }
 
             //gestione portata
             R.id.Antipasto -> {
-                menu.findItem(R.id.Primo).setChecked(false)
-                menu.findItem(R.id.Secondo).setChecked(false)
-                menu.findItem(R.id.Dessert).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter_por(item,R.id.Primo,R.id.Secondo,R.id.Dessert)
                 return true
             }
             R.id.Primo -> {
-                menu.findItem(R.id.Antipasto).setChecked(false)
-                menu.findItem(R.id.Secondo).setChecked(false)
-                menu.findItem(R.id.Dessert).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter_por(item,R.id.Antipasto,R.id.Secondo,R.id.Dessert)
                 return true
             }
             R.id.Secondo -> {
-                menu.findItem(R.id.Primo).setChecked(false)
-                menu.findItem(R.id.Antipasto).setChecked(false)
-                menu.findItem(R.id.Dessert).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter_por(item,R.id.Primo,R.id.Antipasto,R.id.Dessert)
                 return true
             }
             R.id.Dessert -> {
-                menu.findItem(R.id.Primo).setChecked(false)
-                menu.findItem(R.id.Secondo).setChecked(false)
-                menu.findItem(R.id.Antipasto).setChecked(false)
-                searchBar.text.clear()
-                setCheck(item)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                setFilter_por(item,R.id.Primo,R.id.Secondo,R.id.Antipasto)
                 return true
             }
 
@@ -208,6 +154,27 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
             else -> return false
         }
+    }
+
+    private fun setFilter(item:MenuItem, id1:Int, id2:Int)
+    {
+        searchBar.text.clear()
+        menu.findItem(id1).setChecked(false)
+        menu.findItem(id2).setChecked(false)
+        setCheck(item)
+        checkati = controlCheck()
+        adapter1?.filter?.filter(checkati)
+    }
+
+    private fun setFilter_por(item:MenuItem, id1:Int, id2:Int, id3:Int)
+    {
+        searchBar.text.clear()
+        menu.findItem(id1).setChecked(false)
+        menu.findItem(id2).setChecked(false)
+        menu.findItem(id3).setChecked(false)
+        setCheck(item)
+        checkati = controlCheck()
+        adapter1?.filter?.filter(checkati)
     }
 
     private fun setCheck(item: MenuItem?) {
@@ -241,7 +208,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         if (controllo == "")
             controllo = "Tutte"
 
-        Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
         return controllo
     }
 
