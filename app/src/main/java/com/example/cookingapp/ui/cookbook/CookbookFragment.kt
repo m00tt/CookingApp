@@ -1,39 +1,27 @@
 package com.example.cookingapp.ui.cookbook
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.DialogInterface
-import android.graphics.Color
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.PopupMenu
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.commit
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
 import com.example.cookingapp.RecipeActivity
-import com.example.cookingapp.ui.home.HomeAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_cookbook.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.list_view
 import kotlinx.android.synthetic.main.row.*
-import java.io.File
 
 
 class CookbookFragment : Fragment() {
@@ -55,6 +43,8 @@ class CookbookFragment : Fragment() {
     private val mRecipeArrayList = ArrayList<Recipe>()
     private var adapter1: CookbookAdapter? = null
     private lateinit var cookbookViewModel: CookbookViewModel
+
+    //private var ricetteUtente=ArrayList<String>()
 
 
     override fun onCreateView(
@@ -84,37 +74,30 @@ class CookbookFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        mRecipeArrayList.clear()
-        mRecipeReference.addChildEventListener(mRecipesChildListener)
+        //di default si mettono le ricette create dall'utente
+        changeTextButton(btn_mieRicette,20F,true)
+        changeTextButton(btn_preferite,14F,false)
+        loadRecipes(mUserRecipesReference)
 
-        //carico le ricette nella listView
-        adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
-        list_view.adapter = adapter1
 
         //aggiungo i listener per i bottoni (per filtrare)
         btn_mieRicette.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                //mostro il bottone selezionato
+                changeTextButton(btn_mieRicette,20F,true)
+                changeTextButton(btn_preferite,14F,false)
                 //si filtrano solo le ricette create dall'utente
-                //aggiungiamo il listener appena creato
-                mRecipeArrayList.clear()
-                mRecipeReference.addChildEventListener(mRecipesChildListener)
-
-                //carico le ricette nella listView
-                adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
-                list_view.adapter = adapter1
+                loadRecipes(mUserRecipesReference)
             }
         })
 
         btn_preferite.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                //mostro il bottone selezionato
+                changeTextButton(btn_preferite,20F,true)
+                changeTextButton(btn_mieRicette,14F,false)
                 //si filtrano solo le ricette preferite dall'utente
-                //aggiungiamo il listener appena creato
-                /*mRecipeArrayList.clear()
-                mRecipeReference.addChildEventListener(mRecipesChildListener)
-
-                //carico le ricette nella listView
-                adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
-                list_view.adapter = adapter1*/
+                loadRecipes(mFavouriteReference)
             }
         })
 
@@ -234,6 +217,41 @@ class CookbookFragment : Fragment() {
         super.onPause()
         //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
         mRecipeArrayList.clear()
+        //ricetteUtente.clear()
+    }
+
+    private fun loadRecipes(riferimento: DatabaseReference)
+    {
+        //aggiungiamo il listener appena creato
+        mRecipeArrayList.clear()
+        //ricetteUtente.clear()
+        //prendo tutte le ricette create dall'utente
+        riferimento.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(ds in snapshot.children)
+                {
+                    val r=ds.key
+                    //ricetteUtente.add(r!!)
+                    mRecipeReference.orderByChild("ident").equalTo(r).addChildEventListener(mRecipesChildListener)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
+        //carico le ricette nella listView
+        adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
+        list_view.adapter = adapter1
+    }
+
+    private fun changeTextButton(b: Button, size: Float, selected:Boolean )
+    {
+        b.textSize=size
+        if(selected)
+            b.paintFlags = b.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        else
+            b.paintFlags=0
     }
 
 
