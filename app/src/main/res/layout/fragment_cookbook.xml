@@ -33,13 +33,6 @@
             android:background="@color/giallo"
             android:text="@string/cookbook_preferite" />
 
-        <Button
-            android:id="@+id/btn_tutte"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/giallo"
-            android:text="@string/cookbook_tutte" />
     </LinearLayout>
 
     <ListView

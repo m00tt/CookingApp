@@ -84,34 +84,40 @@ class CookbookFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        //aggiungiamo il listener appena creato
-        mRecipeReference!!.addChildEventListener(mRecipesChildListener)
+        mRecipeArrayList.clear()
+        mRecipeReference.addChildEventListener(mRecipesChildListener)
 
         //carico le ricette nella listView
         adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
         list_view.adapter = adapter1
 
-        //aggiungo i listener per i 3 bottoni (per filtrare)
+        //aggiungo i listener per i bottoni (per filtrare)
         btn_mieRicette.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //si filtrano solo le ricette create dall'utente
-                //adapter1?.filter?.filter("MieRicette")
+                //aggiungiamo il listener appena creato
+                mRecipeArrayList.clear()
+                mRecipeReference.addChildEventListener(mRecipesChildListener)
+
+                //carico le ricette nella listView
+                adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
+                list_view.adapter = adapter1
             }
         })
 
         btn_preferite.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //si filtrano solo le ricette preferite dall'utente
-                //adapter1?.filter?.filter("Preferite")
+                //aggiungiamo il listener appena creato
+                /*mRecipeArrayList.clear()
+                mRecipeReference.addChildEventListener(mRecipesChildListener)
+
+                //carico le ricette nella listView
+                adapter1 = CookbookAdapter(context as MainActivity, mRecipeArrayList)
+                list_view.adapter = adapter1*/
             }
         })
 
-        btn_tutte.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                //si filtrano tutte le ricette dell'utente
-                //adapter1?.filter?.filter("Tutte")
-            }
-        })
 
         //aggiungo il listener per il fab dell'aggiunta ricetta
         fab_add.setOnClickListener(object : View.OnClickListener {
@@ -182,7 +188,7 @@ class CookbookFragment : Fragment() {
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente che arriva come snapshot e cambiare le relative informazioni
                 val newRecipe =
-                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
                 val recipeKey = snapshot.key
                 mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }?.set(newRecipe!!)
 
@@ -195,7 +201,7 @@ class CookbookFragment : Fragment() {
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente da eliminare anche in locale
                 val newRecipe =
-                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
                 val recipeKey = snapshot.key
                 var elimineted_recipe =
                     mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }

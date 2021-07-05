@@ -299,7 +299,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
                 //prendiamo i dati dallo snapshot e vediamo a quale utente corrisponde l'utente che arriva come snapshot e cambiare le relative informazioni
                 val newRecipe =
-                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo User
+                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo ricetta
                 val recipeKey = snapshot.key
                 mRecipeArrayList.find { e -> e.toString().equals(recipeKey) }?.set(newRecipe!!)
 

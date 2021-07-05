@@ -62,7 +62,8 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                 idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
                     newView.imageView.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
                 }.addOnFailureListener {
-                    Log.e("IMAGE DOWNLOAD", "Error")
+                    //Log.e("IMAGE DOWNLOAD", "Error")
+                    newView.imageView.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
             }
 
