@@ -68,6 +68,7 @@ class RecipeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
+        btn_eliminaRicetta.visibility=View.INVISIBLE
         et_min.isEnabled=false
         et_min2.isEnabled=false
         et_min.setTextColor(Color.LTGRAY)
@@ -224,6 +225,15 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
+        btn_eliminaRicetta.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                deleteRecipe()
+                Toast.makeText(applicationContext, "Ricetta Eliminata", Toast.LENGTH_SHORT).show()
+                finish()
+
+            }
+
+        })
 
     }
 
@@ -282,6 +292,7 @@ class RecipeActivity : AppCompatActivity() {
 
     fun editRecipe() {
 
+        btn_eliminaRicetta.visibility=View.VISIBLE
         setEditable(Color.BLACK, true)
 
         editable = true
@@ -318,7 +329,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
-
+        btn_eliminaRicetta.visibility=View.INVISIBLE
         val childCountParent = linear_ingredienti.childCount
 
         //prendo tutti i campi da inserire nel DB
@@ -673,6 +684,13 @@ class RecipeActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    fun deleteRecipe()
+    {
+        mFavouriteReference.child(idRicetta).removeValue()
+        mUserRecipesReference.child(idRicetta).removeValue()
+        mRecipeReference.child(idRicetta).removeValue()
     }
 
 

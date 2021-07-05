@@ -325,6 +325,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/inserimento_conservazione" />
+
+                    <Button
+                        android:id="@+id/btn_eliminaRicetta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/elimina_ricetta"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:backgroundTint="@android:color/holo_red_dark"/>
                 </LinearLayout>
             </LinearLayout>
 

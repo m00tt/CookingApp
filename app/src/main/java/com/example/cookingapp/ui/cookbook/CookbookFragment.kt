@@ -74,7 +74,7 @@ class CookbookFragment : Fragment() {
         super.onStart()
 
         //di default si mettono le ricette create dall'utente
-        changeTextButton(btn_mieRicette,20F,true)
+        changeTextButton(btn_mieRicette,18F,true)
         changeTextButton(btn_preferite,14F,false)
         loadRecipes(mUserRecipesReference)
 
@@ -83,7 +83,7 @@ class CookbookFragment : Fragment() {
         btn_mieRicette.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //mostro il bottone selezionato
-                changeTextButton(btn_mieRicette,20F,true)
+                changeTextButton(btn_mieRicette,18F,true)
                 changeTextButton(btn_preferite,14F,false)
                 //si filtrano solo le ricette create dall'utente
                 loadRecipes(mUserRecipesReference)
@@ -93,7 +93,7 @@ class CookbookFragment : Fragment() {
         btn_preferite.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //mostro il bottone selezionato
-                changeTextButton(btn_preferite,20F,true)
+                changeTextButton(btn_preferite,18F,true)
                 changeTextButton(btn_mieRicette,14F,false)
                 //si filtrano solo le ricette preferite dall'utente
                 loadRecipes(mFavouriteReference)
