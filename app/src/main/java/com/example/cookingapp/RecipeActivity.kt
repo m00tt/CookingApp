@@ -87,14 +87,12 @@ class RecipeActivity : AppCompatActivity() {
 
                 setEditable(Color.TRANSPARENT, false)
                 et_preparazione.setTextColor(Color.LTGRAY)
-                et_dosi.setTextColor(Color.BLACK)
                 et_cottura.setTextColor(Color.LTGRAY)
 
+                //CONFRONTO DOSI
+                et_dosi.setTextColor(Color.BLACK)
                 et_dosi.isEnabled = true
                 et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
-
-                //leggere ricetta DB
-
             }
             "addRicetta" -> {
                 btn_ingredient_add.visibility = View.VISIBLE
@@ -105,15 +103,21 @@ class RecipeActivity : AppCompatActivity() {
 
             }
             else -> {
+                idRicetta = intent.getStringExtra("recipe_data")!!
+                leggiRicettaDB(idRicetta)
                 setEditable(Color.TRANSPARENT, false)
 
                 et_preparazione.setTextColor(Color.LTGRAY)
-                et_dosi.setTextColor(Color.LTGRAY)
+
+                //CONFRONTO DOSI
+                et_dosi.setTextColor(Color.BLACK)
+                et_dosi.isEnabled = true
+                et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+
                 et_cottura.setTextColor(Color.LTGRAY)
                 btn_ingredient_add.visibility = View.INVISIBLE
 
-                idRicetta = intent.getStringExtra("recipe_data")!!
-                leggiRicettaDB(idRicetta)
+
             }
 
         }
@@ -172,6 +176,14 @@ class RecipeActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (chiamante == "home") {
+                    if (!et_dosi.text.isEmpty()) {
+                        actualDose = et_dosi.text.toString().toInt()
+                        Log.e("valore actual", actualDose.toString())
+                    }
+                    dosesProportion()
+                }
+                if(chiamante == "ricettario" && editable == false)
+                {
                     if (!et_dosi.text.isEmpty()) {
                         actualDose = et_dosi.text.toString().toInt()
                         Log.e("valore actual", actualDose.toString())
@@ -389,6 +401,13 @@ class RecipeActivity : AppCompatActivity() {
         }catch (e:Exception){}
 
         editable = false
+        if(chiamante == "ricettario")
+        {
+            //CONFRONTO DOSI
+            et_dosi.setTextColor(Color.BLACK)
+            et_dosi.isEnabled = true
+            et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
+        }
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
     }
 
