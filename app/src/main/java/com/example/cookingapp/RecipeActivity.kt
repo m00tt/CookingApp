@@ -603,7 +603,7 @@ class RecipeActivity : AppCompatActivity() {
                 if (snapshot.exists()) { //eseguo l'update della ricetta già esistente
                     Log.e("esiste","lo snapshot esiste")
                     //calcolo la durata
-                    val durata = (cottura.toInt()) + (cottura.toInt())
+                    val durata = (preparazione.toInt()) + (cottura.toInt())
                     //si va a modificare la ricetta già esistente
                     Log.e("dosi",dosi)
                     val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
@@ -614,7 +614,7 @@ class RecipeActivity : AppCompatActivity() {
                 else { //inserisco la ricetta nel DB
                     Log.e("non esiste", "lo snapshot non esiste")
                     //inserimento nel DB
-                    val durata = (cottura.toInt()) + (cottura.toInt())
+                    val durata = (preparazione.toInt()) + (cottura.toInt())
                     val id_tmp = nome + LocalDateTime.now()
                     var id = ""
                     //per togliere i . e i : dall'id (non supportati da firebase)
