@@ -51,7 +51,9 @@ class RecipeActivity : AppCompatActivity() {
     private val mUserRecipesReference: DatabaseReference =
         FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
             .getReference("Users_recipes").child(userID)
-    private val mFavouriteReference: DatabaseReference  = FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app").getReference("Favourites").child(userID)
+    private val mFavouriteReference: DatabaseReference =
+        FirebaseDatabase.getInstance("https://cookingapp-97c73-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Favourites").child(userID)
 
 
     private val OPERATION_CAPTURE_PHOTO = 1
@@ -60,17 +62,18 @@ class RecipeActivity : AppCompatActivity() {
     var prefer = false
     var actualDose = 0
     var chiamante = ""
-    var idRicetta=""
-    var ricetta=Recipe()
+    var idRicetta = ""
+    var ricetta = Recipe()
     lateinit var fotoRicetta: Intent
+
     //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
-        btn_eliminaRicetta.visibility=View.INVISIBLE
-        et_min.isEnabled=false
-        et_min2.isEnabled=false
+        btn_eliminaRicetta.visibility = View.INVISIBLE
+        et_min.isEnabled = false
+        et_min2.isEnabled = false
         et_min.setTextColor(Color.LTGRAY)
         et_min2.setTextColor(Color.LTGRAY)
         et_min.background.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
@@ -143,12 +146,11 @@ class RecipeActivity : AppCompatActivity() {
                     InputType.TYPE_NUMBER_FLAG_SIGNED
         )
 
-        btn_back_recipe.setOnClickListener{
+        btn_back_recipe.setOnClickListener {
             finish()
         }
 
     }
-
 
 
     override fun onStart() {
@@ -187,8 +189,7 @@ class RecipeActivity : AppCompatActivity() {
                     }
                     dosesProportion()
                 }
-                if(chiamante == "ricettario" && editable == false)
-                {
+                if (chiamante == "ricettario" && editable == false) {
                     if (!et_dosi.text.isEmpty()) {
                         actualDose = et_dosi.text.toString().toInt()
                         Log.e("valore actual", actualDose.toString())
@@ -200,7 +201,7 @@ class RecipeActivity : AppCompatActivity() {
 
 
         img_recipe.setOnClickListener {
-            if(editable) {
+            if (editable) {
                 if (ActivityCompat.checkSelfPermission(
                         this,
                         android.Manifest.permission.CAMERA
@@ -219,8 +220,14 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         imgDeleteImage.setOnClickListener {
-            if(editable){
-                FirebaseStoreManager().onDeleteImage(this, idRicetta, resources.getString(R.string.deletingImageWaiting), resources.getString(R.string.deletingDoneImage), resources.getString(R.string.uploading_error))
+            if (editable) {
+                FirebaseStoreManager().onDeleteImage(
+                    this,
+                    idRicetta,
+                    resources.getString(R.string.deletingImageWaiting),
+                    resources.getString(R.string.deletingDoneImage),
+                    resources.getString(R.string.uploading_error)
+                )
                 img_recipe.setImageBitmap(null)
             }
         }
@@ -292,7 +299,7 @@ class RecipeActivity : AppCompatActivity() {
 
     fun editRecipe() {
 
-        btn_eliminaRicetta.visibility=View.VISIBLE
+        btn_eliminaRicetta.visibility = View.VISIBLE
         setEditable(Color.BLACK, true)
 
         editable = true
@@ -329,37 +336,45 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun saveRecipe() {
-        btn_eliminaRicetta.visibility=View.INVISIBLE
+        if(et_recipe_name.text.toString()==""||et_preparazione.text.toString()==""||et_cottura.text.toString()==""||et_dosi.text.toString()==""||et_preparazione_descrizione.text.toString()=="")
+        {
+            Toast.makeText(this,"Completa i campi necessari!",Toast.LENGTH_SHORT).show()
+            return
+        }
+        btn_eliminaRicetta.visibility = View.INVISIBLE
         val childCountParent = linear_ingredienti.childCount
-
+        var difficoltà = sp_difficolta.selectedItem.toString()
         //prendo tutti i campi da inserire nel DB
         val nome = (et_recipe_name.text).toString()
-        var difficoltà = sp_difficolta.selectedItem.toString()
-        val preparazione = et_preparazione.text.toString()
-        val cottura = et_cottura.text.toString()
+
+        var preparazione = et_preparazione.text.toString()
+        var cottura = et_cottura.text.toString()
+        var dosi = et_dosi.text.toString()
+
+
         et_preparazione.setText(preparazione)
         et_cottura.setText(cottura)
-        val dosi = et_dosi.text.toString()
+
+
         var portata = sp_portata.selectedItem.toString()
         val ingredienti = ArrayList<String>()
         val descrizione = et_preparazione_descrizione.text.toString()
         val conservazione = et_conservazione.text.toString()
 
-        when(sp_difficolta.selectedItemPosition)
-        {
-            0->difficoltà="Facile"
-            1->difficoltà="Media"
-            2->difficoltà="Difficile"
+        when (sp_difficolta.selectedItemPosition) {
+            0 -> difficoltà = "Facile"
+            1 -> difficoltà = "Media"
+            2 -> difficoltà = "Difficile"
         }
-        when(sp_portata.selectedItemPosition)
-        {
-            0->portata="Antipasto"
-            1->portata="Primo"
-            2->portata="Secondo"
-            3->portata="Dessert"
+        when (sp_portata.selectedItemPosition) {
+            0 -> portata = "Antipasto"
+            1 -> portata = "Primo"
+            2 -> portata = "Secondo"
+            3 -> portata = "Dessert"
         }
         //remove black underline
         setEditable(Color.TRANSPARENT, false)
+
 
         et_recipe_name.setTextColor(resources.getColor(R.color.scritte))
         et_preparazione.setTextColor(Color.LTGRAY)
@@ -402,7 +417,17 @@ class RecipeActivity : AppCompatActivity() {
         }
 
 
-        inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
+        inserisciRicetta(
+            nome,
+            difficoltà,
+            preparazione,
+            cottura,
+            dosi,
+            portata,
+            ingredienti,
+            descrizione,
+            conservazione
+        )
         //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
         try {
             FirebaseStoreManager().onCaptureImageData(
@@ -413,17 +438,18 @@ class RecipeActivity : AppCompatActivity() {
                 resources.getString(R.string.uploading_done),
                 resources.getString(R.string.uploading_error)
             )
-        }catch (e:Exception){}
+        } catch (e: Exception) {
+        }
 
         editable = false
-        if(chiamante == "ricettario")
-        {
+        if (chiamante == "ricettario") {
             //CONFRONTO DOSI
             et_dosi.setTextColor(Color.BLACK)
             et_dosi.isEnabled = true
             et_dosi.background.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN)
         }
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
+        finish()
     }
 
     fun setPrefer(view: View) {
@@ -458,7 +484,7 @@ class RecipeActivity : AppCompatActivity() {
         var childCountParent = linear_ingredienti.childCount
         var c = 0
         for ((index) in (1 until childCountParent).withIndex()) {
-            Log.v("INDEX",index.toString())
+            Log.v("INDEX", index.toString())
             if (index > 0) {
                 var tmp = ricetta.ingredienti[c].split(";")
                 newQuantita = (((tmp[1].toInt() * actualDose) / ricetta.dosi.toInt()))
@@ -482,23 +508,35 @@ class RecipeActivity : AppCompatActivity() {
                     Log.e("nome", ricetta.name)
                     //setto tutti i campi con i dati relativi a quella determinata ricetta
                     et_recipe_name.setText(ricetta.name)
-                    when(ricetta.difficoltà)
-                    {
-                        "Facile"->{ sp_difficolta.setSelection(0) }
-                        "Media"->{sp_difficolta.setSelection(1)}
-                        "Difficile"->{sp_difficolta.setSelection(2)}
+                    when (ricetta.difficoltà) {
+                        "Facile" -> {
+                            sp_difficolta.setSelection(0)
+                        }
+                        "Media" -> {
+                            sp_difficolta.setSelection(1)
+                        }
+                        "Difficile" -> {
+                            sp_difficolta.setSelection(2)
+                        }
                     }
                     val prepTMP = ricetta.preparazione.split(" ")
                     val cottTMP = ricetta.cottura.split(" ")
                     et_preparazione.setText(prepTMP[0])
                     et_cottura.setText(cottTMP[0])
                     et_dosi.setText(ricetta.dosi)
-                    when(ricetta.portata)
-                    {
-                        "Antipasto"->{ sp_portata.setSelection(0) }
-                        "Primo"->{sp_portata.setSelection(1)}
-                        "Secondo"->{sp_portata.setSelection(2)}
-                        "Dessert"->{sp_portata.setSelection(3)}
+                    when (ricetta.portata) {
+                        "Antipasto" -> {
+                            sp_portata.setSelection(0)
+                        }
+                        "Primo" -> {
+                            sp_portata.setSelection(1)
+                        }
+                        "Secondo" -> {
+                            sp_portata.setSelection(2)
+                        }
+                        "Dessert" -> {
+                            sp_portata.setSelection(3)
+                        }
                     }
                     val ingredienti: ArrayList<String> = ricetta.ingredienti
                     var count = 1
@@ -535,17 +573,18 @@ class RecipeActivity : AppCompatActivity() {
                         }
                         linear_ingredienti[count].spin_ingredient_units.setSelection(selection)
                         Log.v("sd", i)
-                        linear_ingredienti[count].et_recipe_ingredient.isEnabled=false
-                        linear_ingredienti[count].et_ingredient_qty.isEnabled=false
-                        linear_ingredienti[count].spin_ingredient_units.isEnabled=false
-                        linear_ingredienti[count].iv_ingredient_delete.visibility=View.INVISIBLE
+                        linear_ingredienti[count].et_recipe_ingredient.isEnabled = false
+                        linear_ingredienti[count].et_ingredient_qty.isEnabled = false
+                        linear_ingredienti[count].spin_ingredient_units.isEnabled = false
+                        linear_ingredienti[count].iv_ingredient_delete.visibility = View.INVISIBLE
                         count++
                     }
                     et_preparazione_descrizione.setText(ricetta.descrizione)
                     et_conservazione.setText(ricetta.conservazione)
 
                     //CATTURA IMMAGINE RICETTA DAL DB
-                    val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
+                    val mStorageReference: StorageReference =
+                        FirebaseStorage.getInstance().reference
                     val idImgRef = mStorageReference.child("images/${idRicetta}.jpg")
                     thread {
                         idImgRef.getBytes(1024 * 1024).addOnSuccessListener {
@@ -575,33 +614,31 @@ class RecipeActivity : AppCompatActivity() {
             })
     }
 
-    fun checkPreferiti()
-    {
-        mFavouriteReference.child(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    Log.e("esiste","è prefirito")
-                    //la ricetta è preferita di quell'utente
-                    prefer=true
-                    img_heart.setImageResource(R.drawable.heart_red)
-                    fab_edit.hide()
+    fun checkPreferiti() {
+        mFavouriteReference.child(idRicetta)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        Log.e("esiste", "è prefirito")
+                        //la ricetta è preferita di quell'utente
+                        prefer = true
+                        img_heart.setImageResource(R.drawable.heart_red)
+                        fab_edit.hide()
 
+                    } else {
+                        Log.e("non esiste", "non è preferito")
+                        //la ricetta non è preferita di quell'utente
+                        prefer = false
+                        img_heart.setImageResource(R.drawable.heart)
+                    }
                 }
-                else {
-                    Log.e("non esiste", "non è preferito")
-                    //la ricetta non è preferita di quell'utente
-                    prefer=false
-                    img_heart.setImageResource(R.drawable.heart)
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
     }
 
-    fun aggiuntaImmagine(id:String)
-    {
+    fun aggiuntaImmagine(id: String) {
         try {
             FirebaseStoreManager().onCaptureImageData(
                 this,
@@ -611,55 +648,70 @@ class RecipeActivity : AppCompatActivity() {
                 resources.getString(R.string.uploading_done),
                 resources.getString(R.string.uploading_error)
             )
-        }catch (e:Exception){}
+        } catch (e: Exception) {
+        }
     }
-    fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
-    {
-        mRecipeReference.orderByChild("ident").equalTo(idRicetta).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) { //eseguo l'update della ricetta già esistente
-                    Log.e("esiste","lo snapshot esiste")
-                    //calcolo la durata
-                    val durata = (preparazione.toInt()) + (cottura.toInt())
-                    //si va a modificare la ricetta già esistente
-                    Log.e("dosi",dosi)
-                    val ricetta_modificata=Recipe(idRicetta,nome, difficoltà, preparazione, cottura,
-                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
-                    mRecipeReference.child(ricetta_modificata.toString()).setValue(ricetta_modificata)
-                    aggiuntaImmagine(idRicetta)
-                }
-                else { //inserisco la ricetta nel DB
-                    Log.e("non esiste", "lo snapshot non esiste")
-                    //inserimento nel DB
-                    val durata = (preparazione.toInt()) + (cottura.toInt())
-                    val id_tmp = nome + LocalDateTime.now()
-                    var id = ""
-                    //per togliere i . e i : dall'id (non supportati da firebase)
-                    for (i in id_tmp.indices) {
-                        if (id_tmp[i] == '.')
-                            continue
-                        if (id_tmp[i] == ':')
-                            continue
-                        id += id_tmp[i]
+
+    fun inserisciRicetta(
+        nome: String,
+        difficoltà: String,
+        preparazione: String,
+        cottura: String,
+        dosi: String,
+        portata: String,
+        ingredienti: ArrayList<String>,
+        descrizione: String,
+        conservazione: String
+    ) {
+        mRecipeReference.orderByChild("ident").equalTo(idRicetta)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) { //eseguo l'update della ricetta già esistente
+                        Log.e("esiste", "lo snapshot esiste")
+                        //calcolo la durata
+                        val durata = (preparazione.toInt()) + (cottura.toInt())
+                        //si va a modificare la ricetta già esistente
+                        Log.e("dosi", dosi)
+                        val ricetta_modificata = Recipe(
+                            idRicetta, nome, difficoltà, preparazione, cottura,
+                            "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione
+                        )
+                        mRecipeReference.child(ricetta_modificata.toString())
+                            .setValue(ricetta_modificata)
+                        aggiuntaImmagine(idRicetta)
+                    } else { //inserisco la ricetta nel DB
+                        Log.e("non esiste", "lo snapshot non esiste")
+                        //inserimento nel DB
+                        val durata = (preparazione.toInt()) + (cottura.toInt())
+                        val id_tmp = nome + LocalDateTime.now()
+                        var id = ""
+                        //per togliere i . e i : dall'id (non supportati da firebase)
+                        for (i in id_tmp.indices) {
+                            if (id_tmp[i] == '.')
+                                continue
+                            if (id_tmp[i] == ':')
+                                continue
+                            id += id_tmp[i]
+                        }
+                        val nuova_ricetta = Recipe(
+                            id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
+                            "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione
+                        )
+                        aggiuntaImmagine(id)
+                        mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
+                        //si aggiunge la ricetta alla lista delle ricette create dall'utente
+                        mUserRecipesReference.child(id).setValue(id)
                     }
-                    val nuova_ricetta = Recipe(
-                        id, nome, difficoltà, "$preparazione minuti", "$cottura minuti",
-                        "$durata minuti", dosi, portata, ingredienti, descrizione, conservazione)
-                    aggiuntaImmagine(id)
-                    mRecipeReference.child(nuova_ricetta.toString()).setValue(nuova_ricetta)
-                    //si aggiunge la ricetta alla lista delle ricette create dall'utente
-                    mUserRecipesReference.child(id).setValue(id)
+
                 }
 
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
 
     }
 
-    fun favourite(comando:String) {
+    fun favourite(comando: String) {
         if (comando.equals("inserisci")) {
             mFavouriteReference.child(idRicetta).setValue(idRicetta)
         }
@@ -686,16 +738,11 @@ class RecipeActivity : AppCompatActivity() {
             })
     }
 
-    fun deleteRecipe()
-    {
+    fun deleteRecipe() {
         mFavouriteReference.child(idRicetta).removeValue()
         mUserRecipesReference.child(idRicetta).removeValue()
         mRecipeReference.child(idRicetta).removeValue()
     }
-
-
-
-
 
 
 }
