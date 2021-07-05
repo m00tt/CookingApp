@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.row_ingredient.*
 import kotlinx.android.synthetic.main.row_ingredient.view.*
 import kotlinx.android.synthetic.main.row_shoplist.*
 import kotlinx.android.synthetic.main.row_shoplist.view.*
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.HashMap
@@ -376,9 +377,16 @@ class RecipeActivity : AppCompatActivity() {
 
         inserisciRicetta(nome, difficoltà, preparazione, cottura, dosi, portata, ingredienti, descrizione, conservazione)
         //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-
-        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, idRicetta, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
-
+        try {
+            FirebaseStoreManager().onCaptureImageData(
+                this,
+                fotoRicetta,
+                idRicetta,
+                resources.getString(R.string.photo_uploading_message),
+                resources.getString(R.string.uploading_done),
+                resources.getString(R.string.uploading_error)
+            )
+        }catch (e:Exception){}
 
         editable = false
         fab_edit.setImageResource(R.mipmap.ic_pencil_foreground)
@@ -558,8 +566,16 @@ class RecipeActivity : AppCompatActivity() {
 
     fun aggiuntaImmagine(id:String)
     {
-        FirebaseStoreManager().onCaptureImageData(this, fotoRicetta, id, resources.getString(R.string.photo_uploading_message), resources.getString(R.string.uploading_done), resources.getString(R.string.uploading_error))
-
+        try {
+            FirebaseStoreManager().onCaptureImageData(
+                this,
+                fotoRicetta,
+                id,
+                resources.getString(R.string.photo_uploading_message),
+                resources.getString(R.string.uploading_done),
+                resources.getString(R.string.uploading_error)
+            )
+        }catch (e:Exception){}
     }
     fun inserisciRicetta(nome: String, difficoltà: String, preparazione: String, cottura: String, dosi: String, portata: String, ingredienti: ArrayList<String>, descrizione: String, conservazione: String)
     {
