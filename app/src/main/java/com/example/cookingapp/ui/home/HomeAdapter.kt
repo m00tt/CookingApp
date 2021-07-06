@@ -25,10 +25,13 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
     BaseAdapter(), Filterable {
     private var mOriginalValues: ArrayList<Recipe>? = data
     private var mDisplayedValues: ArrayList<Recipe>? = data
-    private var filteredValues: ArrayList<Recipe>? = data
+
 
     override fun getCount(): Int {
-        return mDisplayedValues!!.size
+        if (mDisplayedValues == null)
+            return 0
+        else
+            return mDisplayedValues!!.size
     }
 
     override fun getItem(position: Int): Any {
@@ -53,7 +56,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
             val durata = newView.findViewById<TextView>(R.id.textViewDurata)
             val portata = newView.findViewById<TextView>(R.id.textViewPortata)
 
-            val id=mDisplayedValues?.get(position)?.ident
+            val id = mDisplayedValues?.get(position)?.ident
             //CATTURA IMMAGINE RICETTA DAL DB
 
             val mStorageReference: StorageReference = FirebaseStorage.getInstance().reference
@@ -93,27 +96,14 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
         return newView
 
     }
-    //TODO: risolvere problema che quando si ricerca qualcosa mentre si sta filtrando torna alla lista di partenza non filtrata
-    // (provare ricevendo una stringa contenente i filtri selezionati, separati l'uno dall'altro da uno spazio)
+
     //metodo che serve per la searchBar per filtrare i vari elementi
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
-                var FilteredArrList=ArrayList<Recipe>()
+                var FilteredArrList = ArrayList<Recipe>()
 
-                //controllo se è stato selezionato il filtro "tutte"
-                if(constraint.toString().equals("Tutte"))
-                {
-                    filteredValues= mOriginalValues!!
-                    results.count = mOriginalValues!!.size
-                    results.values = mOriginalValues
-                    return results
-                }
-
-                //altrimenti controllo se è stato chiamato per la ricerca o per il filtro (capendo il numero di stringhe passate alla funzione)
-                val stringhe=constraint?.split(";")
-                val num=stringhe?.count()
 
                 if (mOriginalValues == null)
                     mOriginalValues = ArrayList<Recipe>(mDisplayedValues)
@@ -124,10 +114,7 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                     results.values = mOriginalValues
                 } else {
 
-                    if(num==1)
-                        FilteredArrList=ricerca(constraint)
-                    else
-                        FilteredArrList=filtra(constraint)
+                    FilteredArrList = ricerca(constraint)
 
                     // set the Filtered result to return
                     /*if(FilteredArrList.size>0)
@@ -140,17 +127,16 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
 
-                mDisplayedValues = results?.values as ArrayList<Recipe>
+                mDisplayedValues = results?.values as ArrayList<Recipe>?
                 notifyDataSetChanged()
             }
 
         }
     }
 
-    private fun ricerca(constraint:CharSequence?): ArrayList<Recipe>
-    {
-        val FilteredArrList=ArrayList<Recipe>()
-        lateinit var  data: String
+    private fun ricerca(constraint: CharSequence?): ArrayList<Recipe> {
+        val FilteredArrList = ArrayList<Recipe>()
+        lateinit var data: String
         val cons = constraint.toString()
         for (i in mOriginalValues!!.indices) {
             data = mOriginalValues!![i].name
@@ -166,127 +152,6 @@ class HomeAdapter(private val context: Context, private val data: ArrayList<Reci
                 )
             }
         }
-        return FilteredArrList
-    }
-
-    private fun filtra(constraint:CharSequence?): ArrayList<Recipe>
-    {
-        //Toast.makeText(context as MainActivity, "sono in filtra", Toast.LENGTH_SHORT).show()
-        val FilteredArrList=ArrayList<Recipe>()
-        lateinit var  data: String
-        val stringhe:ArrayList<String> = constraint?.split(";") as ArrayList<String>
-        stringhe.removeAt(stringhe.lastIndex)
-        var tipo=""
-        var durata=""
-        var cont=0
-        for(e in filteredValues!!.indices)
-        {
-            Log.v("prima", filteredValues!![e].name)
-        }
-        for(ele in stringhe.indices) {
-            FilteredArrList.clear()
-            Log.v("elemento", stringhe[ele])
-            Log.v("contatore", cont.toString())
-
-            if ((stringhe[ele].equals("Facile")) || (stringhe[ele].equals("Media")) || (stringhe[ele].equals("Difficile")))
-                tipo = "difficoltà"
-            if ((stringhe[ele].equals("Veloce")) || (stringhe[ele].equals("Media_durata")) || (stringhe[ele].equals("Lunga"))) {
-                tipo = "durata"
-            }
-            if ((stringhe[ele].equals("Antipasto")) || (stringhe[ele].equals("Primo")) || (stringhe[ele].equals("Secondo")) || (stringhe[ele].equals(
-                    "Dessert"
-                ))
-            )
-                tipo = "portata"
-
-            for (i in mOriginalValues!!.indices) {
-                when(tipo){
-                    "difficoltà" -> data = mOriginalValues!![i].difficoltà
-                    "durata" -> data = mOriginalValues!![i].durata
-                    "portata" -> data = mOriginalValues!![i].portata
-                }
-                //se si filtra per durata bisogna dare una significato in minuti a "Veloce", "Media_durata" e "Lunga"
-                if(tipo.equals("durata")){
-                    val numero=data.split(" ")
-                    val num:Int=numero[0].toInt()
-                    when(stringhe[ele]){
-                        "Veloce" -> {
-                            if (num<=20) {
-                                FilteredArrList.add(
-                                    Recipe(
-                                        mOriginalValues!![i].ident,
-                                        mOriginalValues!![i].name,
-                                        mOriginalValues!![i].difficoltà,
-                                        mOriginalValues!![i].durata,
-                                        mOriginalValues!![i].portata
-                                    )
-                                )
-                            }
-                        }
-                        "Media_durata" -> {
-                            if ((num>20)&&(num<=40)) {
-                                FilteredArrList.add(
-                                    Recipe(
-                                        mOriginalValues!![i].ident,
-                                        mOriginalValues!![i].name,
-                                        mOriginalValues!![i].difficoltà,
-                                        mOriginalValues!![i].durata,
-                                        mOriginalValues!![i].portata
-                                    )
-                                )
-                            }
-                        }
-                        "Lunga" -> {
-                            if (num>40) {
-                                FilteredArrList.add(
-                                    Recipe(
-                                        mOriginalValues!![i].ident,
-                                        mOriginalValues!![i].name,
-                                        mOriginalValues!![i].difficoltà,
-                                        mOriginalValues!![i].durata,
-                                        mOriginalValues!![i].portata
-                                    )
-                                )
-                            }
-                        }
-                    }
-                } else{
-                    var string_en=""
-                    when(stringhe[ele])
-                    {
-                        "Facile" -> string_en= context.resources.getString(R.string.popup_facile)
-                        "Media" -> string_en= context.resources.getString(R.string.popup_medio)
-                        "Difficile" -> string_en= context.resources.getString(R.string.popup_difficile)
-                        "Antipasto" -> string_en=context.resources.getString(R.string.popup_antipasto)
-                        "Primo" -> string_en=context.resources.getString(R.string.popup_primo)
-                        "Secondo" -> string_en=context.resources.getString(R.string.popup_secondo)
-                    }
-                        if (data.startsWith(stringhe[ele]) || data.startsWith(string_en)) {
-                            FilteredArrList.add(
-                                Recipe(
-                                    mOriginalValues!![i].ident,
-                                    mOriginalValues!![i].name,
-                                    mOriginalValues!![i].difficoltà,
-                                    mOriginalValues!![i].durata,
-                                    mOriginalValues!![i].portata
-                                )
-                            )
-                        }
-                }
-
-            }
-            if(FilteredArrList.size>0)
-                filteredValues=FilteredArrList
-
-            cont++
-
-            for(e in filteredValues!!.indices)
-            {
-                Log.v("dopo", filteredValues!![e].name)
-            }
-        }
-
-
         return FilteredArrList
     }
 

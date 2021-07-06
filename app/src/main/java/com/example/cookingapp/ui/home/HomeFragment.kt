@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import com.example.cookingapp.MainActivity
 import com.example.cookingapp.R
 import com.example.cookingapp.Recipe
+import com.example.cookingapp.ui.cookbook.CookbookAdapter
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -27,7 +29,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private val mRecipeArrayList = ArrayList<Recipe>()
     private var adapter1: HomeAdapter? = null
     lateinit var menu: Menu
-    lateinit var checkati: String
+    //lateinit var checkati: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -147,8 +149,8 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 menu.findItem(R.id.Primo).setChecked(false)
                 menu.findItem(R.id.Secondo).setChecked(false)
                 menu.findItem(R.id.Dessert).setChecked(false)
-                checkati = controlCheck()
-                adapter1?.filter?.filter(checkati)
+                controlCheck()
+                //adapter1?.filter?.filter(checkati)
                 return true
             }
 
@@ -162,8 +164,8 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         menu.findItem(id1).setChecked(false)
         menu.findItem(id2).setChecked(false)
         setCheck(item)
-        checkati = controlCheck()
-        adapter1?.filter?.filter(checkati)
+        controlCheck()
+        //adapter1?.filter?.filter(checkati)
     }
 
     private fun setFilter_por(item:MenuItem, id1:Int, id2:Int, id3:Int)
@@ -173,43 +175,42 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         menu.findItem(id2).setChecked(false)
         menu.findItem(id3).setChecked(false)
         setCheck(item)
-        checkati = controlCheck()
-        adapter1?.filter?.filter(checkati)
+        controlCheck()
+        //adapter1?.filter?.filter(checkati)
     }
 
     private fun setCheck(item: MenuItem?) {
         item!!.setChecked(!item.isChecked)
     }
 
-    private fun controlCheck(): String {
-        var controllo = ""
+    private fun controlCheck() {
+        var dif = "*"
+        var dur="*"
+        var por="*"
 
         if (menu.findItem(R.id.Facile).isChecked)
-            controllo += "Facile;"
+            dif= "Facile"
         if (menu.findItem(R.id.Media).isChecked)
-            controllo += "Media;"
+            dif= "Media"
         if (menu.findItem(R.id.Difficile).isChecked)
-            controllo += "Difficile;"
+            dif= "Difficile"
         if (menu.findItem(R.id.Veloce).isChecked)
-            controllo += "Veloce;"
+            dur= "Veloce"
         if (menu.findItem(R.id.Media_durata).isChecked)
-            controllo += "Media_durata;"
+            dur= "Media_durata"
         if (menu.findItem(R.id.Lunga).isChecked)
-            controllo += "Lunga;"
+            dur= "Lunga"
         if (menu.findItem(R.id.Antipasto).isChecked)
-            controllo += "Antipasto;"
+            por= "Antipasto"
         if (menu.findItem(R.id.Primo).isChecked)
-            controllo += "Primo;"
+            por= "Primo"
         if (menu.findItem(R.id.Secondo).isChecked)
-            controllo += "Secondo;"
+            por= "Secondo"
         if (menu.findItem(R.id.Dessert).isChecked)
-            controllo += "Dessert;"
+            por= "Dessert"
 
-        if (controllo == "")
-            controllo = "Tutte"
+        filterRecipes(mRecipeReference, dif, dur, por)
 
-        //Toast.makeText(context as MainActivity, controllo, Toast.LENGTH_SHORT).show()
-        return controllo
     }
 
     //metodo che restituisce il listener
@@ -308,6 +309,63 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         super.onPause()
         //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
         mRecipeArrayList.clear()
+    }
+
+    private fun filterRecipes(riferimento: DatabaseReference, dif:String, dur:String, por:String)
+    {
+        Log.e("filtri attivi", "$dif $dur $por")
+        //svuoto l'arrayList di ricette per evitare che si duplichino quando si rientra
+        mRecipeArrayList.clear()
+        //prendo tutte le ricette create dall'utente o tutte le ricette preferite dall'utente
+        riferimento.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //nessun filtro selezionato
+                if(dif.equals("*") && dur.equals("*") && por.equals("*")) //tutte deselezionate
+                    mRecipeReference.addChildEventListener(mRecipesChildListener)
+
+                //solo un filtro selezionato
+                if(!dif.equals("*") && dur.equals("*") && por.equals("*")) //solo difficoltà selezionata
+                    mRecipeReference.orderByChild("difficoltà").equalTo(dif).addChildEventListener(mRecipesChildListener)
+                if(!dur.equals("*") && dif.equals("*") && por.equals("*")) //solo durata selezionata
+                    mRecipeReference.orderByChild("durata").equalTo(dur).addChildEventListener(mRecipesChildListener)
+                if(!por.equals("*") && dif.equals("*") && dur.equals("*")) //solo portata selezionata
+                    mRecipeReference.orderByChild("portata").equalTo(por).addChildEventListener(mRecipesChildListener)
+
+                //2 filtri selezionati
+                /*if(!dif.equals("*") && !dur.equals("*") && por.equals("*")) { //solo difficoltà  e durata sono selezionati
+                    var query: Query = mRecipeReference.orderByChild("difficoltà").equalTo(dif)
+
+                    query.orderByChild("durata").
+                }*/
+                if(!dur.equals("*") && dif.equals("*") && !por.equals("*")) //solo durata e portata sono selezionati
+                    mRecipeReference.orderByChild("durata").equalTo(dur).addChildEventListener(mRecipesChildListener)
+                if(!por.equals("*") && !dif.equals("*") && dur.equals("*")) { //solo portata e difficoltà selezionati
+                    var query=mRecipeReference.orderByChild("portata").equalTo(por)
+                    query.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                var filtrato=it.child("difficoltà").value?.equals(dif)
+                                if(filtrato==true) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+                }
+
+
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
     }
 
 }
