@@ -64,7 +64,7 @@ class RecipeActivity : AppCompatActivity() {
     var chiamante = ""
     var idRicetta = ""
     var ricetta = Recipe()
-    lateinit var fotoRicetta: Intent
+    var fotoRicetta: Intent? = null
 
     //dichiarazione attributi ricetta letti da db
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -228,6 +228,7 @@ class RecipeActivity : AppCompatActivity() {
                     resources.getString(R.string.deletingDoneImage),
                     resources.getString(R.string.uploading_error)
                 )
+                fotoRicetta = null
                 img_recipe.setImageBitmap(null)
             }
         }
@@ -429,16 +430,18 @@ class RecipeActivity : AppCompatActivity() {
             conservazione
         )
         //ESEMPIO AGGIUNTA FOTO NELLO STORAGE (imgName = ID della ricetta)
-        try {
-            FirebaseStoreManager().onCaptureImageData(
-                this,
-                fotoRicetta,
-                idRicetta,
-                resources.getString(R.string.photo_uploading_message),
-                resources.getString(R.string.uploading_done),
-                resources.getString(R.string.uploading_error)
-            )
-        } catch (e: Exception) {
+        if(fotoRicetta!=null){
+            try {
+                FirebaseStoreManager().onCaptureImageData(
+                    this,
+                    fotoRicetta!!,
+                    idRicetta,
+                    resources.getString(R.string.photo_uploading_message),
+                    resources.getString(R.string.uploading_done),
+                    resources.getString(R.string.uploading_error)
+                )
+            } catch (e: Exception) {
+            }
         }
 
         editable = false
@@ -639,16 +642,18 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     fun aggiuntaImmagine(id: String) {
-        try {
-            FirebaseStoreManager().onCaptureImageData(
-                this,
-                fotoRicetta,
-                id,
-                resources.getString(R.string.photo_uploading_message),
-                resources.getString(R.string.uploading_done),
-                resources.getString(R.string.uploading_error)
-            )
-        } catch (e: Exception) {
+        if (fotoRicetta!=null) {
+            try {
+                FirebaseStoreManager().onCaptureImageData(
+                    this,
+                    fotoRicetta!!,
+                    id,
+                    resources.getString(R.string.photo_uploading_message),
+                    resources.getString(R.string.uploading_done),
+                    resources.getString(R.string.uploading_error)
+                )
+            } catch (e: Exception) {
+            }
         }
     }
 
