@@ -324,12 +324,35 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     mRecipeReference.addChildEventListener(mRecipesChildListener)
 
                 //1 FILTRO SELEZIONATO
-                if(!dif.equals("*") && dur.equals("*") && por.equals("*")) //solo difficoltà selezionata
-                    mRecipeReference.orderByChild("difficoltà").equalTo(dif).addChildEventListener(mRecipesChildListener)
-                if(!dur.equals("*") && dif.equals("*") && por.equals("*")) //solo durata selezionata
-                    mRecipeReference.orderByChild("durata").equalTo(dur).addChildEventListener(mRecipesChildListener)
+                if(!dif.equals("*") && dur.equals("*") && por.equals("*")) { //solo difficoltà selezionata
+                    val query = mRecipeReference.orderByChild("difficoltà").equalTo(dif)
+                    callListener(query)
+
+                }
+                if(!dur.equals("*") && dif.equals("*") && por.equals("*")) { //solo durata selezionata
+                    when(dur)
+                    {
+                        "Veloce" -> {
+                            val query=mRecipeReference.orderByChild("durata").endAt("20 minuti")
+                            callListener(query)
+                        }
+                        "Media_durata" -> {
+                            val query=mRecipeReference.orderByChild("durata").startAt("21 minuti").endAt("40 minuti")
+                            callListener(query)
+                        }
+                        "Lunga" -> {
+                            val query= mRecipeReference.orderByChild("durata").startAt("41 minuti")
+                            callListener(query)
+                        }
+                    }
+
+                }
                 if(!por.equals("*") && dif.equals("*") && dur.equals("*")) //solo portata selezionata
-                    mRecipeReference.orderByChild("portata").equalTo(por).addChildEventListener(mRecipesChildListener)
+                {
+                    val query= mRecipeReference.orderByChild("portata").equalTo(por)
+                    callListener(query)
+                }
+
 
                 //2 FILTRI SELEZIONATI
                 //FILTRI: DIFFICOLTA - DURATA
@@ -337,28 +360,53 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     var query: Query = mRecipeReference.orderByChild("difficoltà").equalTo(dif)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                var filtrato=it.child("durata").value.toString()
-                                val tmp = filtrato.split(" ")
+                            if(snapshot.exists()) {
+                                var esiste=false
+                                snapshot.children.forEach {
+                                    var filtrato = it.child("durata").value.toString()
+                                    val tmp = filtrato.split(" ")
 
 
-                                if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    Log.e("minuti ",tmp[0])
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    if (tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                        esiste = true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        Log.e("minuti ", tmp[0])
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                    }
+                                    if (tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
+                                        esiste = true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ", tmp[0])
+                                    }
+                                    if (tmp[0].toInt() > 40 && dur.equals("Lunga")) {
+                                        esiste = true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ", tmp[0])
+                                    }
+                                    if (!esiste) {
+                                        Log.e("non esiste", "!nonesiste")
+                                        mRecipeArrayList.clear()
+                                        adapter1 =
+                                            HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                        list_view.adapter = adapter1
+                                    }
+
+
                                 }
-                                if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                    Log.e("minuti ",tmp[0])
-                                }
-                                if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                    Log.e("minuti ",tmp[0])
-                                }
-
-
+                            }
+                            else{
+                                Log.e("non esiste", " nonesiste")
+                                mRecipeArrayList.clear()
+                                adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                list_view.adapter = adapter1
                             }
                         }
 
@@ -372,27 +420,52 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     var query=mRecipeReference.orderByChild("portata").equalTo(por)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                var filtrato=it.child("durata").value.toString()
-                                Log.e("filtrato2",filtrato)
-                                val tmp = filtrato.split(" ")
+                            if(snapshot.exists()) {
+                                var esiste=false
+                                snapshot.children.forEach {
+                                    var filtrato = it.child("durata").value.toString()
+                                    Log.e("filtrato2", filtrato)
+                                    val tmp = filtrato.split(" ")
 
 
-                                if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    Log.e("minuti ",tmp[0])
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    if (tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                        esiste=true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        Log.e("minuti ", tmp[0])
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                    }
+                                    if (tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
+                                        esiste=true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ", tmp[0])
+                                    }
+                                    if (tmp[0].toInt() > 40 && dur.equals("Lunga")) {
+                                        esiste=true
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ", tmp[0])
+                                    }
+                                    if(!esiste)
+                                    {
+                                        Log.e("non esiste", " nonesiste")
+                                        mRecipeArrayList.clear()
+                                        adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                        list_view.adapter = adapter1
+                                    }
                                 }
-                                if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                    Log.e("minuti ",tmp[0])
-                                }
-                                if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                    Log.e("minuti ",tmp[0])
-                                }
+                            }
+                            else{
+                                Log.e("non esiste", " nonesiste")
+                                mRecipeArrayList.clear()
+                                adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                list_view.adapter = adapter1
                             }
                         }
 
@@ -401,17 +474,34 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
                     })
                 }
+
                 //FILTRI: PORTATA - DIFFICOLTA
                 if(!por.equals("*") && !dif.equals("*") && dur.equals("*")) {
                     var query=mRecipeReference.orderByChild("portata").equalTo(por)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                var filtrato=it.child("difficoltà").value?.equals(dif)
-                                if(filtrato==true) {
-                                    Log.e("filtrato", it.child("name").value.toString())
-                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                            if(snapshot.exists()) {
+                                snapshot.children.forEach {
+                                    var filtrato = it.child("difficoltà").value?.equals(dif)
+                                    if (filtrato == true) {
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident")
+                                            .equalTo(it.child("ident").value.toString())
+                                            .addChildEventListener(mRecipesChildListener)
+                                    }
+                                    else{
+                                        Log.e("non esiste", " nonesiste")
+                                        mRecipeArrayList.clear()
+                                        adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                        list_view.adapter = adapter1
+                                    }
                                 }
+                            }
+                            else{
+                                Log.e("non esiste", " nonesiste")
+                                mRecipeArrayList.clear()
+                                adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                list_view.adapter = adapter1
                             }
                         }
 
@@ -433,7 +523,7 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                                 var filtrato=it.child("portata").value?.equals(por)
                                 if(filtrato==true) {
                                     //QUERY2 NON CONTIENE NULLA
-                                    var filtrato2=it.child("portata").child("durata").value.toString()
+                                    var filtrato2=it.child("durata").value.toString()
                                     Log.e("filtrato2",filtrato2)
                                     val tmp = filtrato2.split(" ")
 
@@ -469,6 +559,29 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             }
         })
 
+    }
+
+    private fun callListener(query:Query){
+        query.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    Log.e("esiste", "esiste")
+                    query.addChildEventListener(mRecipesChildListener)
+                }
+                else
+                {
+                    Log.e("non esiste", " nonesiste")
+                    mRecipeArrayList.clear()
+                    adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                    list_view.adapter = adapter1
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
     }
 
 }
