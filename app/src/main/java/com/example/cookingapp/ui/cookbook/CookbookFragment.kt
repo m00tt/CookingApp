@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_cookbook.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.list_view
 import kotlinx.android.synthetic.main.row.*
+import java.lang.IllegalStateException
 
 
 class CookbookFragment : Fragment() {
@@ -120,47 +121,49 @@ class CookbookFragment : Fragment() {
             //dobbiamo fare la gestione dell'operazione di lettura (ovvero quando e dove ci interessa leggere)
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("TAG", "onChildAdded: ${snapshot.key!!}")
+                try {
+                    Log.d("TAG", "onChildAdded: ${snapshot.key!!}")
 
-                //prendiamo i valori dentro lo snapshot e i mettiamo in una variabile
-                val newRecipe =
-                    snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
-                //prendiamo la lista dei dati che è collegata all'adapter e gli aggiungiamo il newRecipe
-                var diff = ""
-                var port = ""
-                var dur = newRecipe!!.durata
-                when (newRecipe.difficoltà) {
-                    "Facile" -> {
-                        diff = getString(R.string.popup_facile)
+                    //prendiamo i valori dentro lo snapshot e i mettiamo in una variabile
+                    val newRecipe =
+                        snapshot.getValue(Recipe::class.java) //in questo modo ritorna un oggetto di tipo Ricetta
+                    //prendiamo la lista dei dati che è collegata all'adapter e gli aggiungiamo il newRecipe
+                    var diff = ""
+                    var port = ""
+                    var dur = newRecipe!!.durata
+                    when (newRecipe.difficoltà) {
+                        "Facile" -> {
+                            diff = getString(R.string.popup_facile)
+                        }
+                        "Media" -> {
+                            diff = getString(R.string.popup_medio)
+                        }
+                        "Difficile" -> {
+                            diff = getString(R.string.popup_difficile)
+                        }
                     }
-                    "Media" -> {
-                        diff = getString(R.string.popup_medio)
+                    when (newRecipe.portata) {
+                        "Antipasto" -> {
+                            port = getString(R.string.popup_antipasto)
+                        }
+                        "Primo" -> {
+                            port = getString(R.string.popup_primo)
+                        }
+                        "Secondo" -> {
+                            port = getString(R.string.popup_secondo)
+                        }
+                        "Dessert" -> {
+                            port = getString(R.string.popup_dessert)
+                        }
                     }
-                    "Difficile" -> {
-                        diff = getString(R.string.popup_difficile)
-                    }
-                }
-                when (newRecipe.portata) {
-                    "Antipasto" -> {
-                        port = getString(R.string.popup_antipasto)
-                    }
-                    "Primo" -> {
-                        port = getString(R.string.popup_primo)
-                    }
-                    "Secondo" -> {
-                        port = getString(R.string.popup_secondo)
-                    }
-                    "Dessert" -> {
-                        port = getString(R.string.popup_dessert)
-                    }
-                }
-                val tmp = dur.split(" ")
-                dur = tmp[0] + " " + getString(R.string.minutes)
+                    val tmp = dur.split(" ")
+                    dur = tmp[0] + " " + getString(R.string.minutes)
 
 
-                mRecipeArrayList.add(Recipe(newRecipe.ident, newRecipe.name, diff, dur, port))
-                //rigeneriamo l'adapter così va a rilggere i dati e si ridisegna
-                adapter1?.notifyDataSetChanged()
+                    mRecipeArrayList.add(Recipe(newRecipe.ident, newRecipe.name, diff, dur, port))
+                    //rigeneriamo l'adapter così va a rilggere i dati e si ridisegna
+                    adapter1?.notifyDataSetChanged()
+                }catch(e:IllegalStateException){}
             }
 
             //se vogliamo gestire anche i cambiamenti dei nodi avvenuti direttamente dal DB
