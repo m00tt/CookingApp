@@ -512,39 +512,64 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
 
                 //3 FILTRI SELEZIONATI
-                ///TODO: ABILITARE IL FILTRAGGIO CON TRE FILTRI SELEZIONATI (2 FUNZIONANO GIA)
                 if(!dif.equals("*") && !dur.equals("*") && !por.equals("*"))
                 {
-                    Log.e("numero filtri", "3")
-                    var query=mRecipeReference.orderByChild("difficolta").equalTo(dif)
+                    var query=mRecipeReference.orderByChild("difficoltà").equalTo(dif)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                var filtrato=it.child("portata").value?.equals(por)
-                                if(filtrato==true) {
-                                    //QUERY2 NON CONTIENE NULLA
-                                    var filtrato2=it.child("durata").value.toString()
-                                    Log.e("filtrato2",filtrato2)
-                                    val tmp = filtrato2.split(" ")
+                            if (snapshot.exists()) {
+                                var esiste=false
+                                snapshot.children.forEach {
+                                    var filtrato = it.child("portata").value?.equals(por)
+                                    if (filtrato == true) {
+                                        //QUERY2 NON CONTIENE NULLA
+                                        var filtrato2 = it.child("durata").value.toString()
+                                        val tmp = filtrato2.split(" ")
 
-
-                                    if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
-                                        Log.e("filtrato", it.child("name").value.toString())
-                                        Log.e("minuti ",tmp[0])
-                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                        if (tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                            esiste=true
+                                            mRecipeReference.orderByChild("ident")
+                                                .equalTo(it.child("ident").value.toString())
+                                                .addChildEventListener(mRecipesChildListener)
+                                        }
+                                        if (tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals(
+                                                "Media_durata"
+                                            )
+                                        ) {
+                                            esiste=true
+                                            mRecipeReference.orderByChild("ident")
+                                                .equalTo(it.child("ident").value.toString())
+                                                .addChildEventListener(mRecipesChildListener)
+                                        }
+                                        if (tmp[0].toInt() > 40 && dur.equals("Lunga")) {
+                                            esiste=true
+                                            mRecipeReference.orderByChild("ident")
+                                                .equalTo(it.child("ident").value.toString())
+                                                .addChildEventListener(mRecipesChildListener)
+                                        }
+                                        if(!esiste)
+                                        {
+                                            Log.e("non esiste", " nonesiste")
+                                            mRecipeArrayList.clear()
+                                            adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                            list_view.adapter = adapter1
+                                        }
                                     }
-                                    if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
-                                        Log.e("filtrato", it.child("name").value.toString())
-                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                        Log.e("minuti ",tmp[0])
-                                    }
-                                    if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
-                                        Log.e("filtrato", it.child("name").value.toString())
-                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
-                                        Log.e("minuti ",tmp[0])
+                                    else{
+                                        Log.e("non esiste", " nonesiste")
+                                        mRecipeArrayList.clear()
+                                        adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                        list_view.adapter = adapter1
                                     }
                                 }
                             }
+                            else{
+                                Log.e("non esiste", " nonesiste")
+                                mRecipeArrayList.clear()
+                                adapter1 = HomeAdapter(context as MainActivity, mRecipeArrayList)
+                                list_view.adapter = adapter1
+                            }
+
                         }
 
                         override fun onCancelled(error: DatabaseError) {
