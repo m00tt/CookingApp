@@ -367,16 +367,31 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
                     })
                 }
-                //FILTRI: DURATA - PORTATA DA FINIRE
+                //FILTRI: DURATA - PORTATA
                 if(!dur.equals("*") && dif.equals("*") && !por.equals("*")) {
-                    var query=mRecipeReference.orderByChild("durata").equalTo(dur)
+                    var query=mRecipeReference.orderByChild("portata").equalTo(por)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
                             snapshot.children.forEach {
-                                var filtrato=it.child("portata").value?.equals(por)
-                                if(filtrato==true) {
+                                var filtrato=it.child("durata").value.toString()
+                                Log.e("filtrato2",filtrato)
+                                val tmp = filtrato.split(" ")
+
+
+                                if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    Log.e("minuti ",tmp[0])
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                }
+                                if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
                                     Log.e("filtrato", it.child("name").value.toString())
                                     mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    Log.e("minuti ",tmp[0])
+                                }
+                                if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    Log.e("minuti ",tmp[0])
                                 }
                             }
                         }
