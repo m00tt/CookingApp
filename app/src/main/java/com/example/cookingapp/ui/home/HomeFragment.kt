@@ -319,11 +319,11 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         //prendo tutte le ricette create dall'utente o tutte le ricette preferite dall'utente
         riferimento.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                //nessun filtro selezionato
+                //NESSUN FILTRO SELEZIONATO
                 if(dif.equals("*") && dur.equals("*") && por.equals("*")) //tutte deselezionate
                     mRecipeReference.addChildEventListener(mRecipesChildListener)
 
-                //solo un filtro selezionato
+                //1 FILTRO SELEZIONATO
                 if(!dif.equals("*") && dur.equals("*") && por.equals("*")) //solo difficoltà selezionata
                     mRecipeReference.orderByChild("difficoltà").equalTo(dif).addChildEventListener(mRecipesChildListener)
                 if(!dur.equals("*") && dif.equals("*") && por.equals("*")) //solo durata selezionata
@@ -331,15 +331,63 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 if(!por.equals("*") && dif.equals("*") && dur.equals("*")) //solo portata selezionata
                     mRecipeReference.orderByChild("portata").equalTo(por).addChildEventListener(mRecipesChildListener)
 
-                //2 filtri selezionati
-                /*if(!dif.equals("*") && !dur.equals("*") && por.equals("*")) { //solo difficoltà  e durata sono selezionati
+                //2 FILTRI SELEZIONATI
+                //FILTRI: DIFFICOLTA - DURATA
+                if(!dif.equals("*") && !dur.equals("*") && por.equals("*")) { //solo difficoltà  e durata sono selezionati
                     var query: Query = mRecipeReference.orderByChild("difficoltà").equalTo(dif)
+                    query.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                var filtrato=it.child("durata").value.toString()
+                                val tmp = filtrato.split(" ")
 
-                    query.orderByChild("durata").
-                }*/
-                if(!dur.equals("*") && dif.equals("*") && !por.equals("*")) //solo durata e portata sono selezionati
-                    mRecipeReference.orderByChild("durata").equalTo(dur).addChildEventListener(mRecipesChildListener)
-                if(!por.equals("*") && !dif.equals("*") && dur.equals("*")) { //solo portata e difficoltà selezionati
+
+                                if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    Log.e("minuti ",tmp[0])
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                }
+                                if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    Log.e("minuti ",tmp[0])
+                                }
+                                if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    Log.e("minuti ",tmp[0])
+                                }
+
+
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+                }
+                //FILTRI: DURATA - PORTATA DA FINIRE
+                if(!dur.equals("*") && dif.equals("*") && !por.equals("*")) {
+                    var query=mRecipeReference.orderByChild("durata").equalTo(dur)
+                    query.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                var filtrato=it.child("portata").value?.equals(por)
+                                if(filtrato==true) {
+                                    Log.e("filtrato", it.child("name").value.toString())
+                                    mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+                }
+                //FILTRI: PORTATA - DIFFICOLTA
+                if(!por.equals("*") && !dif.equals("*") && dur.equals("*")) {
                     var query=mRecipeReference.orderByChild("portata").equalTo(por)
                     query.addValueEventListener(object : ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -358,7 +406,47 @@ class HomeFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     })
                 }
 
+                //3 FILTRI SELEZIONATI
+                ///TODO: ABILITARE IL FILTRAGGIO CON TRE FILTRI SELEZIONATI (2 FUNZIONANO GIA)
+                if(!dif.equals("*") && !dur.equals("*") && !por.equals("*"))
+                {
+                    Log.e("numero filtri", "3")
+                    var query=mRecipeReference.orderByChild("difficolta").equalTo(dif)
+                    query.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                var filtrato=it.child("portata").value?.equals(por)
+                                if(filtrato==true) {
+                                    //QUERY2 NON CONTIENE NULLA
+                                    var filtrato2=it.child("portata").child("durata").value.toString()
+                                    Log.e("filtrato2",filtrato2)
+                                    val tmp = filtrato2.split(" ")
 
+
+                                    if(tmp[0].toInt() <= 20 && dur.equals("Veloce")) {
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        Log.e("minuti ",tmp[0])
+                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                    }
+                                    if(tmp[0].toInt() > 20 && tmp[0].toInt() <= 40 && dur.equals("Media_durata")) {
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ",tmp[0])
+                                    }
+                                    if(tmp[0].toInt() >40 && dur.equals("Lunga")) {
+                                        Log.e("filtrato", it.child("name").value.toString())
+                                        mRecipeReference.orderByChild("ident").equalTo(it.child("ident").value.toString()).addChildEventListener(mRecipesChildListener)
+                                        Log.e("minuti ",tmp[0])
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+                }
 
             }
 
